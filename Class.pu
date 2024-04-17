@@ -1,0 +1,81 @@
+@startuml TopDown
+' キャラクターとそのステートマシン
+class Entity {
+    -int health
+    -float speed
+}
+
+class Player {
+}
+
+class Enemy {
+}
+
+Entity <|-- Player
+Entity <|-- Enemy
+
+interface IState {
+    +void Enter()
+    +void Execute()
+    +void Exit()
+}
+
+class BaseState {
+    +void Enter()
+    +void Execute()
+    +void Exit()
+}
+
+BaseState -up-|> IState
+
+class PlayerState {
+}
+
+class EnemyState {
+}
+
+PlayerState -up-|> BaseState
+EnemyState -up-|> BaseState
+
+class PlayerStateMachine {
+    +void ChangeState(IState newState)
+}
+
+class EnemyStateMachine {
+    +void ChangeState(IState newState)
+}
+
+PlayerStateMachine -- Player : controls >
+EnemyStateMachine -- Enemy : controls >
+
+Player "1" *-- "1" PlayerStateMachine : stateMachine
+Enemy "1" *-- "1" EnemyStateMachine : stateMachine
+
+PlayerStateMachine *-- IState : currentState
+EnemyStateMachine *-- IState : currentState
+
+' マネージャー
+class AudioManager {
+    +void PlaySound(string clipName)
+}
+
+class EffectManager {
+    +void TriggerEffect(string effectName)
+}
+
+class PoolManager {
+    +GameObject GetObject(string type)
+    +void ReturnObject(GameObject obj)
+}
+
+class TimeManager {
+    +void StartTimer()
+    +void StopTimer()
+}
+
+class GameManager {
+    {static} +GameManager Instance
+    +void ChangeState(GameState newState)
+}
+
+@enduml
