@@ -26,6 +26,8 @@ class BaseState {
     +void Exit()
 }
 
+class StateMachine
+
 BaseState -up-|> IState
 
 class PlayerState {

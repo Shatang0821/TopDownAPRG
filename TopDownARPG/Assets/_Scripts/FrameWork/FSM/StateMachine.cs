@@ -5,7 +5,7 @@ namespace FrameWork.FSM
     public abstract class StateMachine
     {
         protected IState CurrentState { get; private set; }
-
+        
         /// <summary>
         /// 状態の初期化
         /// </summary>
