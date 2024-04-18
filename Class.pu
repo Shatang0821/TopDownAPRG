@@ -1,8 +1,8 @@
 @startuml TopDown
 ' キャラクターとそのステートマシン
 class Entity {
-    -int health
-    -float speed
+    #int Health
+    #float Speed
 }
 
 class Player {
@@ -11,8 +11,29 @@ class Player {
 class Enemy {
 }
 
+class PlayerInput{
+
+}
+
+class MoveComponent{    
+    -Transform entityTransform
+    -Rigidbody entityRigidbody
+    +void MoveComponent(Transform,Rigidbody)
+
+    +void Move(Vector,Speed)
+}
+
+interface IDamaged{
+    +void TakeDamage(float damage);
+}
+
+Entity *-up- MoveComponent
+Entity <|.up. IDamaged
+
 Entity <|-- Player
 Entity <|-- Enemy
+
+Player *-down- PlayerInput
 
 interface IState {
     +void Enter()
@@ -26,14 +47,42 @@ class BaseState {
     +void Exit()
 }
 
-class StateMachine
 
-BaseState -up-|> IState
+' 武器ベース
+class WeaponBase{
+
+}
+' 剣
+class SwordWeapon{
+    
+}
+
+class StateMachine{
+
+}
+
+BaseState .up.|> IState
 
 class PlayerState {
 }
 
+enum PlayerStateEnum{
+    Idle
+    Move
+    Attack
+    Damaged
+    Die
+}
+
 class EnemyState {
+}
+
+enum EnemyStateEnum{
+    Idle
+    Move
+    Attack
+    Damaged
+    Die
 }
 
 PlayerState -up-|> BaseState
@@ -47,7 +96,7 @@ class EnemyStateMachine {
     +void ChangeState(IState newState)
 }
 
-PlayerStateMachine -- Player : controls >
+PlayerStateMachine -right- Player : controls >
 EnemyStateMachine -- Enemy : controls >
 
 Player "1" *-- "1" PlayerStateMachine : stateMachine
@@ -77,7 +126,15 @@ class TimeManager {
 
 class GameManager {
     {static} +GameManager Instance
-    +void ChangeState(GameState newState)
+    +GameStateEnum currentState
+    +void ChangeState(GameStateEnum newState)
+}
+
+enum GameStateEnum{
+    Title
+    Game
+    Pause
+    End
 }
 
 @enduml
