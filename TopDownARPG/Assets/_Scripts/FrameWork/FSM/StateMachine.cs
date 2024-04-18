@@ -10,7 +10,7 @@ namespace FrameWork.FSM
         /// 状態の初期化
         /// </summary>
         /// <param name="startState"></param>
-        public void Initialize(IState startState)
+        protected void InitializeState(IState startState)
         {
             ChangeState(startState);
         }
