@@ -1,140 +1,129 @@
-@startuml TopDown
-' キャラクターとそのステートマシン
-class Entity {
-    #int Health
-    #float Speed
+@startuml EnhancedVerticalGameArchitecture
+top to bottom direction
+
+package "Game Initialization" {
+    class GameLaunch {
+        +void InitializeFramework()
+        +void CreateManagers()
+    }
+
+    GameLaunch --> "1" AudioManager
+    GameLaunch --> "1" EffectManager
+    GameLaunch --> "1" PoolManager
+    GameLaunch --> "1" TimeManager
+    GameLaunch --> "1" GameManager
 }
 
-class Player {
+package "Managers" {
+    class AudioManager {
+        +void PlaySound(string clipName)
+    }
+
+    class EffectManager {
+        +void TriggerEffect(string effectName)
+    }
+
+    class PoolManager {
+        +GameObject GetObject(string type)
+        +void ReturnObject(GameObject obj)
+    }
+
+    class TimeManager {
+        +void StartTimer()
+        +void StopTimer()
+    }
+
+    class GameManager {
+        {static} +GameManager Instance
+        +GameStateEnum currentState
+        +void ChangeState(GameStateEnum newState)
+    }
 }
 
-class Enemy {
+package "Game Entities" {
+    class Entity {
+        #int Health
+        #float Speed
+        -MoveComponent moveComponent
+        -StateMachine stateMachine
+    }
+
+    class Player {
+        -PlayerStateMachine stateMachine
+        +void UpdateState()
+    }
+
+    class Enemy {
+        -EnemyStateMachine stateMachine
+        +void UpdateState()
+    }
 }
 
-class PlayerInput{
+GameManager --> "1" PlayerManager
+GameManager --> "1" EnemyManager
+GameManager --> "1" StageManager
 
+package "Stage Management" {
+    class StageManager {
+        +void InitializeStage()
+        +Stage LoadStage(int stageId)
+    }
+
+    class Stage {
+        +Prefab mapPrefab
+        +List<EnemyWave> enemyWaves
+    }
+
+    class PlayerManager {
+        +void InitializePlayer()
+        +void SpawnPlayerAt(Vector3 position)
+    }
+
+    class EnemyManager {
+        +void InitializeEnemies()
+        +void SpawnEnemies(Stage stage)
+    }
 }
 
-class MoveComponent{    
-    -Transform entityTransform
-    -Rigidbody entityRigidbody
-    +void MoveComponent(Transform,Rigidbody)
+package "Game States and Buff System" {
+    ' ステートマシンとステート
+    class StateMachine {
+        +void ChangeState(IState newState)
+    }
 
-    +void Move(Vector,Speed)
-}
+    interface IState {
+        +void Enter()
+        +void Execute()
+        +void Exit()
+    }
 
-interface IDamaged{
-    +void TakeDamage(float damage);
-}
+    class PlayerState {
+    }
 
-Entity *-up- MoveComponent
-Entity <|.up. IDamaged
+    class EnemyState {
+    }
 
-Entity <|-- Player
-Entity <|-- Enemy
+    enum PlayerStateEnum {
+        Idle
+        Move
+        Attack
+        Damaged
+        Die
+    }
 
-Player *-down- PlayerInput
+    enum EnemyStateEnum {
+        Idle
+        Move
+        Attack
+        Damaged
+        Die
+    }
 
-interface IState {
-    +void Enter()
-    +void Execute()
-    +void Exit()
-}
-
-class BaseState {
-    +void Enter()
-    +void Execute()
-    +void Exit()
-}
-
-
-' 武器ベース
-class WeaponBase{
-
-}
-' 剣
-class SwordWeapon{
-    
-}
-
-class StateMachine{
-
-}
-
-BaseState .up.|> IState
-
-class PlayerState {
-}
-
-enum PlayerStateEnum{
-    Idle
-    Move
-    Attack
-    Damaged
-    Die
-}
-
-class EnemyState {
-}
-
-enum EnemyStateEnum{
-    Idle
-    Move
-    Attack
-    Damaged
-    Die
-}
-
-PlayerState -up-|> BaseState
-EnemyState -up-|> BaseState
-
-class PlayerStateMachine {
-    +void ChangeState(IState newState)
-}
-
-class EnemyStateMachine {
-    +void ChangeState(IState newState)
-}
-
-PlayerStateMachine -right- Player : controls >
-EnemyStateMachine -- Enemy : controls >
-
-Player "1" *-- "1" PlayerStateMachine : stateMachine
-Enemy "1" *-- "1" EnemyStateMachine : stateMachine
-
-PlayerStateMachine *-- IState : currentState
-EnemyStateMachine *-- IState : currentState
-
-' マネージャー
-class AudioManager {
-    +void PlaySound(string clipName)
-}
-
-class EffectManager {
-    +void TriggerEffect(string effectName)
-}
-
-class PoolManager {
-    +GameObject GetObject(string type)
-    +void ReturnObject(GameObject obj)
-}
-
-class TimeManager {
-    +void StartTimer()
-    +void StopTimer()
-}
-
-class GameManager {
-    {static} +GameManager Instance
-    +GameStateEnum currentState
-    +void ChangeState(GameStateEnum newState)
-}
-
-enum GameStateEnum{
-    Title
-    Game
-    Pause
-    End
+    ' バフシステム
+    class BuffSystem {
+        +void ApplyBuff(IBuff buff)
+        +void RemoveBuff(IBuff buff)
+    }
 }
 
 @enduml

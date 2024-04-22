@@ -1,3 +1,6 @@
+using FrameWork.Audio;
+using FrameWork.Factories;
+using FrameWork.Pool;
 using FrameWork.Resource;
 using FrameWork.UI;
 using FrameWork.Utils;
@@ -26,8 +29,10 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     /// </summary>
     private void InitFramework()
     {
-        this.gameObject.AddComponent<ResManager>();
-        this.gameObject.AddComponent<UIManager>();
+        ManagerFactory.Instance.CreateManager<ResManager>();
+        ManagerFactory.Instance.CreateManager<AudioManager>();
+        ManagerFactory.Instance.CreateManager<PoolManager>();
+
     }
 
     /// <summary>
@@ -35,7 +40,6 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     /// </summary>
     private void InitGameLogic()
     {
-        this.gameObject.AddComponent<GameApp>();
-        GameApp.Instance.InitGame();
+        ManagerFactory.Instance.CreateManager<GameManager>();
     }
 }
