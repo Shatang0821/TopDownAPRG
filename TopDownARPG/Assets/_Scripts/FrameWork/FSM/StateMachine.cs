@@ -1,41 +1,54 @@
-﻿using FrameWork.Utils;
+﻿using System.Collections.Generic;
+using FrameWork.Utils;
+using UnityEngine;
 
 namespace FrameWork.FSM
 {
-    public abstract class StateMachine
+    public abstract class StateMachine<TStateEnum>
     {
-        protected IState CurrentState { get; private set; }
+        protected IState currentState { get; private set; }     //現在状態クラス
+        public TStateEnum CurrentState { get; private set; }    //現在状態列挙型
+        
+        private Dictionary<TStateEnum, IState> _stateTable = new();
         
         /// <summary>
         /// 状態の初期化
         /// </summary>
         /// <param name="startState"></param>
-        protected void InitializeState(IState startState)
+        public void Initialize(TStateEnum startState)
         {
             ChangeState(startState);
         }
-        public void ChangeState(IState newState)
+        public void ChangeState(TStateEnum newState)
         {
-            CurrentState?.Exit();
+            if (_stateTable.TryGetValue(newState, out IState state))
+            {
+                if (currentState == null)
+                {
+                    Debug.Log("currentState is null");
+                }
+                currentState?.Exit();
+                CurrentState = newState;
+                currentState = state;
+
+                currentState.Enter();
+            }
             
-            CurrentState = newState;
-
-            CurrentState.Enter();
-        }
-
-        public void HandleInput()
-        {
-            CurrentState?.HandleInput();
         }
 
         public void LogicUpdate()
         {
-            CurrentState?.LogicUpdate();
+            currentState?.LogicUpdate();
         }
 
         public void PhysicsUpdate()
         {
-            CurrentState?.PhysicsUpdate();
+            currentState?.PhysicsUpdate();
+        }
+
+        protected void RegisterState(TStateEnum stateEnum, IState state)
+        {
+            _stateTable[stateEnum] = state;
         }
     }
 }

@@ -36,22 +36,13 @@ namespace FrameWork.UI
 
             _uiPrefabs = new Dictionary<string, GameObject>();
         }
-
-        private void OnEnable()
-        {
-            EventCenter.EventCenter.AddListener<string>(EventKey.OnChangeUIPrefab, ChangeUIPrefab);
-        }
-
-        private void OnDisable()
-        {
-            EventCenter.EventCenter.RemoveListener<string>(EventKey.OnChangeUIPrefab, ChangeUIPrefab);
-        }
+        
 
         /// <summary>
         /// UIオブジェクトの切り替え操作
         /// </summary>
         /// <param name="uiName">stringをキーとして使用する</param>
-        private void ChangeUIPrefab(string uiName)
+        public void ChangeUIPrefab(string uiName)
         {
             if (_currentUIPrefab != null)
             {

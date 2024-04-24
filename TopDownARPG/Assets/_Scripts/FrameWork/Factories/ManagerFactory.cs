@@ -4,10 +4,6 @@ using UnityEngine;
 
 namespace FrameWork.Factories
 {
-    /// <summary>
-    /// Managerオブジェクトを作成し親があればその下に生成する
-    /// 無ければそのまま生成する
-    /// </summary>
     public class ManagerFactory : Singleton<ManagerFactory>
     {
         /// <summary>
@@ -25,9 +21,9 @@ namespace FrameWork.Factories
             }
 
             var component = gameObject.AddComponent<T>();
-            if (component is IInitializable initable)
+            if (component is IInitializable initializable)
             {
-                initable.Init();
+                initializable.Init();
             }
 
             return component;

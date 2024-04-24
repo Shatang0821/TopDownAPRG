@@ -29,7 +29,6 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     /// </summary>
     private void InitFramework()
     {
-        ManagerFactory.Instance.CreateManager<ResManager>();
         ManagerFactory.Instance.CreateManager<AudioManager>();
         ManagerFactory.Instance.CreateManager<PoolManager>();
 
