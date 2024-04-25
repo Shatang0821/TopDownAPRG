@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -20,6 +20,21 @@ public class UIHomeCtrlCtrl : UICtrl
 
     void Start()
     {
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (View["SettingsPanel"].activeSelf)
+            {
+                View["SettingsPanel"].SetActive(false);
+            }
+            if (View["OperationPanel"].activeSelf)
+            {
+                View["OperationPanel"].SetActive(false);
+            }
+        }
     }
 
     private void GameStart()
