@@ -12,7 +12,7 @@ namespace FrameWork.EventCenter
     public class EventCenter
     {
         //デフォルトイベント
-        private static Dictionary<EventKey, Delegate> m_EventDictionary = new Dictionary<EventKey, Delegate>();
+        private static Dictionary<string, Delegate> m_EventDictionary = new Dictionary<string, Delegate>();
 #region Add
 
         /// <summary>
@@ -21,7 +21,7 @@ namespace FrameWork.EventCenter
         /// <param name="eventKey"></param>
         /// <param name="callBack"></param>
         /// <exception cref="Exception"></exception>
-        private static void OnListenerAdding(EventKey eventKey, Delegate callBack)
+        private static void OnListenerAdding(string eventKey, Delegate callBack)
         {
             //イベント登録処理
             if (!m_EventDictionary.ContainsKey(eventKey))
@@ -42,7 +42,7 @@ namespace FrameWork.EventCenter
         /// </summary>
         /// <param name="eventKey">イベントキー</param>
         /// <param name="callBack">デリケート</param>
-        public static void AddListener(EventKey eventKey, CallBack callBack)
+        public static void AddListener(string eventKey, CallBack callBack)
         {
             OnListenerAdding(eventKey, callBack);
 
@@ -55,7 +55,7 @@ namespace FrameWork.EventCenter
         /// <param name="eventKey">イベントキー</param>
         /// <param name="callBack">デリケート</param>
         /// <typeparam name="T">引数</typeparam>
-        public static void AddListener<T>(EventKey eventKey, CallBack<T> callBack)
+        public static void AddListener<T>(string eventKey, CallBack<T> callBack)
         {
             OnListenerAdding(eventKey, callBack);
 
@@ -70,7 +70,7 @@ namespace FrameWork.EventCenter
         /// <param name="callBack">デリケート</param>
         /// <typeparam name="T1">引数</typeparam>
         /// <typeparam name="T2">引数</typeparam>
-        public static void AddListener<T1,T2>(EventKey eventKey, CallBack<T1,T2> callBack)
+        public static void AddListener<T1,T2>(string eventKey, CallBack<T1,T2> callBack)
         {
             OnListenerAdding(eventKey, callBack);
 
@@ -86,7 +86,7 @@ namespace FrameWork.EventCenter
         /// <param name="eventKey">イベントキー</param>
         /// <param name="callBack">イベント</param>
         /// <exception cref="Exception"></exception>
-        private static void OnListenerRemoving(EventKey eventKey, Delegate callBack)
+        private static void OnListenerRemoving(string eventKey, Delegate callBack)
         {
             //イベント登録処理
             if (m_EventDictionary.ContainsKey(eventKey))
@@ -114,7 +114,7 @@ namespace FrameWork.EventCenter
         /// イベントの解除処理
         /// </summary>
         /// <param name="eventKey">イベントキー</param>
-        private static void OnListenerRemoved(EventKey eventKey)
+        private static void OnListenerRemoved(string eventKey)
         {
             if (m_EventDictionary[eventKey] == null)
             {
@@ -127,7 +127,7 @@ namespace FrameWork.EventCenter
         /// </summary>
         /// <param name="eventKey">イベントキー</param>
         /// <param name="callBack">デリケート</param>
-        public static void RemoveListener(EventKey eventKey, CallBack callBack)
+        public static void RemoveListener(string eventKey, CallBack callBack)
         {
             OnListenerRemoving(eventKey, callBack);
 
@@ -142,7 +142,7 @@ namespace FrameWork.EventCenter
         /// <param name="eventKey">イベントキー</param>
         /// <param name="callBack">デリケート</param>
         /// <typeparam name="T">引数</typeparam>
-        public static void RemoveListener<T>(EventKey eventKey, CallBack<T> callBack)
+        public static void RemoveListener<T>(string eventKey, CallBack<T> callBack)
         {
             OnListenerRemoving(eventKey, callBack);
 
@@ -158,7 +158,7 @@ namespace FrameWork.EventCenter
         /// <param name="callBack">デリケート</param>
         /// <typeparam name="T1">引数</typeparam>
         /// <typeparam name="T2">引数</typeparam>
-        public static void RemoveListener<T1,T2>(EventKey eventKey, CallBack<T1,T2> callBack)
+        public static void RemoveListener<T1,T2>(string eventKey, CallBack<T1,T2> callBack)
         {
             OnListenerRemoving(eventKey, callBack);
 
@@ -174,7 +174,7 @@ namespace FrameWork.EventCenter
         /// イベントを実行する
         /// </summary>
         /// <param name="eventKey">イベントキー</param>
-        public static void TriggerEvent(EventKey eventKey)
+        public static void TriggerEvent(string eventKey)
         {
             if (m_EventDictionary.TryGetValue(eventKey, out Delegate d))
             {
@@ -196,7 +196,7 @@ namespace FrameWork.EventCenter
         /// <param name="arg">引数</param>
         /// <typeparam name="T">型</typeparam>
         /// <exception cref="Exception"></exception>
-        public static void TriggerEvent<T>(EventKey eventKey, T arg)
+        public static void TriggerEvent<T>(string eventKey, T arg)
         {
             if (m_EventDictionary.TryGetValue(eventKey, out Delegate d))
             {
@@ -217,7 +217,7 @@ namespace FrameWork.EventCenter
         /// <param name="eventKey">イベントキー</param>
         /// <typeparam name="T1">引数型1</typeparam>
         /// <typeparam name="T2">引数型2</typeparam>
-        public static void TriggerEvent<T1,T2>(EventKey eventKey, T1 arg1,T2 arg2)
+        public static void TriggerEvent<T1,T2>(string eventKey, T1 arg1,T2 arg2)
         {
             if (m_EventDictionary.TryGetValue(eventKey, out Delegate d))
             {
