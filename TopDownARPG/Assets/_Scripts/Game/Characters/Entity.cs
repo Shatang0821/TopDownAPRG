@@ -1,32 +1,86 @@
-﻿using UnityEngine;
+﻿
+using FrameWork.EventCenter;
+using UnityEngine;
+
+/// <summary>
+/// 仮のEntityデータ
+/// </summary>
+public struct EntityData
+{
+    private float initialHealth;
+    private float initialCurrentHealth;
+    private int initialPower;
+    private float initialSpeed;
+}
 
 public class Entity : MonoBehaviour
 {
-    private float _maxHealth;
+    protected Observer<float> maxHealth;
+    
+    protected Observer<float> currentHealth;
 
-    public float MaxHealth
+    protected Observer<int> power;
+
+    protected Observer<float> speed;
+    protected virtual void Awake()
     {
-        get => Health;
-        set
-        {
-            if (value >= 0)
-            {
-                MaxHealth = value;
-            }
-        }
+        InitValue();
     }
-    private float _health;
-    
-    public float Health
+
+    /// <summary>
+    /// データベースから数値を取得
+    /// </summary>
+    private void InitValue(/*EntityData entityData*/)
     {
-        get => _health;
-        set
-        {
-            Mathf.Clamp(_health + value, 0, _maxHealth);
-            //イベントのトリガ
-        }
+        /*
+         *  if(conectDatabase)
+         *  maxHealth = new Observer<float>(entityData.initialHealth, "OnMaxHpChange");
+         *  currentHealth = new Observer<float>(entityData.initialCurrentHealth, "OnCurrentHpChange");
+         *  power = new Observer<int>(entityData.power, "abc");
+         *  speed = new Observer<float>(entityData.speed, "cba");
+         */
+        maxHealth = new Observer<float>(100, "OnMaxHpChange");
+        currentHealth = new Observer<float>(100, "OnCurrentHpChange");
+        power = new Observer<int>(10, "abc");
+        speed = new Observer<float>(10, "cba");
     }
-    
+
+    protected virtual void OnEnable()
+    {
+        // イベントリスナーを設定
+        EventCenter.AddListener<float>("OnMaxHpChange", OnMaxHealthChanged);
+        EventCenter.AddListener<float>("OnCurrentHpChange", OnCurrentHealthChanged);
+    }
+
+    protected virtual void OnDisable()
+    {
+        // イベントリスナーを設定
+        EventCenter.RemoveListener<float>("OnMaxHpChange", OnMaxHealthChanged);
+        EventCenter.RemoveListener<float>("OnCurrentHpChange", OnCurrentHealthChanged);
+    }
+
+    private void OnMaxHealthChanged(float newMaxHealth)
+    {
+        Debug.Log($"Maximum Health Changed to: {newMaxHealth}");
+        // 最大HPの変更に基づいて現在のHPを調整する場合
+        currentHealth.Value = Mathf.Min(currentHealth.Value, newMaxHealth);
+    }
+
+    private void OnCurrentHealthChanged(float newCurrentHealth)
+    {
+        Debug.Log($"Current Health Changed to: {newCurrentHealth}");
+    }
+
+    public void Damage(float amount)
+    {
+        currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);
+    }
+
+    public void Heal(float amount)
+    {
+        currentHealth.Value = Mathf.Min(currentHealth.Value + amount, maxHealth.Value);
+    }
+
     /// <summary>
     /// アニメーションを変更する
     /// </summary>

@@ -7,20 +7,35 @@ using UnityEngine.Serialization;
 
 public class Player : Entity
 {
-
-
-    private void Awake()
+    private PlayerInput _playerInput;
+    private PlayerStateMachine _stateMachine;
+    
+    protected override void Awake()
     {
-
+        base.Awake();
+        _playerInput = new PlayerInput();
+        _stateMachine = new PlayerStateMachine(this);
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-
+        base.OnEnable();
+        _playerInput.OnEnable();
     }
 
-    private void OnDisable()
+    protected override void OnDisable()
     {
+        base.OnDisable();
+        _playerInput.OnDisable();
+    }
 
+    private void Update()
+    {
+        _stateMachine.LogicUpdate();;
+    }
+
+    private void FixedUpdate()
+    {
+        _stateMachine.PhysicsUpdate();
     }
 }
