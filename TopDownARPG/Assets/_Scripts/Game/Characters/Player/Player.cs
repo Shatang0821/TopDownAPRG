@@ -43,11 +43,17 @@ public class Player : Entity
     {
         _stateMachine.PhysicsUpdate();
     }
-
+    
+    /// <summary>
+    /// アニメーションイベント
+    /// </summary>
     private void AnimationEventCalled()
     {
         _stateMachine.AnimationEventCalled();
     }
     
-    
+    private void Test(string str)
+    {
+        DebugLogger.Log(str);
+    }
 }
