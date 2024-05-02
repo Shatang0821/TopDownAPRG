@@ -200,7 +200,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -625,23 +625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2998512261250642241, guid: ca57315880c3b874fb3081db5e1bfc5f, type: 3}
       propertyPath: m_Name
-      value: UILoginCtrl
-      objectReference: {fileID: 0}
-    - target: {fileID: 2998512261250642241, guid: ca57315880c3b874fb3081db5e1bfc5f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3277942345066512668, guid: ca57315880c3b874fb3081db5e1bfc5f, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3665651275917963859, guid: ca57315880c3b874fb3081db5e1bfc5f, type: 3}
-      propertyPath: m_Name
-      value: SingIn
-      objectReference: {fileID: 0}
-    - target: {fileID: 8279066912863237709, guid: ca57315880c3b874fb3081db5e1bfc5f, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: UILogin
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -656,10 +640,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 456006991}
     m_Modifications:
-    - target: {fileID: 44498530923303781, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4350165164537862201, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -740,17 +720,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5819649569754970266, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6190560323034797741, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_Name
-      value: UIHomeCtrl
-      objectReference: {fileID: 0}
-    - target: {fileID: 6190560323034797741, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: UIHome
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -852,11 +824,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7921255731018499758, guid: 92e353d1919b55942b4c20f70de17506, type: 3}
       propertyPath: m_Name
-      value: UIEndCtrl
-      objectReference: {fileID: 0}
-    - target: {fileID: 7921255731018499758, guid: 92e353d1919b55942b4c20f70de17506, type: 3}
-      propertyPath: m_IsActive
-      value: 0
+      value: UIEnd
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
