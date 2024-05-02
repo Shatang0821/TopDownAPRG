@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -6,24 +6,37 @@ using FrameWork.UI;
 using Unity.VisualScripting;
 using System;
 
-
 public class UILoginCtrl : UICtrl
 {
-
-	public override void Awake() {
-
-		base.Awake();
+    public override void Awake()
+    {
+        base.Awake();
         AddButtonListener("Register", Register);
         AddButtonListener("SingIn", SingIn);
-        AddButtonListener("Registration Screen/Complete", Complete);
+        AddButtonListener("RegistrationScreenPanel/Complete", Complete);
+        View["RegistrationScreenPanel"].SetActive(false);
     }
 
-	void Start() {
-	}
+    void Start()
+    {
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (View["RegistrationScreenPanel"].activeSelf)
+            {
+                View["RegistrationScreenPanel"].SetActive(false);
+            }
+        }
+    }
 
     private void Register()
     {
         Debug.Log("Register");
+        bool currentStatus = View["RegistrationScreenPanel"].activeSelf;
+        View["RegistrationScreenPanel"].SetActive(!currentStatus);
     }
 
     private void SingIn()
