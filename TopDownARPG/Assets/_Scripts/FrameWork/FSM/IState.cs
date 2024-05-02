@@ -9,5 +9,7 @@ namespace FrameWork.FSM
         public void LogicUpdate();
         
         public void PhysicsUpdate();
+
+        public void AnimationEventCalled();
     }
 }

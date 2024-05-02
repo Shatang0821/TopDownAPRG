@@ -1,41 +1,53 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.Serialization;
+using FrameWork.Utils;
 
 public class Player : Entity
 {
-    private PlayerInput _playerInput;
     private PlayerStateMachine _stateMachine;
-    
+
+    #region Component
+    public PlayerController PlayerController;
+    #endregion
+
+    private void InitComponent()
+    {
+        PlayerController = new PlayerController(this.transform);
+    }
+
     protected override void Awake()
     {
         base.Awake();
-        _playerInput = new PlayerInput();
+        InitComponent();
         _stateMachine = new PlayerStateMachine(this);
+        _stateMachine.ChangeState(PlayerStateEnum.Idle);
     }
 
     protected override void OnEnable()
     {
         base.OnEnable();
-        _playerInput.OnEnable();
+        PlayerController.OnEnable();
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _playerInput.OnDisable();
+        PlayerController.OnDisable();
     }
 
     private void Update()
     {
-        _stateMachine.LogicUpdate();;
+        _stateMachine.LogicUpdate();
+        ;
     }
 
     private void FixedUpdate()
     {
         _stateMachine.PhysicsUpdate();
     }
+
+    private void AnimationEventCalled()
+    {
+        _stateMachine.AnimationEventCalled();
+    }
+    
+    
 }

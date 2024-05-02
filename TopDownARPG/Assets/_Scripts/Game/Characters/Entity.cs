@@ -13,7 +13,7 @@ public struct EntityData
     private float initialSpeed;
 }
 
-public class Entity : MonoBehaviour
+public class Entity : MonoBehaviour,IDamaged
 {
     protected Observer<float> maxHealth;
     
@@ -22,15 +22,18 @@ public class Entity : MonoBehaviour
     protected Observer<int> power;
 
     protected Observer<float> speed;
+
+    protected Animator animator;
     protected virtual void Awake()
     {
         InitValue();
+        animator = GetComponentInChildren<Animator>();
     }
 
     /// <summary>
     /// データベースから数値を取得
     /// </summary>
-    private void InitValue(/*EntityData entityData*/)
+    public void InitValue(/*EntityData entityData*/)
     {
         /*
          *  if(conectDatabase)
@@ -41,6 +44,7 @@ public class Entity : MonoBehaviour
          */
         maxHealth = new Observer<float>(100, "OnMaxHpChange");
         currentHealth = new Observer<float>(100, "OnCurrentHpChange");
+        //テスト
         power = new Observer<int>(10, "abc");
         speed = new Observer<float>(10, "cba");
     }
@@ -59,28 +63,23 @@ public class Entity : MonoBehaviour
         EventCenter.RemoveListener<float>("OnCurrentHpChange", OnCurrentHealthChanged);
     }
 
-    private void OnMaxHealthChanged(float newMaxHealth)
+    protected virtual void OnMaxHealthChanged(float newMaxHealth)
     {
         Debug.Log($"Maximum Health Changed to: {newMaxHealth}");
         // 最大HPの変更に基づいて現在のHPを調整する場合
         currentHealth.Value = Mathf.Min(currentHealth.Value, newMaxHealth);
     }
 
-    private void OnCurrentHealthChanged(float newCurrentHealth)
+    protected virtual void OnCurrentHealthChanged(float newCurrentHealth)
     {
         Debug.Log($"Current Health Changed to: {newCurrentHealth}");
     }
 
-    public void Damage(float amount)
+    public virtual void Damage(float amount)
     {
         currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);
     }
-
-    public void Heal(float amount)
-    {
-        currentHealth.Value = Mathf.Min(currentHealth.Value + amount, maxHealth.Value);
-    }
-
+    
     /// <summary>
     /// アニメーションを変更する
     /// </summary>
@@ -88,6 +87,6 @@ public class Entity : MonoBehaviour
     /// <param name="value"></param>
     public virtual void SetAnimation(int animHash, bool value)
     {
-        //Animator.SetBool(animHash, value);
+        animator.SetBool(animHash,value);
     }
 }

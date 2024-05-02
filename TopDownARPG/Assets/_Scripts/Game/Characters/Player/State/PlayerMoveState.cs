@@ -4,10 +4,28 @@ using UnityEngine;
 
 namespace SK
 {
-    public class PlayerMoveState : PlayerBaseState
+    public class PlayerMoveState : PlayerMovementState
     {
-        public PlayerMoveState(string animBoolName, PlayerStateMachine playerStateMachine) : base(animBoolName, playerStateMachine)
+        public PlayerMoveState(string animBoolName, Player player,PlayerStateMachine stateMachine) : base(animBoolName, player,stateMachine)
         {
+        }
+
+        public override void LogicUpdate()
+        {
+            base.LogicUpdate();
+            if(!playerStateMachine.CheckState(this))
+                return;
+            
+            if (player.PlayerController.Axis == Vector2.zero)
+            {
+                playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+                return;
+            }
+        }
+        public override void PhysicsUpdate()
+        {
+            base.PhysicsUpdate();
+            player.PlayerController.Move();
         }
     }
 }

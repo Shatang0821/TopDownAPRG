@@ -2,12 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SK
+
+public class PlayerAttackState : PlayerBaseState
 {
-    public class PlayerAttackState : PlayerBaseState
+    public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
+        player, stateMachine)
     {
-        public PlayerAttackState(string animBoolName, PlayerStateMachine playerStateMachine) : base(animBoolName, playerStateMachine)
-        {
-        }
+    }
+
+    public override void AnimationEventCalled()
+    {
+        base.AnimationEventCalled();
+        playerStateMachine.ChangeState(PlayerStateEnum.Idle);
     }
 }
