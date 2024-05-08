@@ -14,6 +14,7 @@ public class UILoginCtrl : UICtrl
         AddButtonListener("Register", Register);
         AddButtonListener("SingIn", SingIn);
         AddButtonListener("RegistrationScreenPanel/Complete", Complete);
+        AddButtonListener("RegistrationScreenPanel/Back", Back);
         View["RegistrationScreenPanel"].SetActive(false);
     }
 
@@ -47,5 +48,14 @@ public class UILoginCtrl : UICtrl
     private void Complete()
     {
         Debug.Log("Complete");
+    }
+    
+    private void Back()
+    {
+        if (View["RegistrationScreenPanel"].activeSelf)
+        {
+            View["RegistrationScreenPanel"].SetActive(false);
+        }
+        Debug.Log("Back");
     }
 }
