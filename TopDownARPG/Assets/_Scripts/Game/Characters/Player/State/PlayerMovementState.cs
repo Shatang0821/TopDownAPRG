@@ -7,7 +7,7 @@
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (player.PlayerController.Attack)
+        if (player.Attack)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Attack);
             return;

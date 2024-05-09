@@ -19,7 +19,7 @@ public class PlayerIdleState : PlayerMovementState
         if (!playerStateMachine.CheckState(this))
             return;
 
-        if (player.PlayerController.Axis != Vector2.zero)
+        if (player.Axis != Vector2.zero)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Move);
             return;

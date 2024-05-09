@@ -1,7 +1,3 @@
-﻿namespace SK._Scripts.Game.Managers
+﻿public class MapManager
 {
-    public class MapManager
-    {
-        
-    }
 }

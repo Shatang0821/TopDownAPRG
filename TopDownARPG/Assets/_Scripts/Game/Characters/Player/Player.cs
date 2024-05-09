@@ -1,16 +1,31 @@
+using FrameWork.EventCenter;
 using FrameWork.Utils;
+using UnityEngine;
 
+public enum PlayerEvent
+{
+    Test,
+}
 public class Player : Entity
 {
     private PlayerStateMachine _stateMachine;
-
     #region Component
-    public PlayerController PlayerController;
+    private PlayerInput _playerInput;
+    private MoveComponent _moveComponent;
     #endregion
+    
+    //移動
+    public Vector2 Axis => _playerInput.Axis;
+    //ダッシュ
+    public bool Dash => _playerInput.Dash;
 
+    public bool Attack => _playerInput.Attack;
+
+    private float _speed;
     private void InitComponent()
     {
-        PlayerController = new PlayerController(this.transform);
+        _playerInput = new PlayerInput();
+        _moveComponent = new MoveComponent(transform);
     }
 
     protected override void Awake()
@@ -18,25 +33,48 @@ public class Player : Entity
         base.Awake();
         InitComponent();
         _stateMachine = new PlayerStateMachine(this);
-        _stateMachine.ChangeState(PlayerStateEnum.Idle);
     }
-
     protected override void OnEnable()
     {
         base.OnEnable();
-        PlayerController.OnEnable();
+        _stateMachine.ChangeState(PlayerStateEnum.Idle);
+        _playerInput.OnEnable();
+
+        EventCenter.AddListener(PlayerEvent.Test,Test);
+        EventCenter.AddListener<int>(PlayerEvent.Test,Test1);
+    }
+
+
+    
+    private void Start()
+    {
+        maxHealth.Value -= 10.0f;
+
+        EventCenter.TriggerEvent(PlayerEvent.Test);
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        PlayerController.OnDisable();
+        _playerInput.OnDisable();
+
+        EventCenter.RemoveListener(PlayerEvent.Test,Test);
+        EventCenter.RemoveListener<int>(PlayerEvent.Test,Test1);
+    }
+    
+    private void Test()
+    {
+        DebugLogger.Log("Test HPは" + maxHealth.Value);
+    }
+    
+    private void Test1(int i)
+    {
+        DebugLogger.Log("Test HPは" + i);
     }
 
     private void Update()
     {
         _stateMachine.LogicUpdate();
-        ;
     }
 
     private void FixedUpdate()
@@ -52,8 +90,11 @@ public class Player : Entity
         _stateMachine.AnimationEventCalled();
     }
     
-    private void Test(string str)
+    public void Move()
     {
-        DebugLogger.Log(str);
+        if (Axis != Vector2.zero)
+        {
+            _moveComponent.Move(Axis,speed.Value);
+        }
     }
 }

@@ -10,7 +10,7 @@
             _transform = transform;
         }
         
-        public void Move(Vector3 vector)
+        public void Move(Vector3 vector,float speed)
         {
             Vector3 movement = new Vector3(vector.x, 0,vector.y);
 
@@ -18,6 +18,6 @@
             {
                 _transform.rotation = Quaternion.Slerp(_transform.rotation, Quaternion.LookRotation(movement), 0.15f);
             }
-            _transform.Translate(movement * (5 * Time.deltaTime),Space.World);
+            _transform.Translate(movement * (speed * Time.deltaTime),Space.World);
         }
     }

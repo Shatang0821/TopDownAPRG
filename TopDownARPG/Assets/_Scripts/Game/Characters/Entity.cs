@@ -1,4 +1,5 @@
 ﻿
+using System;
 using FrameWork.EventCenter;
 using UnityEngine;
 
@@ -42,27 +43,23 @@ public class Entity : MonoBehaviour,IDamaged
          *  power = new Observer<int>(entityData.power, "abc");
          *  speed = new Observer<float>(entityData.speed, "cba");
          */
-        maxHealth = new Observer<float>(100, "OnMaxHpChange");
-        currentHealth = new Observer<float>(100, "OnCurrentHpChange");
+        maxHealth = new Observer<float>(100);
+        currentHealth = new Observer<float>(100);
         //テスト
-        power = new Observer<int>(10, "abc");
-        speed = new Observer<float>(10, "cba");
+        power = new Observer<int>(10);
+        speed = new Observer<float>(10);
     }
 
     protected virtual void OnEnable()
     {
-        // イベントリスナーを設定
-        EventCenter.AddListener<float>("OnMaxHpChange", OnMaxHealthChanged);
-        EventCenter.AddListener<float>("OnCurrentHpChange", OnCurrentHealthChanged);
+        maxHealth.Register(new Action<float>(OnMaxHealthChanged));
     }
 
     protected virtual void OnDisable()
     {
-        // イベントリスナーを設定
-        EventCenter.RemoveListener<float>("OnMaxHpChange", OnMaxHealthChanged);
-        EventCenter.RemoveListener<float>("OnCurrentHpChange", OnCurrentHealthChanged);
+        maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
     }
-
+    
     protected virtual void OnMaxHealthChanged(float newMaxHealth)
     {
         Debug.Log($"Maximum Health Changed to: {newMaxHealth}");
