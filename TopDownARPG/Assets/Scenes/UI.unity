@@ -431,7 +431,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681411848}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -644,6 +644,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 456006991}
     m_Modifications:
+    - target: {fileID: 44498530923303781, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 366876818840457895, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -746,11 +750,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6190560323034797741, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6479002118295209121, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347866374827472077, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347866374827472077, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7347866374827472077, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7892276987491902691, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_IsActive
@@ -874,5 +890,5 @@ SceneRoots:
   - {fileID: 2031027555}
   - {fileID: 1515011163}
   - {fileID: 456006991}
-  - {fileID: 1681411851}
   - {fileID: 1266017837}
+  - {fileID: 1681411851}

@@ -4,9 +4,16 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using FrameWork.UI;
 using Unity.VisualScripting;
+using FrameWork.Utils;
+using FrameWork.Audio;
 
 public class UIHomeCtrl : UICtrl
 {
+    public Slider BgmSlider;
+    public Slider GseSlider;
+    public Text BGMPercentage;
+    public Text GSEPercentage;
+
     public override void Awake()
     {
         base.Awake();
@@ -14,12 +21,28 @@ public class UIHomeCtrl : UICtrl
         AddButtonListener("Settings", Settings);
         AddButtonListener("Operation", Operation);
         AddButtonListener("Exit", Exit);
+
+        BgmSlider = View["SettingsPanel/BGMSlider"].GetComponent<Slider>();
+        GseSlider = View["SettingsPanel/GSESlider"].GetComponent<Slider>();
         View["SettingsPanel"].SetActive(false);
         View["OperationPanel"].SetActive(false);
+
+        BGMPercentage = View["SettingsPanel/BGMPercentage"].GetComponent<Text>();
+        GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>();
     }
 
     void Start()
     {
+    }
+    private void OnEnable()
+    {
+        BgmSlider.onValueChanged.AddListener(delegate { OnBgmVolumeChanged(); });
+        GseSlider.onValueChanged.AddListener(delegate { OnSfxVolumeChanged(); });
+    }
+
+    private void OnDisable()
+    {
+        
     }
 
     void Update()
@@ -60,5 +83,21 @@ public class UIHomeCtrl : UICtrl
     {
         Debug.Log("Exit");
         Application.Quit();
+    }
+
+    public void OnBgmVolumeChanged()
+    {
+        AudioManager.Instance.BgmValue = BgmSlider.value;
+        DebugLogger.Log("BgmValue" + AudioManager.Instance.BgmValue);
+
+        BGMPercentage.text = (BgmSlider.value * 100f).ToString("F0") + "%";
+    }
+
+    public void OnSfxVolumeChanged()
+    {
+        AudioManager.Instance.GseValue = GseSlider.value;
+        DebugLogger.Log("GseValue" + AudioManager.Instance.GseValue);
+
+        GSEPercentage.text = (GseSlider.value * 100f).ToString("F0") + "%";
     }
 }

@@ -11,6 +11,9 @@ namespace FrameWork.Audio
 
         private const float MAX_PITCH = 1.1f;
 
+        public float BgmValue;
+        public float GseValue;
+
         /// <summary>
         /// 音を出す
         /// </summary>
