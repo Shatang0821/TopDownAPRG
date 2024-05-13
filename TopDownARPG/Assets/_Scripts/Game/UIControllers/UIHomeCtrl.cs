@@ -14,6 +14,7 @@ public class UIHomeCtrl : UICtrl
     public Text BGMPercentage;
     public Text GSEPercentage;
 
+    private Button _gameStart;
     public override void Awake()
     {
         base.Awake();
@@ -29,15 +30,25 @@ public class UIHomeCtrl : UICtrl
 
         BGMPercentage = View["SettingsPanel/BGMPercentage"].GetComponent<Text>();
         GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>();
+
+        _gameStart = View["GameStart"].GetComponent<Button>();
+        
     }
 
     void Start()
     {
+        BgmSlider.SetValueWithoutNotify(1.0f);
+        GseSlider.SetValueWithoutNotify(1.0f);
+
+        BGMPercentage.text = "100%";
+        GSEPercentage.text = "100%";
     }
     private void OnEnable()
     {
         BgmSlider.onValueChanged.AddListener(delegate { OnBgmVolumeChanged(); });
         GseSlider.onValueChanged.AddListener(delegate { OnSfxVolumeChanged(); });
+
+        _gameStart.Select();
     }
 
     private void OnDisable()
@@ -101,3 +112,4 @@ public class UIHomeCtrl : UICtrl
         GSEPercentage.text = (GseSlider.value * 100f).ToString("F0") + "%";
     }
 }
+    
