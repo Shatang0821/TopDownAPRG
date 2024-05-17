@@ -32,7 +32,7 @@ public class UIHomeCtrl : UICtrl
         GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>();
 
         _gameStart = View["GameStart"].GetComponent<Button>();
-        
+
     }
 
     void Start()
@@ -53,7 +53,7 @@ public class UIHomeCtrl : UICtrl
 
     private void OnDisable()
     {
-        
+
     }
 
     void Update()
@@ -112,4 +112,3 @@ public class UIHomeCtrl : UICtrl
         GSEPercentage.text = (GseSlider.value * 100f).ToString("F0") + "%";
     }
 }
-    
