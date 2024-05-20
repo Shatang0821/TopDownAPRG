@@ -559,7 +559,7 @@ ModelImporter:
       takeName: GhostSamurai_APose_Attack01_1_ALL_Root
       internalID: 0
       firstFrame: 600
-      lastFrame: 860
+      lastFrame: 823
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -579,8 +579,15 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
-      - time: 0.86608595
+      - time: 0.37811342
         functionName: AnimationEventCalled
+        data: 
+        objectReferenceParameter: {instanceID: 0}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 1
+        functionName: AnimationEndCalled
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0

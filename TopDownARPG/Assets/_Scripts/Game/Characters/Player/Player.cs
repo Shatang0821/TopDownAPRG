@@ -13,7 +13,9 @@ public class Player : Entity
     private PlayerInput _playerInput;
     private MoveComponent _moveComponent;
     #endregion
-    
+    public Transform RayStartPoint;
+
+    public ComboConfig ComboConfig;
     //移動
     public Vector2 Axis => _playerInput.Axis;
     //ダッシュ
@@ -43,8 +45,6 @@ public class Player : Entity
         EventCenter.AddListener(PlayerEvent.Test,Test);
         EventCenter.AddListener<int>(PlayerEvent.Test,Test1);
     }
-
-
     
     private void Start()
     {
@@ -89,12 +89,32 @@ public class Player : Entity
     {
         _stateMachine.AnimationEventCalled();
     }
+
+    private void AnimationEndCalled()
+    {
+        _stateMachine.AnimationEndCalled();
+    }
     
     public void Move()
     {
         if (Axis != Vector2.zero)
         {
             _moveComponent.Move(Axis,speed.Value);
+        }
+    }
+    
+    /// <summary>
+    /// コンボのカウントを設定します。
+    /// </summary>
+    public void SetAttackComboCount()
+    {
+        animator.SetInteger("ComboCounter", ComboConfig.ComboCount);
+        ComboConfig.ComboCount++;
+    
+        if (ComboConfig.ComboCount > ComboConfig.AttackConfigs.Count) // コンボの最大数を超えたらリセットするなどの処理を追加します
+        {
+            // コンボのリセット処理など
+            ComboConfig.ComboCount = 0;
         }
     }
 }

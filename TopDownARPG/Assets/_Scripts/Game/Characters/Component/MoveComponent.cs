@@ -16,7 +16,7 @@
 
             if (movement != Vector3.zero)
             {
-                _transform.rotation = Quaternion.Slerp(_transform.rotation, Quaternion.LookRotation(movement), 0.15f);
+                _transform.rotation = Quaternion.Slerp(_transform.rotation, Quaternion.LookRotation(movement), 0.3f);
             }
             _transform.Translate(movement * (speed * Time.deltaTime),Space.World);
         }

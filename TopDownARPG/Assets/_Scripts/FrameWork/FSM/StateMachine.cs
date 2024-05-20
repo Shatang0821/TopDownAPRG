@@ -23,11 +23,6 @@ namespace FrameWork.FSM
         {
             if (_stateTable.TryGetValue(newState, out IState state))
             {
-                if (CheckState(state))
-                {
-                    DebugLogger.Log("同じ状態に遷移しようとする");
-                    return;
-                }
                 currentState?.Exit();
                 CurrentState = newState;
                 currentState = state;
@@ -50,6 +45,11 @@ namespace FrameWork.FSM
         public void AnimationEventCalled()
         {
             currentState?.AnimationEventCalled();
+        }
+
+        public void AnimationEndCalled()
+        {
+            currentState?.AnimationEndCalled();
         }
 
         protected void RegisterState(TStateEnum stateEnum, IState state)

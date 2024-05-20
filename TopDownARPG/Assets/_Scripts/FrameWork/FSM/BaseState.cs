@@ -16,5 +16,6 @@ namespace FrameWork.FSM
         public abstract void LogicUpdate();
         public abstract void PhysicsUpdate();
         public abstract void AnimationEventCalled();
+        public abstract void AnimationEndCalled();
     }
 }

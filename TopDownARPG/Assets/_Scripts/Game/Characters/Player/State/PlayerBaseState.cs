@@ -45,4 +45,8 @@ public class PlayerBaseState : BaseState
     public override void AnimationEventCalled()
     {
     }
+
+    public override void AnimationEndCalled()
+    {
+    }
 }

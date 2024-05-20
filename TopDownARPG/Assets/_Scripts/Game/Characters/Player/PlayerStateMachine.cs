@@ -17,4 +17,6 @@ public class PlayerStateMachine : StateMachine<PlayerStateEnum>
         RegisterState(PlayerStateEnum.Move,new PlayerMoveState("Move",player,this));
         RegisterState(PlayerStateEnum.Attack,new PlayerAttackState("Attack",player,this));
     }
+    
+    
 }
