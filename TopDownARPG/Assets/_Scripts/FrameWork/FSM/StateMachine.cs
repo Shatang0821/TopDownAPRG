@@ -23,10 +23,6 @@ namespace FrameWork.FSM
         {
             if (_stateTable.TryGetValue(newState, out IState state))
             {
-                if (currentState == null)
-                {
-                    Debug.Log("currentState is null");
-                }
                 currentState?.Exit();
                 CurrentState = newState;
                 currentState = state;
@@ -46,9 +42,26 @@ namespace FrameWork.FSM
             currentState?.PhysicsUpdate();
         }
 
+        public void AnimationEventCalled()
+        {
+            currentState?.AnimationEventCalled();
+        }
+
+        public void AnimationEndCalled()
+        {
+            currentState?.AnimationEndCalled();
+        }
+
         protected void RegisterState(TStateEnum stateEnum, IState state)
         {
             _stateTable[stateEnum] = state;
         }
+    
+        /// <summary>
+        /// 現在ステータスチェック
+        /// </summary>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public bool CheckState(IState state) => state == currentState;
     }
 }

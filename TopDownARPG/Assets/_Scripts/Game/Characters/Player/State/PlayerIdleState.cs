@@ -1,11 +1,33 @@
-﻿namespace SK
+﻿using UnityEngine;
+
+
+public class PlayerIdleState : PlayerMovementState
 {
-    public class PlayerIdleState : PlayerBaseState
+    public PlayerIdleState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
+        player, stateMachine)
     {
-        public PlayerIdleState(string animBoolName, PlayerStateMachine playerStateMachine) : base(animBoolName, playerStateMachine)
+    }
+
+    public override void Enter()
+    {
+        base.Enter();
+    }
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+        if (!playerStateMachine.CheckState(this))
+            return;
+
+        if (player.Axis != Vector2.zero)
         {
+            playerStateMachine.ChangeState(PlayerStateEnum.Move);
+            return;
         }
-        
-        
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
     }
 }
