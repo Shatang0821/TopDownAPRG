@@ -404,7 +404,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Run_Loop
+  m_Name: Move_Loop
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
@@ -419,7 +419,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400002, guid: f38c419fcff60d34094b7891bf7dc2f1, type: 3}
+  m_Motion: {fileID: 7400002, guid: fe640feeeb7361b44b062257c035ca4a, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
