@@ -7,7 +7,7 @@ namespace FrameWork.Audio
     {
         [SerializeField] AudioSource BgmPlayer;
         [SerializeField] AudioSource GsePlayer;
-        
+
 
         private const float MIN_PITCH = 0.9f;
 
@@ -50,7 +50,7 @@ namespace FrameWork.Audio
         public void PlaySfx(AudioData audioData)
         {
             BgmPlayer.PlayOneShot(audioData.audioClip, audioData.volume);
-        }   
+        }
 
         /// <summary>
         /// Pitchをランダムに変更して音を出す
