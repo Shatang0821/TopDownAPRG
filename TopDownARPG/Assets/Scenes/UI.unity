@@ -1196,26 +1196,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 456006991}
     m_Modifications:
-    - target: {fileID: 333019259060008396, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 333019259060008396, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 333019259060008396, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 366876818840457895, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 563730112954392773, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4350165164537862201, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1296,24 +1276,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4605636358025091414, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5857904383802550031, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6190560323034797741, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_Name
       value: UIHome
       objectReference: {fileID: 0}
     - target: {fileID: 6190560323034797741, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
       propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6479002118295209121, guid: cc9ca803aab6d7f46adfd54a536b3f06, type: 3}
-      propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
