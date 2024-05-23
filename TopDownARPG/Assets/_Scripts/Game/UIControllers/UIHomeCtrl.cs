@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using FrameWork.UI;
 using FrameWork.Utils;
 using FrameWork.Audio;
+using UnityEngine.EventSystems;
 
 public class UIHomeCtrl : UICtrl
 {
@@ -32,6 +33,13 @@ public class UIHomeCtrl : UICtrl
         GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>();
 
         _gameStart = View["GameStart"].GetComponent<Button>();
+
+        // Add EventTrigger for GseSlider
+        EventTrigger trigger = GseSlider.gameObject.AddComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerUp;
+        entry.callback.AddListener((data) => { OnSfxSliderPointerUp(); });
+        trigger.triggers.Add(entry);
     }
 
     void Start()
@@ -86,7 +94,6 @@ public class UIHomeCtrl : UICtrl
     private void GameStart()
     {
         Debug.Log("GameStart");
-
     }
 
     private void Settings()
@@ -123,5 +130,10 @@ public class UIHomeCtrl : UICtrl
         DebugLogger.Log("GseValue: " + AudioManager.Instance.GseValue);
 
         GSEPercentage.text = (GseSlider.value * 100f).ToString("F0") + "%";
+    }
+
+    private void OnSfxSliderPointerUp()
+    {
+        AudioManager.Instance.PlayGseChangeSound();
     }
 }
