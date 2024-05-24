@@ -41,10 +41,10 @@ public class UIHomeCtrl : UICtrl
         entry.callback.AddListener((data) => { OnSfxSliderPointerUp(); });
         trigger.triggers.Add(entry);
 
-        AddButtonHoverAnimation("GameStart");
-        AddButtonHoverAnimation("Settings");
-        AddButtonHoverAnimation("Operation");
-        AddButtonHoverAnimation("Exit");
+        AddButtonSelectedAnimation("GameStart");
+        AddButtonSelectedAnimation("Settings");
+        AddButtonSelectedAnimation("Operation");
+        AddButtonSelectedAnimation("Exit");
     }
 
     void Start()
@@ -142,29 +142,32 @@ public class UIHomeCtrl : UICtrl
         AudioManager.Instance.PlayGseChangeSound();
     }
 
-    // 添加按钮悬停事件监听
-    private void AddButtonHoverAnimation(string buttonName)
+    private void AddButtonSelectedAnimation(string buttonName)
     {
         Button button = View[buttonName].GetComponent<Button>();
         Animator animator = button.GetComponent<Animator>();
 
-        // 添加鼠标进入事件监听
+        if (animator.runtimeAnimatorController == null)
+        {
+            Debug.LogWarning($"Animator on {buttonName} does not have an AnimatorController assigned.");
+            return;
+        }
+
         EventTrigger triggerEnter = button.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entryEnter = new EventTrigger.Entry();
         entryEnter.eventID = EventTriggerType.PointerEnter;
         entryEnter.callback.AddListener((data) => {
-            // 检查Animator组件是否为空
-            if (animator != null)
+
+            if (animator != null && animator.runtimeAnimatorController != null)
             {
                 animator.SetTrigger("Selected");
 
-                // 将其他按钮设置为正常状态
-                foreach (var btn in View.Values)
+                foreach (var btnTransform in View.Values)
                 {
-                    if (btn != button.gameObject)
+                    if (btnTransform != button.transform)
                     {
-                        var otherAnimator = btn.GetComponent<Animator>();
-                        if (otherAnimator != null)
+                        var otherAnimator = btnTransform.GetComponent<Animator>();
+                        if (otherAnimator != null && otherAnimator.runtimeAnimatorController != null)
                         {
                             otherAnimator.SetTrigger("Normal");
                         }
@@ -174,19 +177,17 @@ public class UIHomeCtrl : UICtrl
         });
         triggerEnter.triggers.Add(entryEnter);
 
-        // 添加鼠标离开事件监听
         EventTrigger triggerExit = button.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entryExit = new EventTrigger.Entry();
         entryExit.eventID = EventTriggerType.PointerExit;
         entryExit.callback.AddListener((data) => {
-            // 检查Animator组件是否为空
-            if (animator != null)
+
+            if (animator != null && animator.runtimeAnimatorController != null)
             {
                 animator.SetTrigger("Normal");
             }
         });
         triggerExit.triggers.Add(entryExit);
     }
-
 
 }
