@@ -5,14 +5,10 @@ using UnityEngine;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    public float radius = 5.0f; // êÓå^ÇÃîºåa
-    public float angle = 45.0f; // êÓå^ÇÃäpìx
-    public int rayCount = 10;   // RayÇÃêî
-    public float rollAngle = 30.0f; // êÓå^ÇÃÉçÅ[Éãäpìx
-
     private bool _animetionEnd;
     private bool _canOtherState;
-    
+    private ComboConfig _comboConfig;
+    private AttackConfig _attackConfig;
     public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
@@ -22,15 +18,27 @@ public class PlayerAttackState : PlayerBaseState
     {
         player.SetAttackComboCount();
         base.Enter();
-        StableRolledFanRayCast(180, 10,45);
+        
+        _comboConfig = player.ComboConfig;
+        _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
+        StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        var comboConfig = player.ComboConfig;
+        var attackConfig = comboConfig.AttackConfigs[comboConfig.ComboCount-1];
+        StableRolledFanRayCast(attackConfig.Angle, attackConfig.RayCount,attackConfig.RollAngle,attackConfig.Radius);
+        if (player.Damaged)
+        {
+            player.ComboConfig.ComboCount = 0;
+            playerStateMachine.ChangeState(PlayerStateEnum.Damaged);
+            return;
+        }
         if (_canOtherState)
         {
-            if (player.Attack)
+            if (player.Attack && comboConfig.ComboCount < comboConfig.AttackConfigs.Count)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Attack);
                 return;
@@ -71,6 +79,15 @@ public class PlayerAttackState : PlayerBaseState
         _animetionEnd = true;
     }
 
+    public override void PhysicsUpdate()
+    {
+        base.PhysicsUpdate();
+        if (stateTimer > _attackConfig.StartMoveTime && stateTimer < _attackConfig.StopMoveTime)
+        {
+            MovePlayer();
+        }
+    }
+
     public override void Exit()
     {
         base.Exit();
@@ -78,7 +95,7 @@ public class PlayerAttackState : PlayerBaseState
         _animetionEnd = false;
     }
 
-    private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle)
+    private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
     {
         Vector3 forward = player.RayStartPoint.forward;
         Vector3 origin = player.RayStartPoint.position;
@@ -116,6 +133,12 @@ public class PlayerAttackState : PlayerBaseState
         }
     }
 
-
+    private void MovePlayer()
+    {
+        player.Rigidbody.AddForce(player.transform.forward * _attackConfig.Speed,
+            ForceMode.VelocityChange);
+    }
+    
+    
 
 }

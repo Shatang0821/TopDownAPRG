@@ -7,6 +7,12 @@
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if (player.Damaged)
+        {
+            playerStateMachine.ChangeState(PlayerStateEnum.Damaged);
+            return;
+        }
+        
         if (player.Attack)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Attack);

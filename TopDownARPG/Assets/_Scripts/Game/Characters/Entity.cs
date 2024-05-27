@@ -25,10 +25,13 @@ public class Entity : MonoBehaviour,IDamaged
     protected Observer<float> speed;
 
     protected Animator animator;
+
+    public Rigidbody Rigidbody;
     protected virtual void Awake()
     {
         InitValue();
         animator = GetComponentInChildren<Animator>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     /// <summary>
@@ -47,7 +50,7 @@ public class Entity : MonoBehaviour,IDamaged
         currentHealth = new Observer<float>(100);
         //テスト
         power = new Observer<int>(10);
-        speed = new Observer<float>(10);
+        speed = new Observer<float>(5);
     }
 
     protected virtual void OnEnable()

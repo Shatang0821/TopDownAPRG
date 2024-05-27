@@ -18,7 +18,7 @@ public class PlayerIdleState : PlayerMovementState
         base.LogicUpdate();
         if (!playerStateMachine.CheckState(this))
             return;
-
+       
         if (player.Axis != Vector2.zero)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Move);

@@ -1,12 +1,13 @@
 using FrameWork.FSM;
 using FrameWork.Utils;
+using UnityEngine;
 
 
 public class PlayerBaseState : BaseState
 {
     protected PlayerStateMachine playerStateMachine;
     protected Player player;
-
+    protected float stateTimer;
     public PlayerBaseState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName)
     {
         this.player = player;
@@ -18,6 +19,7 @@ public class PlayerBaseState : BaseState
     /// </summary>
     public override void Enter()
     {
+        stateTimer = 0;
         DebugLogger.Log(this.GetType().ToString() + "Enter");
         player.SetAnimation(StateBoolHash, true);
     }
@@ -36,6 +38,8 @@ public class PlayerBaseState : BaseState
 
     public override void LogicUpdate()
     {
+        stateTimer += Time.deltaTime;
+        
     }
 
     public override void PhysicsUpdate()

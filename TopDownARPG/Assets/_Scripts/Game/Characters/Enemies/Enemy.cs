@@ -12,7 +12,7 @@ public class Enemy : MonoBehaviour
     public void Init(GameObject enemy)
     {
         this._enemy = enemy;
-        _moveComponent = new MoveComponent(_enemy.transform);
+       // _moveComponent = new MoveComponent(,_enemy.transform);
     }
     
     public void AllowPlayer(GameObject play)

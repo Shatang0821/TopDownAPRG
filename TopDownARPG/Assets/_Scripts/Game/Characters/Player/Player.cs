@@ -1,6 +1,7 @@
 using FrameWork.EventCenter;
 using FrameWork.Utils;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum PlayerEvent
 {
@@ -23,11 +24,13 @@ public class Player : Entity
 
     public bool Attack => _playerInput.Attack;
 
+    public bool Damaged = false;
+
     private float _speed;
     private void InitComponent()
     {
         _playerInput = new PlayerInput();
-        _moveComponent = new MoveComponent(transform);
+        _moveComponent = new MoveComponent(Rigidbody,transform);
     }
 
     protected override void Awake()
@@ -41,9 +44,6 @@ public class Player : Entity
         base.OnEnable();
         _stateMachine.ChangeState(PlayerStateEnum.Idle);
         _playerInput.OnEnable();
-
-        EventCenter.AddListener(PlayerEvent.Test,Test);
-        EventCenter.AddListener<int>(PlayerEvent.Test,Test1);
     }
     
     private void Start()
@@ -57,29 +57,27 @@ public class Player : Entity
     {
         base.OnDisable();
         _playerInput.OnDisable();
-
-        EventCenter.RemoveListener(PlayerEvent.Test,Test);
-        EventCenter.RemoveListener<int>(PlayerEvent.Test,Test1);
-    }
-    
-    private void Test()
-    {
-        DebugLogger.Log("Test HPは" + maxHealth.Value);
-    }
-    
-    private void Test1(int i)
-    {
-        DebugLogger.Log("Test HPは" + i);
+        
     }
 
     private void Update()
     {
         _stateMachine.LogicUpdate();
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            Damage(5);
+        }
     }
 
     private void FixedUpdate()
     {
         _stateMachine.PhysicsUpdate();
+    }
+    
+    public override void Damage(float amount)
+    {
+        base.Damage(amount);
+        Damaged = true;
     }
     
     /// <summary>
@@ -100,6 +98,18 @@ public class Player : Entity
         if (Axis != Vector2.zero)
         {
             _moveComponent.Move(Axis,speed.Value);
+        }
+    }
+    
+    /// <summary>
+    /// スキルによる移動
+    /// </summary>
+    /// <param name="movementDirection"></param>
+    /// <param name="skillSpeed"></param>
+    public void Move(Vector3 movementDirection,float skillSpeed)
+    {
+        {
+            _moveComponent.Move(movementDirection,skillSpeed);
         }
     }
     

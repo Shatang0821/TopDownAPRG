@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewAttackConfig",menuName = "ComboSystem/CreateNewAttackConfig")]
 public class AttackConfig : ScriptableObject
@@ -10,5 +11,8 @@ public class AttackConfig : ScriptableObject
     public int RayCount = 10;   // Ray‚Ì”
     public float RollAngle = 30.0f; // îŒ^‚Ìƒ[ƒ‹Šp“x
 
+    public float StartMoveTime = 0.0f;
+    public float StopMoveTime = 0.0f;
+    public float Speed = 2.0f;
     //public float AnimationTime;
 }
