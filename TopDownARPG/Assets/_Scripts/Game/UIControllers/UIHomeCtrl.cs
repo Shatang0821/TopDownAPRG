@@ -14,7 +14,10 @@ public class UIHomeCtrl : UICtrl
     public Text GSEPercentage;
 
     private Button _gameStart;
+
     private bool panelDelayInProgress = false;
+    private int currentButtonIndex = 0;
+    private Button[] buttons;
 
     public override void Awake()
     {
@@ -36,20 +39,28 @@ public class UIHomeCtrl : UICtrl
 
         _gameStart = View["GameStart"].GetComponent<Button>();
 
+        // Get all buttons
+        buttons = new Button[]
+        {
+            View["GameStart"].GetComponent<Button>(),
+            View["Settings"].GetComponent<Button>(),
+            View["Operation"].GetComponent<Button>(),
+            View["Exit"].GetComponent<Button>(),
+            View["SettingsPanel/Back"].GetComponent<Button>(),
+            View["OperationPanel/Back"].GetComponent<Button>()
+        };
+
+        foreach (var button in buttons)
+        {
+            AddButtonHoverEffect(button);
+        }
+
         // Add EventTrigger for GseSlider
         EventTrigger trigger = GseSlider.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
         entry.eventID = EventTriggerType.PointerUp;
         entry.callback.AddListener((data) => { OnSfxSliderPointerUp(); });
         trigger.triggers.Add(entry);
-
-        AddButtonHoverEffect("GameStart");
-        AddButtonHoverEffect("Settings");
-        AddButtonHoverEffect("Operation");
-        AddButtonHoverEffect("Exit");
-        AddButtonHoverEffect("SettingsPanel/Back");
-        AddButtonHoverEffect("OperationPanel/Back");
-
     }
 
     void Start()
@@ -59,6 +70,9 @@ public class UIHomeCtrl : UICtrl
 
         BGMPercentage.text = "100%";
         GSEPercentage.text = "100%";
+
+        // Select the first button
+        SelectButton(currentButtonIndex);
     }
 
     private void OnEnable()
@@ -87,6 +101,84 @@ public class UIHomeCtrl : UICtrl
             {
                 View["OperationPanel"].SetActive(false);
             }
+        }
+
+        HandleKeyboardNavigation();
+    }
+
+    private void HandleKeyboardNavigation()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        {
+            // Find the index of the next selectable button excluding Back button
+            currentButtonIndex = GetNextSelectableButtonIndex(1);
+            SelectButton(currentButtonIndex);
+        }
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        {
+            // Find the index of the previous selectable button excluding Back button
+            currentButtonIndex = GetNextSelectableButtonIndex(-1);
+            SelectButton(currentButtonIndex);
+        }
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Button currentButton = buttons[currentButtonIndex];
+            StartCoroutine(ScaleButtonOnPress(currentButton));
+            currentButton.onClick.Invoke();
+        }
+    }
+
+    private int GetNextSelectableButtonIndex(int direction)
+    {
+        int nextIndex = currentButtonIndex;
+
+        do
+        {
+            // Move to the next index
+            nextIndex = (nextIndex + direction + buttons.Length) % buttons.Length;
+
+            // Check if the button at the new index is the Back button
+            if (!buttons[nextIndex].gameObject.name.Contains("Back"))
+            {
+                // If not, return the new index
+                return nextIndex;
+            }
+        } while (nextIndex != currentButtonIndex); // Continue until the original index is reached
+
+        // If all buttons are Back buttons, return the original index
+        return currentButtonIndex;
+    }
+
+
+    private IEnumerator ScaleButtonOnPress(Button button)
+    {
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerDown(null);
+            yield return new WaitForSeconds(0.2f);  // Duration of the scale animation
+            hoverEffect.OnPointerUp(null);
+        }
+    }
+
+    private void SelectButton(int index)
+    {
+        if (buttons != null && buttons.Length > 0 && index >= 0 && index < buttons.Length)
+        {
+            // Deselect all buttons to reset their scale
+            for (int i = 0; i < buttons.Length; i++)
+            {
+                if (i != index)
+                {
+                    ExecuteEvents.Execute(buttons[i].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler);
+                }
+            }
+
+            // Select the current button
+            buttons[index].Select();
+
+            // Trigger the pointer enter event to simulate hover effect
+            ExecuteEvents.Execute(buttons[index].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerEnterHandler);
         }
     }
 
@@ -160,14 +252,13 @@ public class UIHomeCtrl : UICtrl
         AudioManager.Instance.PlayGseChangeSound();
     }
 
-    private void AddButtonHoverEffect(string buttonName)
+    private void AddButtonHoverEffect(Button button)
     {
-        Button button = View[buttonName].GetComponent<Button>();
+
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
     }
 }
-
 public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
     private Button button;
@@ -183,54 +274,67 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
     public void SetOriginalScale(Vector3 scale)
     {
         originalScale = scale;
+        button = GetComponent<Button>();  // Ensure button is initialized
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
         if (button.interactable)
         {
-            if (scaleCoroutine != null)
-            {
-                StopCoroutine(scaleCoroutine);
-            }
-            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 1.8f, 0.2f));
+            ScaleButton(originalScale * 1.8f);
         }
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
         if (button.interactable)
         {
-            if (scaleCoroutine != null)
-            {
-                StopCoroutine(scaleCoroutine);
-            }
-            scaleCoroutine = StartCoroutine(ScaleTo(originalScale, 0.2f));
+            ScaleButton(originalScale);
         }
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
         if (button.interactable)
         {
-            if (scaleCoroutine != null)
-            {
-                StopCoroutine(scaleCoroutine);
-            }
-            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 0.5f, 0.2f));
+            ScaleButton(originalScale * 0.5f);
         }
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
         if (button.interactable)
         {
-            if (scaleCoroutine != null)
-            {
-                StopCoroutine(scaleCoroutine);
-            }
-            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 1.8f, 0.2f));
+            ScaleButton(originalScale * 1.8f);
         }
+    }
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
+        if (button.interactable)
+        {
+            ScaleButton(originalScale * 1.8f);
+        }
+    }
+
+    public void OnDeselect(BaseEventData eventData)
+    {
+        if (button == null) button = GetComponent<Button>();  // Ensure button is not null
+        ScaleButton(originalScale);
+    }
+
+    private void ScaleButton(Vector3 targetScale)
+    {
+        if (scaleCoroutine != null)
+        {
+            StopCoroutine(scaleCoroutine);
+        }
+        scaleCoroutine = StartCoroutine(ScaleTo(targetScale, 0.2f));
     }
 
     private IEnumerator ScaleTo(Vector3 targetScale, float duration)
