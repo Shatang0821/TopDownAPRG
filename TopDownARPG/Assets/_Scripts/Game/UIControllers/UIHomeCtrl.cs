@@ -23,6 +23,8 @@ public class UIHomeCtrl : UICtrl
         AddButtonListener("Settings", () => StartCoroutine(PanelDelayCoroutine(Settings)));
         AddButtonListener("Operation", () => StartCoroutine(PanelDelayCoroutine(Operation)));
         AddButtonListener("Exit", () => StartCoroutine(PanelDelayCoroutine(Exit)));
+        AddButtonListener("SettingsPanel/Back", () => StartCoroutine(PanelDelayCoroutine(Back)));
+        AddButtonListener("OperationPanel/Back", () => StartCoroutine(PanelDelayCoroutine(Back)));
 
         BgmSlider = View["SettingsPanel/BGMSlider"].GetComponent<Slider>();
         GseSlider = View["SettingsPanel/GSESlider"].GetComponent<Slider>();
@@ -41,10 +43,13 @@ public class UIHomeCtrl : UICtrl
         entry.callback.AddListener((data) => { OnSfxSliderPointerUp(); });
         trigger.triggers.Add(entry);
 
-        AddButtonSelectedAnimation("GameStart");
-        AddButtonSelectedAnimation("Settings");
-        AddButtonSelectedAnimation("Operation");
-        AddButtonSelectedAnimation("Exit");
+        AddButtonHoverEffect("GameStart");
+        AddButtonHoverEffect("Settings");
+        AddButtonHoverEffect("Operation");
+        AddButtonHoverEffect("Exit");
+        AddButtonHoverEffect("SettingsPanel/Back");
+        AddButtonHoverEffect("OperationPanel/Back");
+
     }
 
     void Start()
@@ -121,6 +126,19 @@ public class UIHomeCtrl : UICtrl
         Application.Quit();
     }
 
+    private void Back()
+    {
+        if (View["SettingsPanel"].activeSelf)
+        {
+            View["SettingsPanel"].SetActive(false);
+        }
+        if (View["OperationPanel"].activeSelf)
+        {
+            View["OperationPanel"].SetActive(false);
+        }
+        Debug.Log("Back");
+    }
+
     public void OnBgmVolumeChanged()
     {
         AudioManager.Instance.BgmValue = BgmSlider.value;
@@ -142,52 +160,91 @@ public class UIHomeCtrl : UICtrl
         AudioManager.Instance.PlayGseChangeSound();
     }
 
-    private void AddButtonSelectedAnimation(string buttonName)
+    private void AddButtonHoverEffect(string buttonName)
     {
         Button button = View[buttonName].GetComponent<Button>();
-        Animator animator = button.GetComponent<Animator>();
+        ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
+        hoverEffect.SetOriginalScale(button.transform.localScale);
+    }
+}
 
-        if (animator.runtimeAnimatorController == null)
-        {
-            Debug.LogWarning($"Animator on {buttonName} does not have an AnimatorController assigned.");
-            return;
-        }
+public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+{
+    private Button button;
+    private Vector3 originalScale;
+    private Coroutine scaleCoroutine;
 
-        EventTrigger triggerEnter = button.gameObject.AddComponent<EventTrigger>();
-        EventTrigger.Entry entryEnter = new EventTrigger.Entry();
-        entryEnter.eventID = EventTriggerType.PointerEnter;
-        entryEnter.callback.AddListener((data) => {
-
-            if (animator != null && animator.runtimeAnimatorController != null)
-            {
-                animator.SetTrigger("Selected");
-
-                foreach (var btnTransform in View.Values)
-                {
-                    if (btnTransform != button.transform)
-                    {
-                        var otherAnimator = btnTransform.GetComponent<Animator>();
-                        if (otherAnimator != null && otherAnimator.runtimeAnimatorController != null)
-                        {
-                            otherAnimator.SetTrigger("Normal");
-                        }
-                    }
-                }
-            }
-        });
-        triggerEnter.triggers.Add(entryEnter);
-
-        EventTrigger triggerExit = button.gameObject.AddComponent<EventTrigger>();
-        EventTrigger.Entry entryExit = new EventTrigger.Entry();
-        entryExit.eventID = EventTriggerType.PointerExit;
-        entryExit.callback.AddListener((data) => {
-
-            if (animator != null && animator.runtimeAnimatorController != null)
-            {
-                animator.SetTrigger("Normal");
-            }
-        });
-        triggerExit.triggers.Add(entryExit);
+    void Start()
+    {
+        button = GetComponent<Button>();
+        originalScale = transform.localScale;
     }
 
+    public void SetOriginalScale(Vector3 scale)
+    {
+        originalScale = scale;
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (button.interactable)
+        {
+            if (scaleCoroutine != null)
+            {
+                StopCoroutine(scaleCoroutine);
+            }
+            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 1.8f, 0.2f));
+        }
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (button.interactable)
+        {
+            if (scaleCoroutine != null)
+            {
+                StopCoroutine(scaleCoroutine);
+            }
+            scaleCoroutine = StartCoroutine(ScaleTo(originalScale, 0.2f));
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        if (button.interactable)
+        {
+            if (scaleCoroutine != null)
+            {
+                StopCoroutine(scaleCoroutine);
+            }
+            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 0.5f, 0.2f));
+        }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (button.interactable)
+        {
+            if (scaleCoroutine != null)
+            {
+                StopCoroutine(scaleCoroutine);
+            }
+            scaleCoroutine = StartCoroutine(ScaleTo(originalScale * 1.8f, 0.2f));
+        }
+    }
+
+    private IEnumerator ScaleTo(Vector3 targetScale, float duration)
+    {
+        Vector3 startScale = transform.localScale;
+        float time = 0f;
+
+        while (time < duration)
+        {
+            transform.localScale = Vector3.Lerp(startScale, targetScale, time / duration);
+            time += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.localScale = targetScale;
+    }
 }
