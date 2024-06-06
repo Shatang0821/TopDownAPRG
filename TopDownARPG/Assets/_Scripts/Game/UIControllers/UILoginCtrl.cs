@@ -1,10 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections;
-using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.UI;
 using FrameWork.UI;
-using Unity.VisualScripting;
-using System;
 
 public class UILoginCtrl : UICtrl
 {
@@ -16,6 +13,11 @@ public class UILoginCtrl : UICtrl
         AddButtonListener("RegistrationScreenPanel/Complete", Complete);
         AddButtonListener("RegistrationScreenPanel/Back", Back);
         View["RegistrationScreenPanel"].SetActive(false);
+
+        AddButtonHoverEffect("Register");
+        AddButtonHoverEffect("SingIn");
+        AddButtonHoverEffect("RegistrationScreenPanel/Complete");
+        AddButtonHoverEffect("RegistrationScreenPanel/Back");
     }
 
     void Start()
@@ -43,13 +45,21 @@ public class UILoginCtrl : UICtrl
     private void SingIn()
     {
         Debug.Log("SingIn");
+        UIManager.Instance.ShowUI("UIHome");
+        UIManager.Instance.ChangeUIPrefab("UIHome");
+
+        // 手动隐藏UILogin
+        if (this.gameObject != null)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     private void Complete()
     {
         Debug.Log("Complete");
     }
-    
+
     private void Back()
     {
         if (View["RegistrationScreenPanel"].activeSelf)
@@ -57,5 +67,12 @@ public class UILoginCtrl : UICtrl
             View["RegistrationScreenPanel"].SetActive(false);
         }
         Debug.Log("Back");
+    }
+
+    private void AddButtonHoverEffect(string buttonName)
+    {
+        Button button = View[buttonName].GetComponent<Button>();
+        ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
+        hoverEffect.SetOriginalScale(button.transform.localScale);
     }
 }
