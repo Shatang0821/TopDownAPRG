@@ -48,7 +48,6 @@ public class UILoginCtrl : UICtrl
         UIManager.Instance.ShowUI("UIHome");
         UIManager.Instance.ChangeUIPrefab("UIHome");
 
-        // 手动隐藏UILogin
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);

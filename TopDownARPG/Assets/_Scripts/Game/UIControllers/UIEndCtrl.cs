@@ -30,7 +30,6 @@ public class UIEndCtrl : UICtrl
         UIManager.Instance.ShowUI("UIHome");
         UIManager.Instance.ChangeUIPrefab("UIHome");
 
-        // 手动隐藏UILogin
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);
@@ -49,7 +48,6 @@ public class UIEndCtrl : UICtrl
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 
-        // 手动隐藏UILogin
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);

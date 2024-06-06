@@ -175,7 +175,6 @@ public class UIHomeCtrl : UICtrl
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 
-        // 手动隐藏UILogin
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);
@@ -238,7 +237,6 @@ public class UIHomeCtrl : UICtrl
 
     private void AddButtonHoverEffect(Button button)
     {
-
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
     }
