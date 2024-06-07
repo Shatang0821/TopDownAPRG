@@ -10,7 +10,7 @@ public enum PlayerStateEnum
     Damaged,
 }
 
-public class PlayerStateMachine : StateMachine<PlayerStateEnum>
+public class PlayerStateMachine : StateMachine
 {
     public PlayerStateMachine(Player player)
     {

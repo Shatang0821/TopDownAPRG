@@ -20,7 +20,7 @@ public class PlayerBaseState : BaseState
     public override void Enter()
     {
         stateTimer = 0;
-        DebugLogger.Log(this.GetType().ToString() + "Enter");
+        //DebugLogger.Log(this.GetType().ToString() + "Enter");
         player.SetAnimation(StateBoolHash, true);
     }
 
@@ -31,10 +31,7 @@ public class PlayerBaseState : BaseState
     {
         player.SetAnimation(StateBoolHash, false);
     }
-
-    public override void HandleInput()
-    {
-    }
+    
 
     public override void LogicUpdate()
     {

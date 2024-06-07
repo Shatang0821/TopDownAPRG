@@ -40,24 +40,6 @@ package "Managers" {
     }
 }
 
-package "Game Entities" {
-    class Entity {
-        #int Health
-        #float Speed
-        -MoveComponent moveComponent
-        -StateMachine stateMachine
-    }
-
-    class Player {
-        -PlayerStateMachine stateMachine
-        +void UpdateState()
-    }
-
-    class Enemy {
-        -EnemyStateMachine stateMachine
-        +void UpdateState()
-    }
-}
 
 GameManager --> "1" PlayerManager
 GameManager --> "1" EnemyManager
@@ -88,7 +70,11 @@ package "Stage Management" {
 package "Game States and Buff System" {
     ' ステートマシンとステート
     class StateMachine {
-        +void ChangeState(IState newState)
+        #void RegisterState(TStateEnum stateEnum, IState state)
+        +void ChangeState(TStateEnum newState)
+        +void LogicUpdate()
+        +void PhysicsUpdate()
+        +bool CheckState(IState state)
     }
 
     interface IState {

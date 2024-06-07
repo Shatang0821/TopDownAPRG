@@ -124,7 +124,7 @@ public class PlayerAttackState : PlayerBaseState
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray, out RaycastHit hit, radius))
             {
-                Debug.Log("Hit: " + hit.collider.name);
+                //Debug.Log("Hit: " + hit.collider.name);
                 // Õ“Ëˆ—‚ğ’Ç‰Á
             }
 
