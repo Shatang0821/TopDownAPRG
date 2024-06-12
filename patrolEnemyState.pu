@@ -7,7 +7,7 @@ Patrol -down-> Move : 警戒内
 Patrol -down-> Attack : 攻撃範囲
 Patrol -down-> Damaged : 被攻撃
 
-Idle -down-> Move : 警戒内 
+Idle -down-> Move : 警戒内
 Idle -left-> Attack : 攻撃範囲
 Idle -right-> Damaged : 被攻撃
 Idle -up-> Patrol : 巡回

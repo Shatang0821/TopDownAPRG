@@ -62,11 +62,13 @@ public class Entity : MonoBehaviour, IDamaged
     protected virtual void OnEnable()
     {
         maxHealth.Register(new Action<float>(OnMaxHealthChanged));
+        currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnDisable()
     {
         maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
+        currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnMaxHealthChanged(float newMaxHealth)
@@ -81,7 +83,7 @@ public class Entity : MonoBehaviour, IDamaged
         Debug.Log($"Current Health Changed to: {newCurrentHealth}");
     }
 
-    public virtual void Damage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);
     }

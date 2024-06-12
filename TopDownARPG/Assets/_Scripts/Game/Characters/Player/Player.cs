@@ -65,7 +65,7 @@ public class Player : Entity
         _stateMachine.LogicUpdate();
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
-            Damage(5);
+            TakeDamage(5);
         }
     }
 
@@ -74,9 +74,9 @@ public class Player : Entity
         _stateMachine.PhysicsUpdate();
     }
     
-    public override void Damage(float amount)
+    public override void TakeDamage(float amount)
     {
-        base.Damage(amount);
+        base.TakeDamage(amount);
         Damaged = true;
     }
     

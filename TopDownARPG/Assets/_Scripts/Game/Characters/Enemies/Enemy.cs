@@ -6,11 +6,8 @@ using UnityEngine.Serialization;
 
 public abstract  class Enemy : Entity
 {
-    [SerializeField]
     protected Transform player;
-    [HideInInspector]
     public bool TargetFound;    //ターゲット特定
-    [HideInInspector]
     public bool InAttackRange;  //ターゲットが攻撃範囲内
     //警戒範囲
     public float DetectionRange = 5.0f;             //警戒範囲
@@ -24,6 +21,7 @@ public abstract  class Enemy : Entity
     {
         base.Awake();
         enemyStateMachine = CreateStateMachine();
+        player = FindObjectOfType<Player>().transform;
     }
     
     protected virtual void Start()
@@ -43,6 +41,9 @@ public abstract  class Enemy : Entity
     
     //
     private Vector3 directionToPlayer => (player.position - transform.position).normalized;
+    /// <summary>
+    /// 警戒攻撃チェック
+    /// </summary>
     void CheckPlayerRange()
     {
         float distance = Vector3.Distance(transform.position, player.position);
@@ -95,18 +96,18 @@ public abstract  class Enemy : Entity
 
     #region Debug
 
-    void OnGUI()
-    {
-        // デバッグ情報を画面に表示
-        GUIStyle style = new GUIStyle();
-        style.fontSize = 24;
-        style.normal.textColor = Color.black;
-        
-        string message = TargetFound ? "Target Found!" : "Target Not Found";
-        GUI.Label(new Rect(10, 10, 300, 50), message, style);
-        message = InAttackRange ? "Can Attack" : "Can't Attack";
-        GUI.Label(new Rect(10, 30, 300, 50), message, style);
-    }
+    // void OnGUI()
+    // {
+    //     // デバッグ情報を画面に表示
+    //     GUIStyle style = new GUIStyle();
+    //     style.fontSize = 24;
+    //     style.normal.textColor = Color.black;
+    //     
+    //     string message = TargetFound ? "Target Found!" : "Target Not Found";
+    //     GUI.Label(new Rect(10, 10, 300, 50), message, style);
+    //     message = InAttackRange ? "Can Attack" : "Can't Attack";
+    //     GUI.Label(new Rect(10, 30, 300, 50), message, style);
+    // }
     
     void OnDrawGizmos()
     {

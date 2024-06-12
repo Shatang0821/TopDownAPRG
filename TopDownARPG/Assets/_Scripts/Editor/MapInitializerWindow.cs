@@ -1,12 +1,14 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MapInitializerWindow : EditorWindow
 {
-    private int mapWidth = 32;
-    private int mapHeight = 32;
-    private float cubeSize = 1.0f; // 新增方块大小
+    private int mapWidth = 16;
+    private int mapHeight = 16;
     private GameObject parentObject;
+    private List<GameObject> prefabList = new List<GameObject>();
+    private List<bool> prefabWalkableList = new List<bool>();
 
     [MenuItem("Window/Map Initializer")]
     public static void ShowWindow()
@@ -20,12 +22,32 @@ public class MapInitializerWindow : EditorWindow
 
         mapWidth = EditorGUILayout.IntField("Map Width", mapWidth);
         mapHeight = EditorGUILayout.IntField("Map Height", mapHeight);
-        cubeSize = EditorGUILayout.FloatField("Cube Size", cubeSize); // 新增方块大小输入字段
         parentObject = (GameObject)EditorGUILayout.ObjectField("Parent Object", parentObject, typeof(GameObject), true);
+
+        GUILayout.Label("Add Prefabs to List", EditorStyles.boldLabel);
+        if (GUILayout.Button("Add Prefab"))
+        {
+            prefabList.Add(null);
+            prefabWalkableList.Add(false);
+        }
+
+        for (int i = 0; i < prefabList.Count; i++)
+        {
+            prefabList[i] = (GameObject)EditorGUILayout.ObjectField($"Prefab {i + 1}", prefabList[i], typeof(GameObject), false);
+            prefabWalkableList[i] = EditorGUILayout.Toggle("Walkable", prefabWalkableList[i]);
+        }
 
         if (GUILayout.Button("Initialize"))
         {
-            MapEditorWindow.ShowWindow(mapWidth, mapHeight, cubeSize, parentObject);
+            Dictionary<GameObject, bool> prefabTable = new Dictionary<GameObject, bool>();
+            for (int i = 0; i < prefabList.Count; i++)
+            {
+                if (prefabList[i] != null)
+                {
+                    prefabTable[prefabList[i]] = prefabWalkableList[i];
+                }
+            }
+            MapEditorWindow.ShowWindow(mapWidth, mapHeight, parentObject, prefabList,prefabWalkableList);
             Close();
         }
     }

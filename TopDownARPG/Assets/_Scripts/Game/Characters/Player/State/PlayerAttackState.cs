@@ -9,9 +9,11 @@ public class PlayerAttackState : PlayerBaseState
     private bool _canOtherState;
     private ComboConfig _comboConfig;
     private AttackConfig _attackConfig;
+    private HashSet<Enemy> _hitEnemies;
     public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
+        _hitEnemies = new HashSet<Enemy>();
     }
 
     public override void Enter()
@@ -29,7 +31,7 @@ public class PlayerAttackState : PlayerBaseState
         base.LogicUpdate();
         var comboConfig = player.ComboConfig;
         var attackConfig = comboConfig.AttackConfigs[comboConfig.ComboCount-1];
-        StableRolledFanRayCast(attackConfig.Angle, attackConfig.RayCount,attackConfig.RollAngle,attackConfig.Radius);
+        //StableRolledFanRayCast(attackConfig.Angle, attackConfig.RayCount,attackConfig.RollAngle,attackConfig.Radius);
         if (player.Damaged)
         {
             player.ComboConfig.ComboCount = 0;
@@ -93,6 +95,7 @@ public class PlayerAttackState : PlayerBaseState
         base.Exit();
         _canOtherState = false;
         _animetionEnd = false;
+        _hitEnemies.Clear();
     }
 
     private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
@@ -124,8 +127,17 @@ public class PlayerAttackState : PlayerBaseState
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray, out RaycastHit hit, radius))
             {
-                //Debug.Log("Hit: " + hit.collider.name);
-                // Õ“Ëˆ—‚ğ’Ç‰Á
+                if (hit.collider.CompareTag("Enemy"))
+                {
+                    Enemy enemy = hit.collider.GetComponent<Enemy>();
+                    if (enemy != null && !_hitEnemies.Contains(enemy)) // ‚±‚±‚ğC³
+                    {
+                        _hitEnemies.Add(enemy); // “G‚ğ’Ç‰Á
+                        Debug.Log("Hit: " + hit.collider.name);
+                        EnemyManager.Instance.ApplyDamageToEnemy(enemy, 10);
+                    }
+                }
+                
             }
 
             // ƒfƒoƒbƒO—p‚ÌRay‚ğ•`‰æ
