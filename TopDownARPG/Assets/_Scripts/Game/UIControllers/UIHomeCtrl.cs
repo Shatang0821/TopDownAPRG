@@ -12,12 +12,18 @@ public class UIHomeCtrl : UICtrl
     public Slider GseSlider;
     public Text BGMPercentage;
     public Text GSEPercentage;
+    public Text BGM;
+    public Text GSE;
 
     private Button _gameStart;
+    private Button _lastSelectedButton;
 
     private bool panelDelayInProgress = false;
     private int currentButtonIndex = 0;
     private Button[] buttons;
+
+    private enum SelectedElement { Button, BgmSlider, GseSlider }
+    private SelectedElement selectedElement = SelectedElement.Button;
 
     public override void Awake()
     {
@@ -36,6 +42,8 @@ public class UIHomeCtrl : UICtrl
 
         BGMPercentage = View["SettingsPanel/BGMPercentage"].GetComponent<Text>();
         GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>();
+        BGM = View["SettingsPanel/BGM"].GetComponent<Text>();
+        GSE = View["SettingsPanel/GSE"].GetComponent<Text>();
 
         _gameStart = View["GameStart"].GetComponent<Button>();
 
@@ -58,7 +66,7 @@ public class UIHomeCtrl : UICtrl
         // Add EventTrigger for GseSlider
         EventTrigger trigger = GseSlider.gameObject.AddComponent<EventTrigger>();
         EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerUp;
+        entry.eventID = EventTriggerType.PointerUp; 
         entry.callback.AddListener((data) => { OnSfxSliderPointerUp(); });
         trigger.triggers.Add(entry);
     }
@@ -96,10 +104,12 @@ public class UIHomeCtrl : UICtrl
             if (View["SettingsPanel"].activeSelf)
             {
                 View["SettingsPanel"].SetActive(false);
+                RestoreLastSelectedButton();
             }
             if (View["OperationPanel"].activeSelf)
             {
                 View["OperationPanel"].SetActive(false);
+                RestoreLastSelectedButton();
             }
         }
 
@@ -108,21 +118,85 @@ public class UIHomeCtrl : UICtrl
 
     private void HandleKeyboardNavigation()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        if (selectedElement == SelectedElement.Button)
         {
-            currentButtonIndex = (currentButtonIndex + 1) % buttons.Length;
-            SelectButton(currentButtonIndex);
+            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            {
+                currentButtonIndex = (currentButtonIndex + 1) % buttons.Length;
+                SelectButton(currentButtonIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            {
+                currentButtonIndex = (currentButtonIndex - 1 + buttons.Length) % buttons.Length;
+                SelectButton(currentButtonIndex);
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                if (View["SettingsPanel"].activeSelf)
+                {
+                    selectedElement = SelectedElement.BgmSlider;
+                    BgmSlider.Select();
+                    ScaleText(BGM, true);
+                }
+            }
+            else if (Input.GetKeyDown(KeyCode.Return))
+            {
+                Button currentButton = buttons[currentButtonIndex];
+                StartCoroutine(ScaleButtonOnPress(currentButton));
+                currentButton.onClick.Invoke();
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        else if (selectedElement == SelectedElement.BgmSlider)
         {
-            currentButtonIndex = (currentButtonIndex - 1 + buttons.Length) % buttons.Length;
-            SelectButton(currentButtonIndex);
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                BgmSlider.value = Mathf.Min(BgmSlider.value + 0.01f, 1.0f);
+            }
+            else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                BgmSlider.value = Mathf.Max(BgmSlider.value - 0.01f, 0.0f);
+            }
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                selectedElement = SelectedElement.Button;
+                SelectButton(currentButtonIndex);
+                ScaleText(BGM, false);
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                selectedElement = SelectedElement.GseSlider;
+                GseSlider.Select();
+                ScaleText(BGM, false);
+                ScaleText(GSE, true);
+            }
         }
-        else if (Input.GetKeyDown(KeyCode.Return))
+        else if (selectedElement == SelectedElement.GseSlider)
         {
-            Button currentButton = buttons[currentButtonIndex];
-            StartCoroutine(ScaleButtonOnPress(currentButton));
-            currentButton.onClick.Invoke();
+            if(Input.GetKey(KeyCode.Return))
+            {
+                AudioManager.Instance.PlayGseChangeSound();
+            }
+            if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+            {
+                GseSlider.value = Mathf.Min(GseSlider.value + 0.01f, 1.0f);
+            }
+            else if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+            {
+                GseSlider.value = Mathf.Max(GseSlider.value - 0.01f, 0.0f);
+            }
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                selectedElement = SelectedElement.BgmSlider;
+                BgmSlider.Select();
+                ScaleText(GSE, false);
+                ScaleText(BGM, true);
+            }
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                selectedElement = SelectedElement.Button;
+                SelectButton(currentButtonIndex);
+                ScaleText(GSE, false);
+            }
         }
     }
 
@@ -158,6 +232,20 @@ public class UIHomeCtrl : UICtrl
         }
     }
 
+    private void SaveLastSelectedButton(Button button)
+    {
+        _lastSelectedButton = button;
+    }
+
+    private void RestoreLastSelectedButton()
+    {
+        if (_lastSelectedButton != null)
+        {
+            _lastSelectedButton.Select();
+            _lastSelectedButton = null;
+        }
+    }
+
     private IEnumerator PanelDelayCoroutine(System.Action action)
     {
         if (panelDelayInProgress)
@@ -185,14 +273,26 @@ public class UIHomeCtrl : UICtrl
     {
         Debug.Log("Settings");
         bool currentStatus = View["SettingsPanel"].activeSelf;
+        if (!currentStatus)
+        {
+            SaveLastSelectedButton(buttons[currentButtonIndex]);
+            currentButtonIndex = System.Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
+        }
         View["SettingsPanel"].SetActive(!currentStatus);
+        SelectButton(currentButtonIndex);
     }
 
     private void Operation()
     {
         Debug.Log("Operation");
         bool currentStatus = View["OperationPanel"].activeSelf;
+        if (!currentStatus)
+        {
+            SaveLastSelectedButton(buttons[currentButtonIndex]);
+            currentButtonIndex = System.Array.IndexOf(buttons, View["OperationPanel/Back"].GetComponent<Button>());
+        }
         View["OperationPanel"].SetActive(!currentStatus);
+        SelectButton(currentButtonIndex);
     }
 
     private void Exit()
@@ -206,10 +306,12 @@ public class UIHomeCtrl : UICtrl
         if (View["SettingsPanel"].activeSelf)
         {
             View["SettingsPanel"].SetActive(false);
+            RestoreLastSelectedButton(); // 恢复上次选择的按钮
         }
         if (View["OperationPanel"].activeSelf)
         {
             View["OperationPanel"].SetActive(false);
+            RestoreLastSelectedButton(); // 恢复上次选择的按钮
         }
         Debug.Log("Back");
     }
@@ -240,5 +342,16 @@ public class UIHomeCtrl : UICtrl
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
     }
-}
 
+    private void ScaleText(Text text, bool enlarge)
+    {
+        if (text == null)
+        {
+            Debug.LogError("Text is null");
+            return;
+        }
+
+        float scaleFactor = enlarge ? 1.5f : 1.0f;
+        text.transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+    }
+}
