@@ -5,38 +5,74 @@ namespace FrameWork.Audio
 {
     public class AudioManager : PersistentUnitySingleton<AudioManager>
     {
-        [SerializeField] AudioSource sFXPlayer;
+        [SerializeField] AudioSource BgmPlayer;
+        [SerializeField] AudioSource GsePlayer;
+        [SerializeField] AudioSource GseChangeSound;  // Changed to AudioSource
 
         private const float MIN_PITCH = 0.9f;
-
         private const float MAX_PITCH = 1.1f;
 
-        /// <summary>
-        /// 音を出す
-        /// </summary>
-        /// <param name="audioData">音データ</param>
-        public void PlaySfx(AudioData audioData)
+        private float bgmValue = 1.0f;
+        private float gseValue = 1.0f;
+
+        public float BgmValue
         {
-            sFXPlayer.PlayOneShot(audioData.audioClip, audioData.volume);
+            get { return bgmValue; }
+            set
+            {
+                bgmValue = Mathf.Clamp01(value);
+                UpdateVolume();
+            }
         }
 
-        /// <summary>
-        /// Pitchをランダムに変更して音を出す
-        /// </summary>
-        /// <param name="audioData">音データ</param>
+        public float GseValue
+        {
+            get { return gseValue; }
+            set
+            {
+                gseValue = Mathf.Clamp01(value);
+                UpdateVolume();
+            }
+        }
+
+        private void UpdateVolume()
+        {
+            BgmPlayer.volume = bgmValue;
+            GsePlayer.volume = gseValue;
+        }
+
+        public void PlaySfx(AudioSource source, float volume)
+        {
+            if (source != null)
+            {
+                source.volume = volume;
+                source.Play();
+            }
+            else
+            {
+                Debug.LogError("AudioSource is null. Cannot play sound.");
+            }
+        }
+
+        public void PlaySfx(AudioData audioData)
+        {
+            BgmPlayer.PlayOneShot(audioData.audioClip, audioData.volume);
+        }
+
         public void PlayRandomSfx(AudioData audioData)
         {
-            sFXPlayer.pitch = Random.Range(MIN_PITCH, MAX_PITCH);
+            BgmPlayer.pitch = Random.Range(MIN_PITCH, MAX_PITCH);
             PlaySfx(audioData);
         }
 
-        /// <summary>
-        /// いくつかの音源をランダムに流す
-        /// </summary>
-        /// <param name="audioData">音データ配列</param>
         public void PlayRandomSfx(AudioData[] audioData)
         {
             PlayRandomSfx(audioData[Random.Range(0, audioData.Length)]);
+        }
+
+        public void PlayGseChangeSound()
+        {
+            PlaySfx(GseChangeSound, GseValue);
         }
     }
 }
