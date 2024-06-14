@@ -17,5 +17,5 @@ MonoBehaviour:
   RayCount: 35
   RollAngle: 0
   StartMoveTime: 0
-  StopMoveTime: 0
+  StopMoveTime: 0.4
   Speed: 2

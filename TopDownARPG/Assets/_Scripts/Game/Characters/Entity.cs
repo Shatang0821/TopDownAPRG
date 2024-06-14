@@ -97,4 +97,6 @@ public class Entity : MonoBehaviour, IDamaged
     {
         animator.SetBool(animHash, value);
     }
+    
+    
 }

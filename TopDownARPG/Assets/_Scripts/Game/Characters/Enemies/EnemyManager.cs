@@ -31,7 +31,6 @@ public class EnemyManager : Singleton<EnemyManager>
         
         if (_currentWaveEnemies.Contains(enemy))
         {
-            Debug.Log("Yes");
             enemy.TakeDamage(damage);
         }
     }

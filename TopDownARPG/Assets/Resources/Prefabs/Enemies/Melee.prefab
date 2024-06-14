@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 9009503299832394791}
   - component: {fileID: 476730312349632119}
   - component: {fileID: 4974985365361209182}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Melee
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -121,7 +121,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rigidbody: {fileID: 0}
-  player: {fileID: 0}
   TargetFound: 0
   InAttackRange: 0
   DetectionRange: 12

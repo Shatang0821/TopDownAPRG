@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class PlayerAttackState : PlayerBaseState
@@ -10,6 +11,7 @@ public class PlayerAttackState : PlayerBaseState
     private ComboConfig _comboConfig;
     private AttackConfig _attackConfig;
     private HashSet<Enemy> _hitEnemies;
+    private Vector3 toMouseDir; //マウス向き方向
     public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
@@ -20,10 +22,18 @@ public class PlayerAttackState : PlayerBaseState
     {
         player.SetAttackComboCount();
         base.Enter();
-        
         _comboConfig = player.ComboConfig;
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
+        
+        //マウス操作の場合マウス位置に回転
+        if (player._playerInput.CurrentDevice.Value == Keyboard.current)
+        {
+            toMouseDir = new Vector3(player._playerInput.MousePosition.x, 0, player._playerInput.MousePosition.y);
+            player.Rotation(toMouseDir,0f);
+        }
+        
         StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
+        Debug.Log(toMouseDir);
     }
 
     public override void LogicUpdate()
@@ -58,11 +68,11 @@ public class PlayerAttackState : PlayerBaseState
             player.ComboConfig.ComboCount = 0;
             if (player.Axis != Vector2.zero)
             {
-                playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+                playerStateMachine.ChangeState(PlayerStateEnum.Move);
             }
             else
             {
-                playerStateMachine.ChangeState(PlayerStateEnum.Move);
+                playerStateMachine.ChangeState(PlayerStateEnum.Idle);
             }
         }
     }
@@ -95,9 +105,17 @@ public class PlayerAttackState : PlayerBaseState
         base.Exit();
         _canOtherState = false;
         _animetionEnd = false;
+        toMouseDir = Vector3.zero;
         _hitEnemies.Clear();
     }
-
+    
+    /// <summary>
+    /// 扇型レイを使って敵のダメージ処理させる
+    /// </summary>
+    /// <param name="angle">範囲</param>
+    /// <param name="rayCount">レイ数</param>
+    /// <param name="rollAngle">ロール角度</param>
+    /// <param name="radius">半径</param>
     private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
     {
         Vector3 forward = player.RayStartPoint.forward;
@@ -147,8 +165,10 @@ public class PlayerAttackState : PlayerBaseState
 
     private void MovePlayer()
     {
-        player.Rigidbody.AddForce(player.transform.forward * _attackConfig.Speed,
-            ForceMode.VelocityChange);
+        var forward = player.transform.forward;
+        player.Move(new Vector3(forward.x,forward.z,0),_attackConfig.Speed,0,false);
+        // player.Rigidbody.AddForce(player.transform.forward * _attackConfig.Speed,
+        //     ForceMode.VelocityChange);
     }
     
     
