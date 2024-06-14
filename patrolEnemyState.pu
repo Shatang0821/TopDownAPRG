@@ -1,0 +1,28 @@
+@startuml PatrolEnemyState
+
+[*] --> Patrol
+
+Patrol -down-> Idle : 警戒点
+Patrol -down-> Move : 警戒内
+Patrol -down-> Attack : 攻撃範囲
+Patrol -down-> Damaged : 被攻撃
+
+Idle -down-> Move : 警戒内
+Idle -left-> Attack : 攻撃範囲
+Idle -right-> Damaged : 被攻撃
+Idle -up-> Patrol : 巡回
+
+Move -down-> Attack : 攻撃範囲
+Move -up-> Idle : 警戒外
+Move -right-> Damaged : 被攻撃
+
+Attack --> Idle : 警戒外
+Attack -up-> Move : 警戒内
+Attack -down-> Damaged : 被攻撃
+
+Damaged -left-> Idle : 警戒外
+Damaged -up-> Move : 警戒内
+Damaged -down-> Die : 死亡
+Damaged -up-> Attack : 攻撃範囲
+
+@enduml

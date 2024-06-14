@@ -1,0 +1,42 @@
+@startuml enemy
+
+abstract class Enemy {
+    - health: float
+    - moveSpeed: float
+    - attackRange: float
+    - attackDamage: float
+    --
+    + Idle()
+    + Move()
+    + Attack()
+    + Damaged()
+    + Die()
+}
+
+class MeleeEnemy {
+    + Enemy
+    - EnemyStateMachine()
+}
+
+class RangedEnemy {
+    + Enemy
+    - EnemyStateMachine
+}
+class StateMachine {
+    #void RegisterState(TStateEnum stateEnum, IState state)
+    +void ChangeState(TStateEnum newState)
+    +void LogicUpdate()
+    +void PhysicsUpdate()
+    +bool CheckState(IState state)
+}
+
+class EnemyStateMachine{
+    
+}
+
+StateMachine <|-- EnemyStateMachine
+
+Enemy <|-- MeleeEnemy
+Enemy <|-- RangedEnemy
+
+@enduml

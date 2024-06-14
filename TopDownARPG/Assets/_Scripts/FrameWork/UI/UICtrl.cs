@@ -8,8 +8,10 @@ namespace FrameWork.UI
     public class UICtrl : MonoBehaviour
     {
         private Dictionary<string, GameObject> _view = new Dictionary<string, GameObject>();
+        private Dictionary<string, Button> _buttons = new Dictionary<string, Button>();
 
         protected Dictionary<string, GameObject> View => _view;
+        protected Dictionary<string, Button> Buttons => _buttons;
 
         public virtual void Awake()
         {
