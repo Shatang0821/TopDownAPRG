@@ -17,7 +17,7 @@ public class PlayerData
     public int maxhealth;
     public int currenthealth;
     public int power;
-    public float speed; // speed‚ÍÀÛ‚É‚ÍfloatŒ^‚Å‚ ‚é‚±‚Æ‚É’ˆÓ
+    public float speed; 
     public int mp;
 }
 
@@ -28,5 +28,5 @@ public class EnemyData
     public string name;
     public int health;
     public int power;
-    public float speed; // speed‚ÍÀÛ‚É‚ÍfloatŒ^‚Å‚ ‚é‚±‚Æ‚É’ˆÓ
+    public float speed; 
 }

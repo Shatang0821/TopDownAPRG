@@ -11,13 +11,13 @@ public class API : MonoBehaviour
 {
 
     [SerializeField]
-    InputField accountname;//アカウントの名前入力欄
-    [SerializeField]
-    InputField password;//パスワード入力欄
+    InputField accountname;
 
+    [SerializeField]
+    InputField password;
     private bool isLogout;
 
-    IEnumerator CreateAccount()
+    IEnumerator CreateAccount(InputField accountname,InputField password)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -45,7 +45,7 @@ public class API : MonoBehaviour
 
     }
 
-    IEnumerator Login()
+    IEnumerator Login(InputField accountname, InputField password)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -66,12 +66,12 @@ public class API : MonoBehaviour
         else
         {
             Debug.Log("ログイン成功: " + request.downloadHandler.text);
-            SaveAccount();
-            StartCoroutine(Get_Game_Info());
+            SaveAccount(accountname,password);
+            StartCoroutine(Get_Game_Info(accountname));
         }
     }
 
-    IEnumerator Get_Game_Info()
+    IEnumerator Get_Game_Info(InputField accountname)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -89,7 +89,7 @@ public class API : MonoBehaviour
         }
         else
         {
-            Debug.Log("データ取得完了: " + request.downloadHandler.text);
+            Debug.Log("データ取得完了 ");
 
             // JSON文字列を直接取得
             string json = request.downloadHandler.text;
@@ -108,7 +108,7 @@ public class API : MonoBehaviour
 
 
     #region アカウントの保存
-    void SaveAccount()
+    void SaveAccount(InputField accountname, InputField password)
     {
         string filePath = Application.persistentDataPath + "/LoginAccount.json";
 
@@ -122,13 +122,13 @@ public class API : MonoBehaviour
             {
                 accountmanager.accountname = null;
                 accountmanager.password = null;
-                Debug.Log("a");
+                Debug.Log("ログアウト");
             }
             else
             {
                 accountmanager.accountname = accountname.text;
                 accountmanager.password = password.text;
-                Debug.Log("b");
+                Debug.Log("保存成功");
             }
 
             Debug.Log(filePath);
@@ -151,22 +151,52 @@ public class API : MonoBehaviour
     }
     #endregion
 
+    public void CheckSessionStatus()
+    {
+        StartCoroutine(CheckSessionCoroutine());
+    }
+
+    IEnumerator CheckSessionCoroutine()
+    {
+        UnityWebRequest request = UnityWebRequest.Get("https://example.com/check-session");
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
+        {
+            // レスポンスの処理
+            string jsonResponse = request.downloadHandler.text;
+            Debug.Log("Server response: " + jsonResponse);
+
+            // ログアウトのシグナルを受信した場合
+            if (jsonResponse.Contains("logout"))
+            {
+                isLogout = true;
+                SaveAccount(accountname, password);
+                isLogout = false;
+            }
+        }
+        else
+        {
+            Debug.LogError("Failed to check session status: " + request.error);
+        }
+    }
+
 
     public void CreateAccountButton()
     {
-        StartCoroutine(CreateAccount());
+        StartCoroutine(CreateAccount(accountname,password));
     }
 
     public void LoginButton()
     {
         isLogout = false;
-        StartCoroutine(Login());
+        StartCoroutine(Login(accountname,password));
     }
 
     public void LogoutButton()
     {
         isLogout = true;
-        SaveAccount();
+        SaveAccount(accountname,password);
         isLogout = false;
     }
 

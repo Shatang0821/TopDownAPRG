@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class GameData
 {
-    public int id;
-    public int maxhealth;
-    public int currenthealth;
-    public int power;
-    public float speed; // speedÇÕé¿ç€Ç…ÇÕfloatå^Ç≈Ç†ÇÈÇ±Ç∆Ç…íçà”
-    public int mp;
+    public int p_id;
+    public int p_maxhealth;
+    public int p_currenthealth;
+    public int p_power;
+    public float p_speed; // speedÇÕé¿ç€Ç…ÇÕfloatå^Ç≈Ç†ÇÈÇ±Ç∆Ç…íçà”
+    public int p_mp;
 
     public void SetBasicData(JsonGameData basic)
     {
-        id = basic.player.id;
-        maxhealth = basic.player.maxhealth;
-        currenthealth = basic.player.currenthealth;
-        power = basic.player.power;
-        speed = basic.player.speed;
-        mp = basic.player.mp;
+        p_id = basic.player.id;
+        p_maxhealth = basic.player.maxhealth;
+        p_currenthealth = basic.player.currenthealth;
+        p_power = basic.player.power;
+        p_speed = basic.player.speed;
+        p_mp = basic.player.mp;
     }
     public override string ToString()
     {
-        return $"ID: {id}, Max Health: {maxhealth}, Current Health: {currenthealth}, Power: {power}, Speed: {speed}, MP: {mp}";
+        return $"ID: {p_id}, Max Health: {p_maxhealth}, Current Health: {p_currenthealth}, Power: {p_power}, Speed: {p_speed}, MP: {p_mp}";
     }
 }
