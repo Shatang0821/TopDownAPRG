@@ -9,6 +9,7 @@ using UnityEngine.EventSystems;
 
 public class UIEndCtrl : UICtrl
 {
+    private Image _blackImage; // Black Image を格納するための変数
 
     public override void Awake()
     {
@@ -22,6 +23,17 @@ public class UIEndCtrl : UICtrl
         AddButtonHoverEffect("Exit");
         AddButtonHoverEffect("GameLose/ReStart");
 
+        _blackImage = View["Black"].GetComponent<Image>();// Black Image を取得
+
+        // 1秒後にBlack Imageを非表示にするコルーチンを開始
+        StartCoroutine(HideBlackImageAfterDelay());
+    }
+
+    // 1秒後にBlack Imageを非表示にするコルーチン
+    private IEnumerator HideBlackImageAfterDelay()
+    {
+        yield return new WaitForSeconds(1.8f);
+        _blackImage.gameObject.SetActive(false);
     }
 
     private void Title()

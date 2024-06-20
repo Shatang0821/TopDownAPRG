@@ -9,14 +9,27 @@ using UnityEngine.EventSystems;
 
 public class UIGameCtrl : UICtrl 
 {
+    private Image _blackImage; // Black Image を格納するための変数
 
-	public override void Awake() {
+    public override void Awake() {
 
 		base.Awake();
+        _blackImage = View["Black"].GetComponent<Image>();// Black Image を取得
 
-	}
+        // 1秒後にBlack Imageを非表示にするコルーチンを開始
+        StartCoroutine(HideBlackImageAfterDelay());
+    }
 
-	void Start() {
+    // 1秒後にBlack Imageを非表示にするコルーチン
+    private IEnumerator HideBlackImageAfterDelay()
+    {
+        yield return new WaitForSeconds(1.8f);
+        _blackImage.gameObject.SetActive(false);
+    }
+
+
+
+    void Start() {
 	}
 
 }
