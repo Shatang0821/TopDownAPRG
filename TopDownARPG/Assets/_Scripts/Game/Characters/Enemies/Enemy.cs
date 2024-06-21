@@ -17,6 +17,8 @@ public abstract  class Enemy : Entity
     public float AttackFieldOfView = 45.0f; 
     protected StateMachine enemyStateMachine;
 
+    //状態関係
+    public bool Damaged;
     protected override void Awake()
     {
         base.Awake();
@@ -34,13 +36,33 @@ public abstract  class Enemy : Entity
         enemyStateMachine.LogicUpdate();
         CheckPlayerRange();
     }
-    
 
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        Damaged = true;
+    }
+
+    /// <summary>
+    /// ステートマシンの初期化関数
+    /// </summary>
+    /// <returns>ステートマシンインスタンス</returns>
     protected abstract StateMachine CreateStateMachine();
+    /// <summary>
+    /// 初期状態を取得する
+    /// </summary>
+    /// <returns>状態の列挙型</returns>
     protected abstract Enum GetInitialState();
+
+    /// <summary>
+    /// ダメージ受けた時の詳細処理(ひるむ値などの計算)
+    /// </summary>
+    public abstract void TakenDamageState();
     
-    //
-    private Vector3 directionToPlayer => (player.position - transform.position).normalized;
+    /// <summary>
+    /// プレイヤの方向
+    /// </summary>
+    private Vector3 _directionToPlayer => (player.position - transform.position).normalized;
     /// <summary>
     /// 警戒攻撃チェック
     /// </summary>
@@ -51,7 +73,7 @@ public abstract  class Enemy : Entity
         // 警戒範囲内かつ視野内にいるかをチェック
         if (distance <= DetectionRange)
         {
-            float detectionAngle = Vector3.Angle(transform.forward, directionToPlayer);
+            float detectionAngle = Vector3.Angle(transform.forward, _directionToPlayer);
             if (detectionAngle <= DetectionFieldOfView / 2)
             {
                 TargetFound = true;
@@ -65,7 +87,7 @@ public abstract  class Enemy : Entity
         // 攻撃範囲内かつ視野内にいるかをチェック
         if (distance <= AttackRange)
         {
-            float attackAngle = Vector3.Angle(transform.forward, directionToPlayer);
+            float attackAngle = Vector3.Angle(transform.forward, _directionToPlayer);
             if (attackAngle <= AttackFieldOfView / 2)
             {
                 InAttackRange = true;

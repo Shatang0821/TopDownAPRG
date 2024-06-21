@@ -5,6 +5,7 @@ namespace FrameWork.FSM
     public abstract class BaseState : IState
     {
         protected int StateBoolHash; // アニメーターのハッシュ値
+        protected float stateTimer;  // ステート持続時間
         protected BaseState(string animBoolName)
         {
             StateBoolHash = Animator.StringToHash(animBoolName); // アニメーターハッシュの初期化

@@ -9,7 +9,7 @@ public class MeleeIdleState : MeleeMovementState
     public override void Enter()
     {
         base.Enter();
-               
+        
     }
 
     public override void LogicUpdate()

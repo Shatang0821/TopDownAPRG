@@ -33,7 +33,6 @@ public class PlayerAttackState : PlayerBaseState
         }
         
         StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
-        Debug.Log(toMouseDir);
     }
 
     public override void LogicUpdate()
@@ -151,7 +150,7 @@ public class PlayerAttackState : PlayerBaseState
                     if (enemy != null && !_hitEnemies.Contains(enemy)) // Ç±Ç±ÇèCê≥
                     {
                         _hitEnemies.Add(enemy); // ìGÇí«â¡
-                        Debug.Log("Hit: " + hit.collider.name);
+                        //Debug.Log("Hit: " + hit.collider.name);
                         EnemyManager.Instance.ApplyDamageToEnemy(enemy, 10);
                     }
                 }

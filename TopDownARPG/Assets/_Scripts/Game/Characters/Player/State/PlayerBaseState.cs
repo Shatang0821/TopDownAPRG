@@ -7,7 +7,7 @@ public class PlayerBaseState : BaseState
 {
     protected PlayerStateMachine playerStateMachine;
     protected Player player;
-    protected float stateTimer;
+    
     public PlayerBaseState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName)
     {
         this.player = player;

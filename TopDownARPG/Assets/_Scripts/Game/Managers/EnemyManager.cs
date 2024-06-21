@@ -3,18 +3,19 @@ using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
-public class EnemyManager : Singleton<EnemyManager>
+public class EnemyManager : UnitySingleton<EnemyManager>
 {
     private List<Enemy> _currentWaveEnemies;
     private GameObject _enemy;
     private EnemiesConfig _enemiesConfig;
-
+    
     public void Initialize()
     {
         _enemiesConfig = ResManager.Instance.GetAssetCache<EnemiesConfig>("Enemies Config/Enemies_Config");
-        if (_enemiesConfig)
+        if (!_enemiesConfig)
         {
-            Debug.Log(_enemiesConfig.Melee.name);
+            DebugLogger.Log("Enemy配置ファイルが取得できません");
+            return;
         }
         _currentWaveEnemies = new List<Enemy>();
         SpawnEnemy();
@@ -22,9 +23,11 @@ public class EnemyManager : Singleton<EnemyManager>
 
     public void SpawnEnemy()
     {
-        GameObject enemyObject = GameObject.Instantiate(_enemiesConfig.Melee, new Vector3(5,1,-5), Quaternion.identity);
-        Enemy enemy = enemyObject.GetComponent<Enemy>();   
-        _currentWaveEnemies.Add(enemy);
+        foreach (var enemy in _enemiesConfig.Enemies)
+        {
+           var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,-5), Quaternion.identity);
+            _currentWaveEnemies.Add(eObject.GetComponent<Enemy>());
+        }
     }
     public void ApplyDamageToEnemy(Enemy enemy, float damage)
     {
