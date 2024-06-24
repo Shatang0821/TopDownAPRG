@@ -15,6 +15,10 @@ public enum RHStateEnum
 
 public class RockHurler : Enemy
 {
+    public override void TakenDamageState()
+    {
+    }
+
     protected override StateMachine CreateStateMachine()
     {
         var stateMachine = new EnemyStateMachine(this);
