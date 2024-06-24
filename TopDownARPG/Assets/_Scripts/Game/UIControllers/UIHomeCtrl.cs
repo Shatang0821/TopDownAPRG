@@ -6,6 +6,7 @@ using FrameWork.Utils;
 using FrameWork.Audio;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
+using System;
 
 public class UIHomeCtrl : UICtrl
 {
@@ -45,6 +46,11 @@ public class UIHomeCtrl : UICtrl
         // スライダーとパネルを初期化する
         BgmSlider = View["SettingsPanel/BGMSlider"].GetComponent<Slider>();
         GseSlider = View["SettingsPanel/GSESlider"].GetComponent<Slider>();
+
+        // 设置滑块的初始值为100%
+        BgmSlider.value = 1.0f;
+        GseSlider.value = 1.0f;
+
         View["SettingsPanel"].SetActive(false); // 設定パネルを非表示にする
         View["OperationPanel"].SetActive(false); // 操作説明パネルを非表示にする
 
@@ -53,18 +59,22 @@ public class UIHomeCtrl : UICtrl
         BGM = View["SettingsPanel/BGM"].GetComponent<Text>(); // BGMのラベルを表示するテキストを取得
         GSE = View["SettingsPanel/GSE"].GetComponent<Text>(); // 効果音のラベルを表示するテキストを取得
 
+        // 更新音量百分比文本
+        BGMPercentage.text = "100%";
+        GSEPercentage.text = "100%";
+
         _gameStart = View["GameStart"].GetComponent<Button>(); // ゲーム開始ボタンを取得
         _blackImage = View["Black"].GetComponent<Image>();// Black Image を取得
 
         // ボタンの配列を初期化
         buttons = new Button[]
         {
-            View["GameStart"].GetComponent<Button>(), // ゲーム開始ボタン
-            View["Settings"].GetComponent<Button>(), // 設定ボタン
-            View["Operation"].GetComponent<Button>(), // 操作説明ボタン
-            View["Exit"].GetComponent<Button>(), // 終了ボタン
-            View["SettingsPanel/Back"].GetComponent<Button>(), // 設定パネルの戻るボタン
-            View["OperationPanel/Back"].GetComponent<Button>() // 操作説明パネルの戻るボタン
+        View["GameStart"].GetComponent<Button>(), // ゲーム開始ボタン
+        View["Settings"].GetComponent<Button>(), // 設定ボタン
+        View["Operation"].GetComponent<Button>(), // 操作説明ボタン
+        View["Exit"].GetComponent<Button>(), // 終了ボタン
+        View["SettingsPanel/Back"].GetComponent<Button>(), // 設定パネルの戻るボタン
+        View["OperationPanel/Back"].GetComponent<Button>() // 操作説明パネルの戻るボタン
         };
 
         // すべてのボタンにホバーエフェクトを追加
@@ -83,6 +93,7 @@ public class UIHomeCtrl : UICtrl
         // 1秒後にBlack Imageを非表示にするコルーチンを開始
         StartCoroutine(HideBlackImageAfterDelay());
     }
+
 
     // スクリプトが有効になったときに呼び出される
     private void OnEnable()
@@ -141,12 +152,22 @@ public class UIHomeCtrl : UICtrl
             if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
             {
                 currentButtonIndex = (currentButtonIndex + 1) % buttons.Length;
+                // 如果当前按钮是 "Exit"，则跳到 "GameStart" 按钮上
+                if (buttons[currentButtonIndex].name == "Back")
+                {
+                    currentButtonIndex = Array.IndexOf(buttons, View["GameStart"].GetComponent<Button>());
+                }
                 SelectButton(currentButtonIndex);
             }
             // 左矢印またはAキーが押された場合
             else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
             {
                 currentButtonIndex = (currentButtonIndex - 1 + buttons.Length) % buttons.Length;
+                // 如果当前按钮是 "Exit"，则跳到 "GameStart" 按钮上
+                if (buttons[currentButtonIndex].name == "Back")
+                {
+                    currentButtonIndex = Array.IndexOf(buttons, View["Exit"].GetComponent<Button>());
+                }
                 SelectButton(currentButtonIndex);
             }
             // 下矢印またはSキーが押された場合（設定パネルがアクティブならば）
@@ -183,6 +204,8 @@ public class UIHomeCtrl : UICtrl
             else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 selectedElement = SelectedElement.Button;
+                // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
+                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
                 SelectButton(currentButtonIndex);
                 ScaleText(BGM, false);
             }
@@ -219,6 +242,8 @@ public class UIHomeCtrl : UICtrl
             else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 selectedElement = SelectedElement.Button;
+                // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
+                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
                 SelectButton(currentButtonIndex);
                 ScaleText(GSE, false);
             }
@@ -230,6 +255,10 @@ public class UIHomeCtrl : UICtrl
             }
         }
     }
+
+
+
+
 
     // ボタンが押されたときのスケール効果を実装するコルーチン
     private IEnumerator ScaleButtonOnPress(Button button)
@@ -295,6 +324,7 @@ public class UIHomeCtrl : UICtrl
     private void GameStart()
     {
         Debug.Log("GameStart");
+        UIManager.Instance.RemoveUI("UIHome");
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 

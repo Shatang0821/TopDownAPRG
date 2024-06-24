@@ -32,4 +32,18 @@ public class UIGameCtrl : UICtrl
     void Start() {
 	}
 
+    private void Update()
+    {
+        if (Input.GetKeyUp(KeyCode.T))
+        {
+            UIManager.Instance.RemoveUI("UIGame");
+            UIManager.Instance.ShowUI("UIEnd");
+            UIManager.Instance.ChangeUIPrefab("UIEnd");
+
+            if (this.gameObject != null)
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
+    }
 }

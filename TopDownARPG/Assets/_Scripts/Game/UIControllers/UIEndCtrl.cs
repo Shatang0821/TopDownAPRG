@@ -39,6 +39,7 @@ public class UIEndCtrl : UICtrl
     private void Title()
     {
         Debug.Log("Title");
+        UIManager.Instance.RemoveUI("UIEnd");
         UIManager.Instance.ShowUI("UIHome");
         UIManager.Instance.ChangeUIPrefab("UIHome");
 
