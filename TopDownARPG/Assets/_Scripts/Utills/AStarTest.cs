@@ -15,7 +15,7 @@ public class AStarTest : MonoBehaviour
     public Vector2Int endGrid = new Vector2Int(9, 9);
 
     private int[,] map;
-    private List<AStar.Node> path;
+    private List<AStar.AstarNode> path;
 
     private void Start()
     {
