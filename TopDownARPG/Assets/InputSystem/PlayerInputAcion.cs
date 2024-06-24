@@ -46,15 +46,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""MouseLook"",
-                    ""type"": ""Value"",
-                    ""id"": ""8b2c953f-7d82-4e2a-941c-94136c5db500"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
                     ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""763fbca9-7ad6-4362-adaf-ca10b3d951f6"",
@@ -144,12 +135,12 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a2ee8ea6-258e-4da5-8282-b8d8f2760977"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""b590874e-ff45-4930-9506-934d5c0e2e87"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""MouseLook"",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -157,6 +148,17 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""8c492915-c756-41de-9203-1ddb69fff4ba"",
                     ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4ddd84a1-8ef1-41e0-9646-f64d95eb20de"",
+                    ""path"": ""<Gamepad>/buttonWest"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -173,7 +175,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
         m_GamePlay = asset.FindActionMap("GamePlay", throwIfNotFound: true);
         m_GamePlay_Axis = m_GamePlay.FindAction("Axis", throwIfNotFound: true);
         m_GamePlay_Dash = m_GamePlay.FindAction("Dash", throwIfNotFound: true);
-        m_GamePlay_MouseLook = m_GamePlay.FindAction("MouseLook", throwIfNotFound: true);
         m_GamePlay_Attack = m_GamePlay.FindAction("Attack", throwIfNotFound: true);
     }
 
@@ -238,7 +239,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
     private List<IGamePlayActions> m_GamePlayActionsCallbackInterfaces = new List<IGamePlayActions>();
     private readonly InputAction m_GamePlay_Axis;
     private readonly InputAction m_GamePlay_Dash;
-    private readonly InputAction m_GamePlay_MouseLook;
     private readonly InputAction m_GamePlay_Attack;
     public struct GamePlayActions
     {
@@ -246,7 +246,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
         public GamePlayActions(@PlayerInputAcion wrapper) { m_Wrapper = wrapper; }
         public InputAction @Axis => m_Wrapper.m_GamePlay_Axis;
         public InputAction @Dash => m_Wrapper.m_GamePlay_Dash;
-        public InputAction @MouseLook => m_Wrapper.m_GamePlay_MouseLook;
         public InputAction @Attack => m_Wrapper.m_GamePlay_Attack;
         public InputActionMap Get() { return m_Wrapper.m_GamePlay; }
         public void Enable() { Get().Enable(); }
@@ -263,9 +262,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
             @Dash.started += instance.OnDash;
             @Dash.performed += instance.OnDash;
             @Dash.canceled += instance.OnDash;
-            @MouseLook.started += instance.OnMouseLook;
-            @MouseLook.performed += instance.OnMouseLook;
-            @MouseLook.canceled += instance.OnMouseLook;
             @Attack.started += instance.OnAttack;
             @Attack.performed += instance.OnAttack;
             @Attack.canceled += instance.OnAttack;
@@ -279,9 +275,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
             @Dash.started -= instance.OnDash;
             @Dash.performed -= instance.OnDash;
             @Dash.canceled -= instance.OnDash;
-            @MouseLook.started -= instance.OnMouseLook;
-            @MouseLook.performed -= instance.OnMouseLook;
-            @MouseLook.canceled -= instance.OnMouseLook;
             @Attack.started -= instance.OnAttack;
             @Attack.performed -= instance.OnAttack;
             @Attack.canceled -= instance.OnAttack;
@@ -306,7 +299,6 @@ public partial class @PlayerInputAcion: IInputActionCollection2, IDisposable
     {
         void OnAxis(InputAction.CallbackContext context);
         void OnDash(InputAction.CallbackContext context);
-        void OnMouseLook(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
     }
 }

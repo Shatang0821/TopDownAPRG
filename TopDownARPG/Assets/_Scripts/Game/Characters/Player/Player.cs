@@ -1,6 +1,9 @@
+using System;
 using FrameWork.EventCenter;
 using FrameWork.Utils;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum PlayerEvent
 {
@@ -8,10 +11,11 @@ public enum PlayerEvent
 }
 public class Player : Entity
 {
+    private Camera _camera; 
     private PlayerStateMachine _stateMachine;
     #region Component
-    private PlayerInput _playerInput;
-    private MoveComponent _moveComponent;
+    public PlayerInput _playerInput;
+    private MovementComponent _movementComponent;
     #endregion
     public Transform RayStartPoint;
 
@@ -20,14 +24,16 @@ public class Player : Entity
     public Vector2 Axis => _playerInput.Axis;
     //ダッシュ
     public bool Dash => _playerInput.Dash;
-
+    //攻撃
     public bool Attack => _playerInput.Attack;
-
-    private float _speed;
+    //被撃
+    public bool Damaged = false;
+    
     private void InitComponent()
     {
+        _camera = Camera.main;
         _playerInput = new PlayerInput();
-        _moveComponent = new MoveComponent(transform);
+        _movementComponent = new MovementComponent(Rigidbody,transform);
     }
 
     protected override void Awake()
@@ -40,46 +46,48 @@ public class Player : Entity
     {
         base.OnEnable();
         _stateMachine.ChangeState(PlayerStateEnum.Idle);
+        _playerInput.CurrentDevice.Register(new Action<InputDevice>(OnDeviceChanged));
         _playerInput.OnEnable();
-
-        EventCenter.AddListener(PlayerEvent.Test,Test);
-        EventCenter.AddListener<int>(PlayerEvent.Test,Test1);
+    }
+    
+    protected virtual void OnDeviceChanged(InputDevice device)
+    {
+        Debug.Log($"Maximum Health Changed to: {device}");
     }
     
     private void Start()
     {
-        maxHealth.Value -= 10.0f;
-
-        EventCenter.TriggerEvent(PlayerEvent.Test);
+        //maxHealth.Value -= 10.0f;
     }
 
     protected override void OnDisable()
     {
         base.OnDisable();
+        _playerInput.CurrentDevice.UnRegister(new Action<InputDevice>(OnDeviceChanged));
         _playerInput.OnDisable();
-
-        EventCenter.RemoveListener(PlayerEvent.Test,Test);
-        EventCenter.RemoveListener<int>(PlayerEvent.Test,Test1);
-    }
-    
-    private void Test()
-    {
-        DebugLogger.Log("Test HPは" + maxHealth.Value);
-    }
-    
-    private void Test1(int i)
-    {
-        DebugLogger.Log("Test HPは" + i);
+        
     }
 
     private void Update()
     {
         _stateMachine.LogicUpdate();
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            //TakeDamage(5);
+        }
+
+//        Rotation();
     }
 
     private void FixedUpdate()
     {
         _stateMachine.PhysicsUpdate();
+    }
+    
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        Damaged = true;
     }
     
     /// <summary>
@@ -99,9 +107,44 @@ public class Player : Entity
     {
         if (Axis != Vector2.zero)
         {
-            _moveComponent.Move(Axis,speed.Value);
+            _movementComponent.Move(Axis,speed.Value,0.2f);
         }
     }
+    
+   /// <summary>
+   /// 強制移動
+   /// </summary>
+   /// <param name="movementDirection"></param>
+   /// <param name="speed"></param>
+   /// <param name="rotationSpeed"></param>
+   /// <param name="rotation"></param>
+    public void Move(Vector3 movementDirection,float speed,float rotationSpeed,bool rotation = true)
+    {
+        _movementComponent.Move(movementDirection,speed,rotationSpeed,rotation);
+    }
+    
+    /// <summary>
+    /// ターゲット方向に回転
+    /// </summary>
+    /// <param name="targetDirection">ターゲット方向</param>
+    /// <param name="rotationSpeed">回転速度</param>
+    public void Rotation(Vector3 targetDirection, float rotationSpeed)
+    {
+        // マウスの位置をスクリーンからワールド座標に変換
+        Vector3 mousePosition = _playerInput.MousePosition;
+        mousePosition.z = _camera.transform.position.y; // カメラからの距離を調整
+        Vector3 worldPosition = _camera.ScreenToWorldPoint(mousePosition);
+        
+        // プレイヤーの位置からマウスの位置へのベクトルを計算
+        Vector3 direction = worldPosition - transform.position;
+        direction.y = 0;
+
+        if (direction.magnitude > 0.1f)
+        {
+            _movementComponent.RotateTowards(transform,direction,rotationSpeed);
+        }
+    }
+    
     
     /// <summary>
     /// コンボのカウントを設定します。

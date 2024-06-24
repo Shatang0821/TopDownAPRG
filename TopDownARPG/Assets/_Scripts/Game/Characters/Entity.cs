@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using FrameWork.EventCenter;
 using UnityEngine;
 
@@ -14,10 +13,10 @@ public struct EntityData
     private float initialSpeed;
 }
 
-public class Entity : MonoBehaviour,IDamaged
+public class Entity : MonoBehaviour, IDamaged
 {
     protected Observer<float> maxHealth;
-    
+
     protected Observer<float> currentHealth;
 
     protected Observer<int> power;
@@ -25,16 +24,26 @@ public class Entity : MonoBehaviour,IDamaged
     protected Observer<float> speed;
 
     protected Animator animator;
+
+    [HideInInspector] public Rigidbody Rigidbody;
+
+    public virtual void Initialize()
+    {
+        animator = GetComponentInChildren<Animator>();
+        Rigidbody = GetComponent<Rigidbody>();
+    }
+    
     protected virtual void Awake()
     {
         InitValue();
         animator = GetComponentInChildren<Animator>();
+        Rigidbody = GetComponent<Rigidbody>();
     }
 
     /// <summary>
     /// データベースから数値を取得
     /// </summary>
-    public void InitValue(/*EntityData entityData*/)
+    public void InitValue( /*EntityData entityData*/)
     {
         /*
          *  if(conectDatabase)
@@ -47,19 +56,21 @@ public class Entity : MonoBehaviour,IDamaged
         currentHealth = new Observer<float>(100);
         //テスト
         power = new Observer<int>(10);
-        speed = new Observer<float>(10);
+        speed = new Observer<float>(5);
     }
 
     protected virtual void OnEnable()
     {
         maxHealth.Register(new Action<float>(OnMaxHealthChanged));
+        currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnDisable()
     {
         maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
+        currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
     }
-    
+
     protected virtual void OnMaxHealthChanged(float newMaxHealth)
     {
         Debug.Log($"Maximum Health Changed to: {newMaxHealth}");
@@ -72,11 +83,11 @@ public class Entity : MonoBehaviour,IDamaged
         Debug.Log($"Current Health Changed to: {newCurrentHealth}");
     }
 
-    public virtual void Damage(float amount)
+    public virtual void TakeDamage(float amount)
     {
         currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);
     }
-    
+
     /// <summary>
     /// アニメーションを変更する
     /// </summary>
@@ -84,6 +95,8 @@ public class Entity : MonoBehaviour,IDamaged
     /// <param name="value"></param>
     public virtual void SetAnimation(int animHash, bool value)
     {
-        animator.SetBool(animHash,value);
+        animator.SetBool(animHash, value);
     }
+    
+    
 }

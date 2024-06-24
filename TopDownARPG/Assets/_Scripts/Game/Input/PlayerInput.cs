@@ -1,3 +1,4 @@
+using FrameWork.EventCenter;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,14 +10,18 @@ public class PlayerInput
     #region 変数定義
 
     private PlayerInputAcion _inputActions;
-    private InputDevice _currentDevice; //現在デバイス
-    
+    //private InputDevice _currentDevice; //現在デバイス
+    public Observer<InputDevice> CurrentDevice;
     //移動
     public Vector2 Axis => _inputActions.GamePlay.Axis.ReadValue<Vector2>();
     //ダッシュ
     public bool Dash => _inputActions.GamePlay.Dash.WasPerformedThisFrame();
 
     public bool Attack => _inputActions.GamePlay.Attack.IsPressed();
+    
+    // マウスの位置
+    public Vector2 MousePosition => Mouse.current.position.ReadValue();
+    
     #endregion
 
     #region クラスライフサイクル
@@ -32,12 +37,14 @@ public class PlayerInput
     public void Init()
     {
         _inputActions = new PlayerInputAcion();
-        _currentDevice = Keyboard.current;
+       //_currentDevice = Keyboard.current;
+       CurrentDevice = new Observer<InputDevice>(Keyboard.current);
     }
 
     public void OnEnable()
     {
         _inputActions.Enable();
+        CurrentDevice.Value = Gamepad.current;
         InputSystem.onActionChange += OnActionChange;
     }
 
@@ -50,7 +57,37 @@ public class PlayerInput
     #endregion
 
     #region デバイス
-
+    
+    //元の
+    
+    // /// <summary>
+    // /// デバイス切り替え処理
+    // /// </summary>
+    // /// <param name="obj"></param>
+    // /// <param name="actionChange"></param>
+    // private void OnActionChange(object obj, InputActionChange actionChange)
+    // {
+    //     if (actionChange == InputActionChange.ActionStarted)
+    //     {
+    //         var d = ((InputAction)obj).activeControl.device;
+    //         switch (d.device)
+    //         {
+    //             case Keyboard:
+    //                 if (_currentDevice == Keyboard.current)
+    //                     return;
+    //                 _currentDevice = Keyboard.current;
+    //                 Debug.Log(_currentDevice);
+    //                 break;
+    //             case Gamepad:
+    //                 if (_currentDevice == Gamepad.current)
+    //                     return;
+    //                 _currentDevice = Gamepad.current;
+    //                 Debug.Log(_currentDevice);
+    //                 break;
+    //         }
+    //     }
+    // }
+    
     /// <summary>
     /// デバイス切り替え処理
     /// </summary>
@@ -64,16 +101,16 @@ public class PlayerInput
             switch (d.device)
             {
                 case Keyboard:
-                    if (_currentDevice == Keyboard.current)
+                    if (CurrentDevice.Value == Keyboard.current)
                         return;
-                    _currentDevice = Keyboard.current;
-                    Debug.Log(_currentDevice);
+                    CurrentDevice.Value = Keyboard.current;
+                    //Debug.Log(_currentDevice);
                     break;
                 case Gamepad:
-                    if (_currentDevice == Gamepad.current)
+                    if (CurrentDevice.Value == Gamepad.current)
                         return;
-                    _currentDevice = Gamepad.current;
-                    Debug.Log(_currentDevice);
+                    CurrentDevice.Value = Gamepad.current;
+                    //Debug.Log(_currentDevice);
                     break;
             }
         }

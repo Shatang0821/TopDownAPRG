@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50035a90bde16144482d328a44ad2bc8, type: 3}
   m_Name: Attack01
   m_EditorClassIdentifier: 
-  Radius: 5
-  Angle: 45
-  RayCount: 10
-  RollAngle: 30
-  AnimationTime: 1.99
+  Radius: 2
+  Angle: 150
+  RayCount: 20
+  RollAngle: 52.5
+  StartMoveTime: 0.2
+  StopMoveTime: 0.4
+  Speed: 2

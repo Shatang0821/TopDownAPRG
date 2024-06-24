@@ -15,4 +15,6 @@ MonoBehaviour:
   AttackConfigs:
   - {fileID: 11400000, guid: 09b49a12eccc15b499c88d97f644d4df, type: 2}
   - {fileID: 11400000, guid: 59bfb13508029114280fbe54c8e92e10, type: 2}
-  ComboCount: 1
+  - {fileID: 11400000, guid: 2f5bd7a18ef231d4385e7c99f71b9529, type: 2}
+  - {fileID: 11400000, guid: f7fb6769512e70c4781f2f65e773e8dc, type: 2}
+  ComboCount: 0

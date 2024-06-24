@@ -24,15 +24,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "MouseLook",
-                    "type": "Value",
-                    "id": "8b2c953f-7d82-4e2a-941c-94136c5db500",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
-                },
-                {
                     "name": "Attack",
                     "type": "Button",
                     "id": "763fbca9-7ad6-4362-adaf-ca10b3d951f6",
@@ -122,12 +113,12 @@
                 },
                 {
                     "name": "",
-                    "id": "a2ee8ea6-258e-4da5-8282-b8d8f2760977",
-                    "path": "<Mouse>/position",
+                    "id": "b590874e-ff45-4930-9506-934d5c0e2e87",
+                    "path": "<Gamepad>/buttonEast",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "MouseLook",
+                    "action": "Dash",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -135,6 +126,17 @@
                     "name": "",
                     "id": "8c492915-c756-41de-9203-1ddb69fff4ba",
                     "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4ddd84a1-8ef1-41e0-9646-f64d95eb20de",
+                    "path": "<Gamepad>/buttonWest",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

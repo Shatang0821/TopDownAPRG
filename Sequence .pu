@@ -1,0 +1,36 @@
+@startuml Sequence 
+
+actor Player
+participant TitleScreen
+participant LoginManager
+participant GameManager
+participant PlayerManager
+participant StageManager
+participant PoolManager
+participant EnemyManager
+participant RemoteServer
+
+Player -> TitleScreen: Enter game
+TitleScreen -> LoginManager: ログイン(登録)
+LoginManager -> GameManager: ゲームスタート
+
+GameManager -> PlayerManager: プレイヤデータ初期化
+GameManager -> StageManager: ステージ初期化
+GameManager -> PoolManager: プールにエネミー初期化
+
+PlayerManager -> Player: プレイヤ作成
+StageManager -> Stage: ステージ作成
+
+EnemyManager -> AreaInfo: エリアデータを取得
+EnemyManager -> EnemyInfo: 敵生成データを取得
+EnemyManager -> Enemy: パットロール敵の生成
+
+Player -> GameManager: プレイヤが特定の位置に入
+GameManager -> EnemyManager: 敵生成指示
+EnemyManager -> PoolManager: 敵を指定位置に生成する
+PoolManager -> Enemy: 敵を配置
+
+Player -> GameManager: ステージクリア
+GameManager -> RemoteServer: サーバデータ更新
+
+@enduml
