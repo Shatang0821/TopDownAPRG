@@ -17,13 +17,14 @@ public class MapEditorWindow : EditorWindow
 
     [SerializeField] private GameObject wallPrefab; // 壁のプレハブ
     [SerializeField] private GameObject groundPrefab; // 地面のプレハブ
-
+    
+    //ツール
     private enum Tool
     {
         None,
-        Wall,
-        Ground,
-        Erase
+        Wall,       //壁
+        Ground,     //地面
+        Erase       //削除
     }
 
     private Tool selectedTool = Tool.None;
@@ -39,13 +40,14 @@ public class MapEditorWindow : EditorWindow
     private void OnEnable()
     {
         grids = new int[mapWidth, mapHeight]; // グリッドの状態を0で初期化
-    for (int x = 0; x < mapWidth; x++)
+        for (int x = 0; x < mapWidth; x++)
         {
             for (int y = 0; y < mapHeight; y++)
             {
                 grids[x, y] = 0; // デフォルトは0
             }
         }
+
         selectedTool = Tool.Wall;
     }
 
@@ -122,7 +124,7 @@ public class MapEditorWindow : EditorWindow
         {
             for (int y = 0; y < mapHeight; y++)
             {
-                Rect gridRect = new Rect(rect.x + x * _gridSize, rect.y + (mapHeight - 1 - y) * _gridSize, _gridSize, _gridSize);
+                Rect gridRect = new Rect(rect.x + x * _gridSize, rect.y + y * _gridSize, _gridSize, _gridSize);
                 Color color;
                 if (grids[x, y] == 0) // デフォルト（歩けない）
                 {
@@ -151,7 +153,7 @@ public class MapEditorWindow : EditorWindow
         Event e = Event.current;
         Vector2 mousePos = e.mousePosition;
         int x = Mathf.FloorToInt(mousePos.x / _gridSize);
-        int y = Mathf.FloorToInt((mapHeight * _gridSize - mousePos.y) / _gridSize); // y座標を調整
+        int y = Mathf.FloorToInt(mousePos.y / _gridSize); // y座標を調整
 
         if ((e.type == EventType.MouseDown || e.type == EventType.MouseDrag) && e.button == 0)
         {
@@ -209,7 +211,7 @@ public class MapEditorWindow : EditorWindow
     {
         if (prefab == null || parentObject == null) return;
 
-        Vector3 position = new Vector3(x, 0, y);
+        Vector3 position = new Vector3(x, 0, -y);
         GameObject instance = Instantiate(prefab, position, Quaternion.identity, parentObject.transform);
         instance.name = $"{prefab.name}_{x}_{y}";
     }

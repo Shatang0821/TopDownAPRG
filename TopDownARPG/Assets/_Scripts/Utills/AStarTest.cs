@@ -7,10 +7,10 @@ using UnityEngine;
 [ExecuteInEditMode]
 public class AStarTest : MonoBehaviour
 {
-    public int mapWidth = 5;       // マップの幅
-    public int mapHeight = 5;      // マップの高さ
+    public int mapWidth;       // マップの幅
+    public int mapHeight;      // マップの高さ
     public float cellSize = 1f;     // セルサイズ
-    public string csvFilePath = "Assets/MapData/"; // CSVファイルのパス
+    public string csvFilePath = "Assets/MapData/map.csv"; // CSVファイルのパス
     public Vector2Int startGrid = new Vector2Int(0, 0);
     public Vector2Int endGrid = new Vector2Int(9, 9);
 
@@ -20,15 +20,11 @@ public class AStarTest : MonoBehaviour
     private void Start()
     {
         LoadMapFromCSV(csvFilePath);
-        _ = FindPathAsync(); // 非同期でFindPathを呼び出す
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _ = FindPathAsync(); // 非同期でFindPathを呼び出す
-        }
+       
     }
 
     private void OnDrawGizmos()
@@ -38,44 +34,36 @@ public class AStarTest : MonoBehaviour
             LoadMapFromCSV(csvFilePath);
         }
         DrawGrid();
-        DrawPath();
     }
 
     private void LoadMapFromCSV(string filePath)
     {
-        string[] lines = File.ReadAllLines(filePath);
-        map = new int[lines.Length, lines[0].Split(',').Length];
-
-        for (int y = 0; y < lines.Length; y++)
+        try
         {
-            string[] values = lines[y].Split(',');
-            for (int x = 0; x < values.Length; x++)
-            {
-                map[y, x] = int.Parse(values[x]);  // そのまま読み込む
-            }
-        }
+            string[] lines = File.ReadAllLines(filePath);
+            map = new int[lines.Length, lines[0].Split(',').Length];
 
-        mapHeight = map.GetLength(0);
-        mapWidth = map.GetLength(1);
+            for (int y = 0; y < lines.Length; y++)
+            {
+                string[] values = lines[y].Split(',');
+                for (int x = 0; x < values.Length; x++)
+                {
+                    map[y, x] = int.Parse(values[x]);  // そのまま読み込む
+                }
+            }
+
+            mapHeight = map.GetLength(0);
+            mapWidth = map.GetLength(1);
+        }
+        catch (Exception e)
+        {
+            Debug.LogError("Error loading map from CSV: " + e.Message);
+        }
     }
 
     private void DrawGrid()
     {
         Gizmos.color = Color.gray;
-
-        for (int x = 0; x <= mapWidth; x++)
-        {
-            Vector3 start = transform.position + new Vector3(x * cellSize, 0, 0);
-            Vector3 end = transform.position + new Vector3(x * cellSize, 0, mapHeight * cellSize);
-            Gizmos.DrawLine(start, end);
-        }
-
-        for (int y = 0; y <= mapHeight; y++)
-        {
-            Vector3 start = transform.position + new Vector3(0, 0, y * cellSize);
-            Vector3 end = transform.position + new Vector3(mapWidth * cellSize, 0, y * cellSize);
-            Gizmos.DrawLine(start, end);
-        }
 
         for (int y = 0; y < mapHeight; y++)
         {
@@ -93,39 +81,10 @@ public class AStarTest : MonoBehaviour
                 {
                     Gizmos.color = Color.white;
                 }
-                Gizmos.DrawCube(transform.position + new Vector3(x * cellSize + cellSize / 2, 0, y * cellSize + cellSize / 2), new Vector3(cellSize, 0.1f, cellSize));
+                Gizmos.DrawCube(transform.position + new Vector3(x * cellSize + cellSize / 2, 0, -y * cellSize + cellSize / 2), new Vector3(cellSize, 0.1f, cellSize));
             }
         }
     }
 
-    private void DrawPath()
-    {
-        if (path == null) return;
-
-        Gizmos.color = Color.green;
-        for (int i = 0; i < path.Count - 1; i++)
-        {
-            Vector3 start = transform.position + new Vector3(path[i].x * cellSize + cellSize / 2, 0, path[i].y * cellSize + cellSize / 2);
-            Vector3 end = transform.position + new Vector3(path[i + 1].x * cellSize + cellSize / 2, 0, path[i + 1].y * cellSize + cellSize / 2);
-            Gizmos.DrawLine(start, end);
-        }
-    }
-
-    private async Task FindPathAsync()
-    {
-        if (startGrid.x >= 0 && startGrid.x < mapWidth && startGrid.y >= 0 && startGrid.y < mapHeight &&
-            endGrid.x >= 0 && endGrid.x < mapWidth && endGrid.y >= 0 && endGrid.y < mapHeight)
-        {
-            AStar aStar = new AStar(map);
-            AStar.Node startNode = new AStar.Node(startGrid.x, startGrid.y);
-            AStar.Node endNode = new AStar.Node(endGrid.x, endGrid.y);
-
-            // 重い処理を別スレッドで実行
-            path = await Task.Run(() => aStar.FindPath(startNode, endNode));
-        }
-        else
-        {
-            Debug.LogWarning("Start or end grid is out of bounds!");
-        }
-    }
+    
 }
