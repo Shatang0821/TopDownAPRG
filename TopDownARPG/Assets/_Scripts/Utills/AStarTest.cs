@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -14,19 +13,29 @@ public class AStarTest : MonoBehaviour
     public Vector2Int startGrid = new Vector2Int(0, 0);
     public Vector2Int endGrid = new Vector2Int(9, 9);
 
+    private AStar _aStar;
     private int[,] map;
     private List<AStar.AstarNode> path;
 
     private void Start()
     {
+        _aStar = new AStar();
         LoadMapFromCSV(csvFilePath);
+        _aStar.InitMap(map);
+        path = _aStar.FindPath(startGrid, endGrid);
+        if (path != null)
+        {
+            foreach (var node in path)
+            {
+                Debug.Log(node.Pos);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Path not found.");
+        }
     }
-
-    private void Update()
-    {
-       
-    }
-
+    
     private void OnDrawGizmos()
     {
         if (map == null)
@@ -34,6 +43,7 @@ public class AStarTest : MonoBehaviour
             LoadMapFromCSV(csvFilePath);
         }
         DrawGrid();
+        DrawPath();
     }
 
     private void LoadMapFromCSV(string filePath)
@@ -86,5 +96,20 @@ public class AStarTest : MonoBehaviour
         }
     }
 
-    
+    private void DrawPath()
+    {
+        if (path == null || path.Count == 0)
+            return;
+
+        Gizmos.color = Color.green;
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            var current = path[i];
+            var next = path[i + 1];
+            Gizmos.DrawLine(
+                new Vector3(current.Pos.x * cellSize + cellSize / 2, 0, -current.Pos.y * cellSize + cellSize / 2),
+                new Vector3(next.Pos.x * cellSize + cellSize / 2, 0, -next.Pos.y * cellSize + cellSize / 2)
+            );
+        }
+    }
 }
