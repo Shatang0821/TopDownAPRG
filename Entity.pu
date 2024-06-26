@@ -1,0 +1,73 @@
+@startuml PatrolEnemyState
+package "Game Entities" {
+    class Entity {
+    #Observer<float> maxHealth
+    #Observer<float> currentHealth
+    #Observer<int> power
+    #Observer<float> speed
+    #Animator animator
+    #Rigidbody Rigidbody
+
+    -void OnMaxHealthChanged(float newMaxHealth)
+    -void OnCurrentHealthChanged(float newCurrentHealth)
+    -void OnCurrentPowerChanged(int newPower)
+    -void OnCurrentSpeedChanged(float speed)
+
+    +void Initialize()
+    +void InitValue()
+    +void Damage(float amount)
+    +void SetAnimation(int animHash, bool value)
+}
+
+    class Player {
+        -PlayerStateMachine stateMachine
+        +void Initialize() <<override>>
+    }
+
+    class Enemy {
+        -EnemyStateMachine stateMachine
+        +void Idle() <<virtual>>
+        +void Move() <<virtual>>
+        +void Attack() <<virtual>>
+        +void Damaged() <<virtual>>
+        +void Die() <<virtual>>
+    }
+
+    class Melee{
+        +void Idle() <<override>>
+        +void Move() <<override>>
+        +void Attack() <<override>>
+        +void Damaged() <<override>>
+        +void Die() <<override>>
+    }
+
+    class Ranged{
+        +void Idle() <<override>>
+        +void Move() <<override>>
+        +void Attack() <<override>>
+        +void Damaged() <<override>>
+        +void Die() <<override>>
+    }
+
+    Entity <|-- Player
+    Entity <|-- Enemy
+
+    Enemy <|-down- Melee
+    Enemy <|-down- Ranged
+}
+
+package "Utils"{
+    class Observer<T> {
+        -Action<T> _action
+        -T _value
+        +T ValueGetter
+        +Observer(T value)
+        +void Register(Action<T> action)
+        +void UnRegister(Action<T> action)
+    }
+
+}
+
+Entity -up-> Observer : uses
+
+@enduml

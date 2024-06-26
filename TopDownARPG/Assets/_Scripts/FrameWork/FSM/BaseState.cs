@@ -12,8 +12,9 @@ namespace FrameWork.FSM
 
         public abstract void Enter();
         public abstract void Exit();
-        public abstract void HandleInput();
         public abstract void LogicUpdate();
         public abstract void PhysicsUpdate();
+        public abstract void AnimationEventCalled();
+        public abstract void AnimationEndCalled();
     }
 }
