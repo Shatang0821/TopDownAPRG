@@ -40,8 +40,8 @@ public class UIHomeCtrl : UICtrl
         AddButtonListener("Settings", () => StartCoroutine(PanelDelayCoroutine(Settings)));
         AddButtonListener("Operation", () => StartCoroutine(PanelDelayCoroutine(Operation)));
         AddButtonListener("Exit", () => StartCoroutine(PanelDelayCoroutine(Exit)));
-        AddButtonListener("SettingsPanel/Back", () => StartCoroutine(PanelDelayCoroutine(Back)));
-        AddButtonListener("OperationPanel/Back", () => StartCoroutine(PanelDelayCoroutine(Back)));
+        AddButtonListener("SettingsPanel/SBack", () => StartCoroutine(PanelDelayCoroutine(Back)));
+        AddButtonListener("OperationPanel/OBack", () => StartCoroutine(PanelDelayCoroutine(Back)));
 
         // スライダーとパネルを初期化する
         BgmSlider = View["SettingsPanel/BGMSlider"].GetComponent<Slider>();
@@ -73,8 +73,8 @@ public class UIHomeCtrl : UICtrl
         View["Settings"].GetComponent<Button>(), // 設定ボタン
         View["Operation"].GetComponent<Button>(), // 操作説明ボタン
         View["Exit"].GetComponent<Button>(), // 終了ボタン
-        View["SettingsPanel/Back"].GetComponent<Button>(), // 設定パネルの戻るボタン
-        View["OperationPanel/Back"].GetComponent<Button>() // 操作説明パネルの戻るボタン
+        View["SettingsPanel/SBack"].GetComponent<Button>(), // 設定パネルの戻るボタン
+        View["OperationPanel/OBack"].GetComponent<Button>() // 操作説明パネルの戻るボタン
         };
 
         // すべてのボタンにホバーエフェクトを追加
@@ -153,7 +153,7 @@ public class UIHomeCtrl : UICtrl
             {
                 currentButtonIndex = (currentButtonIndex + 1) % buttons.Length;
                 // 如果当前按钮是 "Exit"，则跳到 "GameStart" 按钮上
-                if (buttons[currentButtonIndex].name == "Back")
+                if (buttons[currentButtonIndex].name == "SBack")
                 {
                     currentButtonIndex = Array.IndexOf(buttons, View["GameStart"].GetComponent<Button>());
                 }
@@ -164,7 +164,7 @@ public class UIHomeCtrl : UICtrl
             {
                 currentButtonIndex = (currentButtonIndex - 1 + buttons.Length) % buttons.Length;
                 // 如果当前按钮是 "Exit"，则跳到 "GameStart" 按钮上
-                if (buttons[currentButtonIndex].name == "Back")
+                if (buttons[currentButtonIndex].name == "OBack")
                 {
                     currentButtonIndex = Array.IndexOf(buttons, View["Exit"].GetComponent<Button>());
                 }
@@ -205,7 +205,7 @@ public class UIHomeCtrl : UICtrl
             {
                 selectedElement = SelectedElement.Button;
                 // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
-                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
+                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/SBack"].GetComponent<Button>());
                 SelectButton(currentButtonIndex);
                 ScaleText(BGM, false);
             }
@@ -243,7 +243,7 @@ public class UIHomeCtrl : UICtrl
             {
                 selectedElement = SelectedElement.Button;
                 // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
-                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
+                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/SBack"].GetComponent<Button>());
                 SelectButton(currentButtonIndex);
                 ScaleText(GSE, false);
             }
@@ -255,10 +255,6 @@ public class UIHomeCtrl : UICtrl
             }
         }
     }
-
-
-
-
 
     // ボタンが押されたときのスケール効果を実装するコルーチン
     private IEnumerator ScaleButtonOnPress(Button button)
@@ -342,7 +338,7 @@ public class UIHomeCtrl : UICtrl
         if (!currentStatus)
         {
             SaveLastSelectedButton(buttons[currentButtonIndex]);
-            currentButtonIndex = System.Array.IndexOf(buttons, View["SettingsPanel/Back"].GetComponent<Button>());
+            currentButtonIndex = System.Array.IndexOf(buttons, View["SettingsPanel/SBack"].GetComponent<Button>());
         }
         View["SettingsPanel"].SetActive(!currentStatus);
         SelectButton(currentButtonIndex);
@@ -356,7 +352,7 @@ public class UIHomeCtrl : UICtrl
         if (!currentStatus)
         {
             SaveLastSelectedButton(buttons[currentButtonIndex]);
-            currentButtonIndex = System.Array.IndexOf(buttons, View["OperationPanel/Back"].GetComponent<Button>());
+            currentButtonIndex = System.Array.IndexOf(buttons, View["OperationPanel/OBack"].GetComponent<Button>());
         }
         View["OperationPanel"].SetActive(!currentStatus);
         SelectButton(currentButtonIndex);
