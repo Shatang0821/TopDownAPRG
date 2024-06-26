@@ -44,7 +44,7 @@
             }
             
         }
-
+        
         private Vector3 GetCurrentHorizontalVelocity()
         {
             Vector3 horizontalVelocity = _rigidbody.velocity;

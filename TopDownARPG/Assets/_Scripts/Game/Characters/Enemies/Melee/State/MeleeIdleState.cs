@@ -9,7 +9,7 @@ public class MeleeIdleState : MeleeMovementState
     public override void Enter()
     {
         base.Enter();
-               
+        
     }
 
     public override void LogicUpdate()
@@ -22,11 +22,13 @@ public class MeleeIdleState : MeleeMovementState
                 //攻撃
                 enemyStateMachine.ChangeState(MeleeStateEnum.Attack);
             }
-            else
+            
+            if(!enemy.InAttackRange)
             {
                 //移動
                 enemyStateMachine.ChangeState(MeleeStateEnum.Move);
             }
+            
         }
     }
 }

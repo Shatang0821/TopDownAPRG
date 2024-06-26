@@ -25,6 +25,8 @@ public class Melee : Enemy
         //èÛë‘ÇÃìoò^ 
         stateMachine.RegisterState(MeleeStateEnum.Idle,new MeleeIdleState("Idle",this,stateMachine));
         stateMachine.RegisterState(MeleeStateEnum.Move,new MeleeMoveState("Move",this,stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Damaged,new MeleeDamagedState("Damaged",this,stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Attack,new MeleeAttackState("Attack",this,stateMachine));
         
         return stateMachine;
     }
@@ -32,5 +34,11 @@ public class Melee : Enemy
     protected override Enum GetInitialState()
     {
         return MeleeStateEnum.Idle;
+    }
+
+    public override void TakenDamageState()
+    {
+        
+        enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
     }
 }

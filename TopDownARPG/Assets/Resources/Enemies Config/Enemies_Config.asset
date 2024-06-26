@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 303d5ca8bd425d046ab779d807bc9f98, type: 3}
   m_Name: Enemies_Config
   m_EditorClassIdentifier: 
-  Melee: {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
+  Enemies:
+  - {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
