@@ -320,8 +320,9 @@ public class UIHomeCtrl : UICtrl
     private void GameStart()
     {
         Debug.Log("GameStart");
-        UIManager.Instance.RemoveUI("UIHome");
         UIManager.Instance.ShowUI("UIGame");
+        UIManager.Instance.RemoveUI("UIHome");
+
         UIManager.Instance.ChangeUIPrefab("UIGame");
 
         if (this.gameObject != null)

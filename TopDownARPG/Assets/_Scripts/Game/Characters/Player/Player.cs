@@ -1,5 +1,7 @@
 using System;
 using FrameWork.EventCenter;
+using FrameWork.SceneLoader;
+using FrameWork.UI;
 using FrameWork.Utils;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -57,7 +59,7 @@ public class Player : Entity
     
     private void Start()
     {
-        //maxHealth.Value -= 10.0f;
+       // maxHealth.Value -= 10.0f;
     }
 
     protected override void OnDisable()
@@ -74,6 +76,11 @@ public class Player : Entity
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             //TakeDamage(5);
+        }
+
+        if(Input.GetKeyDown(KeyCode.M)) 
+        {
+            maxHealth.Value -= 10.0f;
         }
 
 //        Rotation();
@@ -158,6 +165,20 @@ public class Player : Entity
         {
             // コンボのリセット処理など
             ComboConfig.ComboCount = 0;
+        }
+    }
+
+    //チンペン変更
+    protected override void OnCurrentHealthChanged(float newCurrentHealth)
+    {
+        base.OnCurrentHealthChanged(newCurrentHealth);
+        EventCenter.TriggerEvent<float>(HPBar_EVENT.Change, newCurrentHealth);
+
+        if (newCurrentHealth <= 0)
+        {
+            UIManager.Instance.RemoveUI("UIGame");
+            UIManager.Instance.ShowUI("UIEnd");
+            UIManager.Instance.ChangeUIPrefab("UIEnd");
         }
     }
 }

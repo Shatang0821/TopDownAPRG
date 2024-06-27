@@ -41,4 +41,11 @@ public class Melee : Enemy
         
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
     }
+
+    //ƒ`ƒ“ƒyƒ“’Ç‰Á
+    protected override void OnCurrentHealthChanged(float newCurrentHealth)
+    {
+        base.OnCurrentHealthChanged(newCurrentHealth);
+
+    }
 }
