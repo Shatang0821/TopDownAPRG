@@ -7118,6 +7118,8 @@ GameObject:
   m_Component:
   - component: {fileID: 7239306727288005996}
   - component: {fileID: 3698944816211092064}
+  - component: {fileID: 9070005434411081792}
+  - component: {fileID: 3676575796038763128}
   m_Layer: 7
   m_Name: Rock Hurler
   m_TagString: Enemy
@@ -7160,6 +7162,51 @@ MonoBehaviour:
   DetectionFieldOfView: 360
   AttackRange: 10
   AttackFieldOfView: 180
+  Damaged: 0
+--- !u!136 &9070005434411081792
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8382721700994508426}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.45
+  m_Height: 1.3
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!95 &3676575796038763128
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8382721700994508426}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 8ecea2efd5f661d409624700b93e422a, type: 3}
+  m_Controller: {fileID: 9100000, guid: 994d108932a1af441bdb413dc66d46c8, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &8595718346526317044
 GameObject:
   m_ObjectHideFlags: 0
