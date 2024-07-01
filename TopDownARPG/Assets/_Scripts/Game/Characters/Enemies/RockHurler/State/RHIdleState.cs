@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Unity.VisualScripting;
 
-public class RHIdleState : MeleeMovementState
+public class RHIdleState : RHMovementState
 {
     public RHIdleState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
@@ -17,21 +15,17 @@ public class RHIdleState : MeleeMovementState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (enemy.TargetFound)
+        if (enemy.InAttackRange)
         {
-            if (enemy.InAttackRange)
-            {
-                //UŒ‚
-                enemyStateMachine.ChangeState(RHStateEnum.Attack);
-                Debug.Log("UŒ‚");
-            }
-            
-            if(!enemy.TargetFound)
+            enemyStateMachine.ChangeState(RHStateEnum.Attack); 
+            if (enemy.TargetFound)
             {
                 //ˆÚ“®
                 enemyStateMachine.ChangeState(RHStateEnum.Move);
-                Debug.Log("ˆÚ“®");
+                return;
             }
+            return;
         }
+
     }
 }

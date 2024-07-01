@@ -25,8 +25,8 @@ public class API : MonoBehaviour
         form.AddField("password", password.text);
 
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.102:8000/api/create_accout", form);
-        UnityWebRequest getrequest = UnityWebRequest.Get("http://192.168.56.102:8000/api/create_accout");
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/create_accout", form);
+        UnityWebRequest getrequest = UnityWebRequest.Get("http://192.168.56.104:8000/api/create_accout");
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
         yield return getrequest.SendWebRequest();
@@ -53,7 +53,7 @@ public class API : MonoBehaviour
         form.AddField("password", password.text);
 
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.102:8000/api/login", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/login", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
 
@@ -77,7 +77,7 @@ public class API : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("user_name", accountname.text);
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.102:8000/api/get_game_info", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/get_game_info", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
 

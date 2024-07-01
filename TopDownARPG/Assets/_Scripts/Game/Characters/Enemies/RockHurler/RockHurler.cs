@@ -15,16 +15,17 @@ public enum RHStateEnum
 
 public class RockHurler : Enemy
 {
-    public override void TakenDamageState()
-    {
-    }
+
+ 
 
     protected override StateMachine CreateStateMachine()
     {
         var stateMachine = new EnemyStateMachine(this);
         //èÛë‘ÇÃìoò^ 
-        stateMachine.RegisterState(RHStateEnum.Idle, new MeleeIdleState("Idle", this, stateMachine));
-        stateMachine.RegisterState(RHStateEnum.Move, new MeleeMoveState("Move", this, stateMachine));
+        stateMachine.RegisterState(RHStateEnum.Idle, new RHIdleState("Idle", this, stateMachine));
+        stateMachine.RegisterState(RHStateEnum.Move, new RHMoveState("Move", this, stateMachine));
+        stateMachine.RegisterState(RHStateEnum.Attack, new RHAttackState("Attack", this, stateMachine));
+        //stateMachine.RegisterState(RHStateEnum.Damaged, new RHDamagedState("Damaged", this, stateMachine));
 
         return stateMachine;
 
@@ -33,5 +34,17 @@ public class RockHurler : Enemy
     protected override Enum GetInitialState()
     {
         return RHStateEnum.Idle;
+    } 
+    
+    public override void TakenDamageState()
+    {
+        enemyStateMachine.ChangeState(RHStateEnum.Damaged);
     }
+
+    private void AnimationEventCalled()
+    {
+        enemyStateMachine.AnimationEventCalled();
+    }
+
+
 }
