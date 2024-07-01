@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class AStar : MonoBehaviour
+public class AStar
 {
     private int width;  //幅
     private int height; //高さ
@@ -181,20 +181,24 @@ public class AStar : MonoBehaviour
     {
         var neighbors = new List<AstarNode>();
 
-        for (int y = -1; y <= 1; y++)
+        // 4方向（上下左右）を定義
+        int[,] directions = new int[,]
         {
-            for (int x = -1; x <= 1; x++)
-            {
-                if (x == 0 && y == 0) continue;
+            { 0, 1 },  // 上
+            { 1, 0 },  // 右
+            { 0, -1 }, // 下
+            { -1, 0 }  // 左
+        };
+        
+        for (int i = 0; i < 4; i++)
+        {
+            int checkX = node.Pos.x + directions[i, 0];
+            int checkY = node.Pos.y + directions[i, 1];
 
-                int checkX = node.Pos.x + x;
-                int checkY = node.Pos.y + y;
+            if (IsMapExternal(checkX, checkY))
+                continue;
 
-                if (IsMapExternal(checkX, checkY))
-                    continue;
-
-                neighbors.Add(nodeArray[checkX, checkY]);
-            }
+            neighbors.Add(nodeArray[checkX, checkY]);
         }
 
         return neighbors;

@@ -1,12 +1,16 @@
 ﻿using System;
-using FrameWork.FSM;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using StateMachine = FrameWork.FSM.StateMachine;
 
 public abstract  class Enemy : Entity
 {
-    protected Transform player;
+    protected Transform player; //プレイヤ
     public bool TargetFound;    //ターゲット特定
     public bool InAttackRange;  //ターゲットが攻撃範囲内
     //警戒範囲
@@ -17,6 +21,7 @@ public abstract  class Enemy : Entity
     public float AttackFieldOfView = 45.0f; 
     protected StateMachine enemyStateMachine;
 
+    protected List<AStar.AstarNode> path;
     //状態関係
     public bool Damaged;
     protected override void Awake()
@@ -29,12 +34,28 @@ public abstract  class Enemy : Entity
     protected virtual void Start()
     {
         enemyStateMachine.ChangeState(GetInitialState());
+        StartCoroutine(nameof(FindPath));
     }
 
+    IEnumerator FindPath()
+    {
+        while (true)
+        {
+            Debug.Log("aa");
+            path = StageManager.Instance.FindPath(transform.position, player.position);
+            yield return new WaitForSeconds(2.0f);
+        }
+    }
+    
     protected virtual void Update()
     {
         enemyStateMachine.LogicUpdate();
         CheckPlayerRange();
+    }
+
+    protected void FixedUpdate()
+    {
+        enemyStateMachine.PhysicsUpdate();
     }
 
     public override void TakeDamage(float amount)
@@ -63,13 +84,14 @@ public abstract  class Enemy : Entity
     /// プレイヤの方向
     /// </summary>
     private Vector3 _directionToPlayer => (player.position - transform.position).normalized;
+    
     /// <summary>
     /// 警戒攻撃チェック
     /// </summary>
     void CheckPlayerRange()
     {
         float distance = Vector3.Distance(transform.position, player.position);
-
+        
         // 警戒範囲内かつ視野内にいるかをチェック
         if (distance <= DetectionRange)
         {
@@ -156,6 +178,7 @@ public abstract  class Enemy : Entity
         
         Gizmos.DrawLine(position, position + leftBoundary);
         Gizmos.DrawLine(position, position + rightBoundary);
+        DrawPath();
     }
     
     void DrawWireCircle(Vector3 center, float radius, float segmentLength)
@@ -172,7 +195,24 @@ public abstract  class Enemy : Entity
             prevPoint = newPoint;
         }
     }
+    
+    private void DrawPath()
+    {
+        if (path == null || path.Count == 0)
+            return;
 
+        Gizmos.color = Color.green;
+        for (int i = 0; i < path.Count - 1; i++)
+        {
+            var current = path[i];
+            var next = path[i + 1];
+            Gizmos.DrawLine(
+                StageManager.Instance.GridToWorldPosition(current.Pos),
+                StageManager.Instance.GridToWorldPosition(next.Pos)
+            );
+        }
+    }
+    
     #endregion
    
 }

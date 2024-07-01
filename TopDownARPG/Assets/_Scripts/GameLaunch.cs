@@ -39,6 +39,6 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     /// </summary>
     private void InitGameLogic()
     {
-        ManagerFactory.Instance.CreateManager<GameManager>();
+        //ManagerFactory.Instance.CreateManager<GameManager>();
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class AStarTest : MonoBehaviour
 {
     public int mapWidth;       // マップの幅
@@ -17,17 +16,24 @@ public class AStarTest : MonoBehaviour
     private int[,] map;
     private List<AStar.AstarNode> path;
 
+    public GameObject movingObjectPrefab;
+    private GameObject movingObject;
+    private int currentPathIndex = 0;
+    private float moveSpeed = 2f;
+
     private void Start()
     {
         _aStar = new AStar();
         LoadMapFromCSV(csvFilePath);
         _aStar.InitMap(map);
         path = _aStar.FindPath(startGrid, endGrid);
+
         if (path != null)
         {
-            foreach (var node in path)
+            // 移動オブジェクトを生成
+            if (movingObjectPrefab != null)
             {
-                Debug.Log(node.Pos);
+                movingObject = Instantiate(movingObjectPrefab, GridToWorldPosition(path[0].Pos), Quaternion.identity);
             }
         }
         else
@@ -35,14 +41,42 @@ public class AStarTest : MonoBehaviour
             Debug.LogWarning("Path not found.");
         }
     }
+
+    private void Update()
+    {
+        if (movingObject != null && path != null && currentPathIndex < path.Count)
+        {
+            MoveAlongPath();
+        }
+    }
+
+    private void MoveAlongPath()
+    {
+        Vector3 targetPosition = GridToWorldPosition(path[currentPathIndex].Pos);
+        movingObject.transform.position = Vector3.MoveTowards(movingObject.transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+        if (Vector3.Distance(movingObject.transform.position, targetPosition) < 0.1f)
+        {
+            currentPathIndex++;
+        }
+    }
+
+    private Vector3 GridToWorldPosition(Vector2Int gridPosition)
+    {
+        // ローカル座標に変換
+        Vector3 localPosition = new Vector3(gridPosition.x * cellSize + cellSize / 2, 0, -gridPosition.y * cellSize - cellSize / 2);
     
+        // マップのTransformを考慮してワールド座標に変換
+        return transform.TransformPoint(localPosition);
+        //return new Vector3(gridPosition.x * cellSize + cellSize / 2, 0, -gridPosition.y * cellSize - cellSize / 2);
+    }
+
     private void OnDrawGizmos()
     {
         if (map == null)
         {
             LoadMapFromCSV(csvFilePath);
         }
-        DrawGrid();
         DrawPath();
     }
 
@@ -70,32 +104,7 @@ public class AStarTest : MonoBehaviour
             Debug.LogError("Error loading map from CSV: " + e.Message);
         }
     }
-
-    private void DrawGrid()
-    {
-        Gizmos.color = Color.gray;
-
-        for (int y = 0; y < mapHeight; y++)
-        {
-            for (int x = 0; x < mapWidth; x++)
-            {
-                if (map[y, x] == 1)
-                {
-                    Gizmos.color = Color.blue;
-                }
-                else if (map[y, x] == 2)
-                {
-                    Gizmos.color = Color.red;
-                }
-                else
-                {
-                    Gizmos.color = Color.white;
-                }
-                Gizmos.DrawCube(transform.position + new Vector3(x * cellSize + cellSize / 2, 0, -y * cellSize + cellSize / 2), new Vector3(cellSize, 0.1f, cellSize));
-            }
-        }
-    }
-
+    
     private void DrawPath()
     {
         if (path == null || path.Count == 0)
@@ -107,8 +116,8 @@ public class AStarTest : MonoBehaviour
             var current = path[i];
             var next = path[i + 1];
             Gizmos.DrawLine(
-                new Vector3(current.Pos.x * cellSize + cellSize / 2, 0, -current.Pos.y * cellSize + cellSize / 2),
-                new Vector3(next.Pos.x * cellSize + cellSize / 2, 0, -next.Pos.y * cellSize + cellSize / 2)
+                GridToWorldPosition(current.Pos),
+                GridToWorldPosition(next.Pos)
             );
         }
     }
