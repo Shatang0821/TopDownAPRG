@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 6835673523945206532}
   - component: {fileID: 3307016958746960547}
   m_Layer: 5
-  m_Name: Jump
+  m_Name: Dash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -531,7 +531,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Jump
+  m_Text: Dash
 --- !u!1 &831732911465303964
 GameObject:
   m_ObjectHideFlags: 0

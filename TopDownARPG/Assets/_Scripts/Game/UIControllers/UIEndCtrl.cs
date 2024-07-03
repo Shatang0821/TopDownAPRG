@@ -17,13 +17,16 @@ public class UIEndCtrl : UICtrl
         base.Awake();
         AddButtonListener("Title", Title);
         AddButtonListener("Exit", Exit);
-        AddButtonListener("GameLose/ReStart", ReStart);
+        AddButtonListener("ReStart", ReStart);
          
         AddButtonHoverEffect("Title");
         AddButtonHoverEffect("Exit");
-        AddButtonHoverEffect("GameLose/ReStart");
+        AddButtonHoverEffect("ReStart");
 
         _blackImage = View["Black"].GetComponent<Image>();// Black Image を取得
+
+        AudioManager.Instance.PlayLoseBgm();
+        AudioManager.Instance.StopAllNonLoseBgms();
 
         // 1秒後にBlack Imageを非表示にするコルーチンを開始
         StartCoroutine(HideBlackImageAfterDelay());

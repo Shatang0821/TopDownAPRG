@@ -20,8 +20,8 @@ public class UILoginCtrl : UICtrl
         AddButtonHoverEffect("RegistrationScreenPanel/Complete");
         AddButtonHoverEffect("RegistrationScreenPanel/Back");
 
-        // 播放背景音乐
-        PlayBackgroundMusic();
+        AudioManager.Instance.PlayBgmPlayer();
+        AudioManager.Instance.StopAllNonBgmPlayers();
     }
 
     void Start()
@@ -78,11 +78,5 @@ public class UILoginCtrl : UICtrl
         Button button = View[buttonName].GetComponent<Button>();
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
-    }
-
-    private void PlayBackgroundMusic()
-    {
-        // 这里假设 AudioManager 是你的背景音乐管理类，并且有一个 PlayBackgroundMusic 方法来播放背景音乐
-        AudioManager.Instance.PlayBgmPlayer();
     }
 }

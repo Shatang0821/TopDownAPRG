@@ -92,6 +92,12 @@ public class UIHomeCtrl : UICtrl
 
         // 1秒後にBlack Imageを非表示にするコルーチンを開始
         StartCoroutine(HideBlackImageAfterDelay());
+
+        if (!AudioManager.Instance.IsBgmPlaying())
+        {
+            AudioManager.Instance.PlayBgmPlayer();
+        }
+        AudioManager.Instance.StopAllNonBgmPlayers();
     }
 
 

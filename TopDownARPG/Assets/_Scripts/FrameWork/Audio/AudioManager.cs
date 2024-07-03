@@ -53,10 +53,14 @@ namespace FrameWork.Audio
             Dash.playOnAwake = false;
         }
 
+        public bool IsBgmPlaying()
+        {
+            return BgmPlayer.isPlaying;
+        }
 
         public void StopGameBgmPlayer()
         {
-            // ここにゲーム用のBGMを停止するコードを追加します
+            // 这里添加停止游戏背景音乐的代码
             if (GameBgmPlayer.isPlaying)
                 GameBgmPlayer.Stop();
         }
@@ -117,7 +121,7 @@ namespace FrameWork.Audio
             PlayRandomSfx(audioData[Random.Range(0, audioData.Length)]);
         }
 
-        #region GBM止め
+        #region GBM停止
         public void StopAllNonBgmPlayers()
         {
             if (WinBgm.isPlaying)
@@ -167,7 +171,7 @@ namespace FrameWork.Audio
         }
         #endregion
 
-        #region 音
+        #region 音效
         public void PlayBgmPlayer()
         {
             PlaySfx(BgmPlayer, BgmValue);
@@ -191,38 +195,38 @@ namespace FrameWork.Audio
         public void PlayGsePlayer()
         {
             PlaySfx(GsePlayer, GseValue);
-        }   
-        
+        }
+
         public void PlayGseChangeSound()
         {
             PlaySfx(GseChangeSound, GseValue);
-        }  
-        
+        }
+
         public void PlayAttack()
         {
             PlaySfx(Attack, GseValue);
-        }   
-        
+        }
+
         public void PlayAttack_E()
         {
             PlaySfx(Attack_E, GseValue);
-        }   
-        
+        }
+
         public void PlayCRE_Attack()
         {
             PlaySfx(CRE_Attack, GseValue);
-        }  
-        
+        }
+
         public void PlayCRE_Hit()
         {
             PlaySfx(CRE_Hit, GseValue);
-        }   
-        
+        }
+
         public void PlayLRE_Attack()
         {
             PlaySfx(LRE_Attack, GseValue);
-        }  
-        
+        }
+
         public void PlayLRE_Hit()
         {
             PlaySfx(LRE_Hit, GseValue);

@@ -46,9 +46,6 @@ public class UIGameCtrl : UICtrl
             {
                 this.gameObject.SetActive(false);
             }
-
-            // 停止播放游戏背景音乐
-            AudioManager.Instance.StopGameBgmPlayer();
         }
     }
 }
