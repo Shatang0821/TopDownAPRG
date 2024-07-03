@@ -1,4 +1,5 @@
 ﻿using System;
+using FrameWork.Audio;
 using FrameWork.FSM;
 using UnityEngine;
 using UnityEngine.AI;
@@ -41,6 +42,9 @@ public abstract  class Enemy : Entity
     {
         base.TakeDamage(amount);
         Damaged = true;
+
+        //チンペン音
+        AudioManager.Instance.PlayAttack();
     }
 
     /// <summary>

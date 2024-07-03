@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using FrameWork.Audio;
+using UnityEngine;
 
 public class PlayerDashState : PlayerBaseState
 {
@@ -13,6 +14,9 @@ public class PlayerDashState : PlayerBaseState
         base.Enter();
         _direction = player.Axis;
         _duration = 0.1f;
+
+        //チンペン音
+        AudioManager.Instance.PlayDash();
     }
 
     public override void LogicUpdate()
