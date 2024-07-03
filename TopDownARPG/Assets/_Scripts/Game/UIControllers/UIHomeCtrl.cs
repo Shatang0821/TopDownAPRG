@@ -118,7 +118,10 @@ public class UIHomeCtrl : UICtrl
     private IEnumerator HideBlackImageAfterDelay()
     {
         yield return new WaitForSeconds(1.8f);
-        _blackImage.gameObject.SetActive(false);
+        if (_blackImage != null)
+        {
+            _blackImage.gameObject.SetActive(false);
+        }
     }
 
     // フレームごとに呼び出される
@@ -320,9 +323,8 @@ public class UIHomeCtrl : UICtrl
     private void GameStart()
     {
         Debug.Log("GameStart");
-        UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.RemoveUI("UIHome");
-
+        UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 
         if (this.gameObject != null)

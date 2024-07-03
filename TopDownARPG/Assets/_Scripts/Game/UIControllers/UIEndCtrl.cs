@@ -58,6 +58,7 @@ public class UIEndCtrl : UICtrl
     private void ReStart()
     {
         Debug.Log("ReStart");
+        UIManager.Instance.RemoveUI("UIEnd");
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 

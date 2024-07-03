@@ -80,7 +80,7 @@ public class Entity : MonoBehaviour, IDamaged
 
     protected virtual void OnCurrentHealthChanged(float newCurrentHealth)
     {
-        Debug.Log($"Current Health Changed to: {newCurrentHealth}");
+        Debug.Log($"Current Health Changed to: {newCurrentHealth}");　
     }
 
     public virtual void TakeDamage(float amount)

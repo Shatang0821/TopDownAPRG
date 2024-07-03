@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using FrameWork.UI;
@@ -6,31 +6,33 @@ using FrameWork.Utils;
 using FrameWork.Audio;
 using UnityEngine.EventSystems;
 
-
-public class UIGameCtrl : UICtrl 
+public class UIGameCtrl : UICtrl
 {
-    private Image _blackImage; // Black Image ‚ğŠi”[‚·‚é‚½‚ß‚Ì•Ï”
+    private Image _blackImage; // Black Image ã‚’æ ¼ç´ã™ã‚‹ãŸã‚ã®å¤‰æ•°
 
-    public override void Awake() {
+    public override void Awake()
+    {
+        base.Awake();
+        _blackImage = View["Black"].GetComponent<Image>(); // Black Image ã‚’å–å¾—
 
-		base.Awake();
-        _blackImage = View["Black"].GetComponent<Image>();// Black Image ‚ğæ“¾
-
-        // 1•bŒã‚ÉBlack Image‚ğ”ñ•\¦‚É‚·‚éƒRƒ‹[ƒ`ƒ“‚ğŠJn
+        // 1ç§’å¾Œã«Black Imageã‚’éè¡¨ç¤ºã«ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³ã‚’é–‹å§‹
         StartCoroutine(HideBlackImageAfterDelay());
+
+        // æ’­æ”¾æ¸¸æˆèƒŒæ™¯éŸ³ä¹å¹¶ç¦ç”¨å…¶ä»– BGM
+        AudioManager.Instance.PlayGameBgmPlayer();
+        AudioManager.Instance.StopAllNonGameBgmPlayers();
     }
 
-    // 1•bŒã‚ÉBlack Image‚ğ”ñ•\¦‚É‚·‚éƒRƒ‹[ƒ`ƒ“
+    // 1ç§’å¾Œã«Black Imageã‚’éè¡¨ç¤ºã«ã™ã‚‹ã‚³ãƒ«ãƒ¼ãƒãƒ³
     private IEnumerator HideBlackImageAfterDelay()
     {
         yield return new WaitForSeconds(1.8f);
         _blackImage.gameObject.SetActive(false);
     }
 
-
-
-    void Start() {
-	}
+    void Start()
+    {
+    }
 
     private void Update()
     {
@@ -44,6 +46,9 @@ public class UIGameCtrl : UICtrl
             {
                 this.gameObject.SetActive(false);
             }
+
+            // åœæ­¢æ’­æ”¾æ¸¸æˆèƒŒæ™¯éŸ³ä¹
+            AudioManager.Instance.StopGameBgmPlayer();
         }
     }
 }
