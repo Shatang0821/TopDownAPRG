@@ -36,7 +36,7 @@ namespace FrameWork.UI
 
             _uiPrefabs = new Dictionary<string, GameObject>();
         }
-        
+
 
         /// <summary>
         /// UIオブジェクトの切り替え操作
@@ -49,8 +49,15 @@ namespace FrameWork.UI
                 _currentUIPrefab.SetActive(false);
             }
 
-            _currentUIPrefab = _uiPrefabs[uiName];
-            _currentUIPrefab.SetActive(true);
+            if (_uiPrefabs.ContainsKey(uiName))
+            {
+                _currentUIPrefab = _uiPrefabs[uiName];
+                _currentUIPrefab.SetActive(true);
+            }
+            else
+            {
+                Debug.LogWarning($"UI with name {uiName} does not exist in ChangeUIPrefab.");
+            }
         }
 
         /// <summary>
@@ -65,16 +72,25 @@ namespace FrameWork.UI
             {
                 parent = this.Canvas.transform;
             }
-            
+
+            // Check if the UI prefab already exists
+            if (_uiPrefabs.ContainsKey(uiName))
+            {
+                Debug.LogWarning($"UI with name {uiName} already exists, updating...");
+                GameObject existingUI = _uiPrefabs[uiName];
+                GameObject.Destroy(existingUI);
+                _uiPrefabs.Remove(uiName);
+            }
+
             // UIプレハブを取得する
             GameObject uiPrefab = ResManager.Instance.GetAssetCache<GameObject>(UIPREFABROOT + uiName);
 
             // UIプレハブを生成する
             GameObject uiView = GameObject.Instantiate(uiPrefab, parent, false);
-            
+
             uiView.name = uiName;
             _uiPrefabs.Add(uiName, uiView);
-            
+
             Type type = Type.GetType(uiName + "Ctrl");
             UICtrl ctrl = (UICtrl)uiView.AddComponent(type);
 
@@ -87,10 +103,17 @@ namespace FrameWork.UI
         /// <param name="uiName"></param>
         public void RemoveUI(string uiName)
         {
-            Transform view = this.Canvas.transform.Find(uiName);
-            if (view)
+            if (_uiPrefabs.ContainsKey(uiName))
             {
-                GameObject.Destroy(view.gameObject);
+                GameObject uiView = _uiPrefabs[uiName];
+                Debug.Log($"Removing UI: {uiName}");
+                GameObject.Destroy(uiView);
+                _uiPrefabs.Remove(uiName);
+                Debug.Log($"UI {uiName} removed.");
+            }
+            else
+            {
+                Debug.LogWarning($"UI with name {uiName} does not exist.");
             }
         }
 
@@ -99,19 +122,11 @@ namespace FrameWork.UI
         /// </summary>
         public void RemoveAll()
         {
-            //すべてのUIをリストに入れる
-            List<Transform> children = new List<Transform>();
-            //すべてのUIをリストに入れる
-            foreach (Transform variable in this.Canvas.transform)
+            foreach (var uiView in _uiPrefabs.Values)
             {
-                children.Add(variable);
+                GameObject.Destroy(uiView);
             }
-
-            //リスト内のUIを削除
-            foreach (var t in children)
-            {
-                GameObject.Destroy(t.gameObject);
-            }
+            _uiPrefabs.Clear();
         }
     }
 }

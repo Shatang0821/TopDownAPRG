@@ -9,7 +9,7 @@ namespace SK
     {
         private void Awake()
         {
-            UIManager.Instance.ShowUI("UIGame");
+            UIManager.Instance.ShowUI("UILogin");
         }
         // Start is called before the first frame update
         void Start()

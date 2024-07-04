@@ -20,7 +20,10 @@ public class UILoginCtrl : UICtrl
         AddButtonHoverEffect("RegistrationScreenPanel/Complete");
         AddButtonHoverEffect("RegistrationScreenPanel/Back");
 
-        AudioManager.Instance.PlayBgmPlayer();
+        if (!AudioManager.Instance.IsBgmPlaying())
+        {
+            AudioManager.Instance.PlayBgmPlayer();
+        }
         AudioManager.Instance.StopAllNonBgmPlayers();
     }
 

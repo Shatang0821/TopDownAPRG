@@ -40,6 +40,7 @@ public class UIHomeCtrl : UICtrl
         AddButtonListener("Settings", () => StartCoroutine(PanelDelayCoroutine(Settings)));
         AddButtonListener("Operation", () => StartCoroutine(PanelDelayCoroutine(Operation)));
         AddButtonListener("Exit", () => StartCoroutine(PanelDelayCoroutine(Exit)));
+        AddButtonListener("Logout", () => StartCoroutine(PanelDelayCoroutine(Logout)));
         AddButtonListener("SettingsPanel/SBack", () => StartCoroutine(PanelDelayCoroutine(Back)));
         AddButtonListener("OperationPanel/OBack", () => StartCoroutine(PanelDelayCoroutine(Back)));
 
@@ -73,6 +74,7 @@ public class UIHomeCtrl : UICtrl
         View["Settings"].GetComponent<Button>(), // 設定ボタン
         View["Operation"].GetComponent<Button>(), // 操作説明ボタン
         View["Exit"].GetComponent<Button>(), // 終了ボタン
+        View["Logout"].GetComponent<Button>(), // 終了ボタン
         View["SettingsPanel/SBack"].GetComponent<Button>(), // 設定パネルの戻るボタン
         View["OperationPanel/OBack"].GetComponent<Button>() // 操作説明パネルの戻るボタン
         };
@@ -372,6 +374,19 @@ public class UIHomeCtrl : UICtrl
     {
         Debug.Log("Exit");
         Application.Quit();
+    }
+
+    private void Logout()
+    {
+        Debug.Log("Logout");
+        UIManager.Instance.RemoveUI("UIHome");
+        UIManager.Instance.ShowUI("UILogin");
+        UIManager.Instance.ChangeUIPrefab("UILogin");
+
+        if (this.gameObject != null)
+        {
+            this.gameObject.SetActive(false);
+        }
     }
 
     // 戻るボタンが押されたときの処理
