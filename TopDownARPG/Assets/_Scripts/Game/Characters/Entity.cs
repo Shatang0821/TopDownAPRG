@@ -83,6 +83,10 @@ public class Entity : MonoBehaviour, IDamaged
         Debug.Log($"Current Health Changed to: {newCurrentHealth}");
     }
 
+    /// <summary>
+    /// ダメージを受けた時の処理
+    /// </summary>
+    /// <param name="amount"></param>
     public virtual void TakeDamage(float amount)
     {
         currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);

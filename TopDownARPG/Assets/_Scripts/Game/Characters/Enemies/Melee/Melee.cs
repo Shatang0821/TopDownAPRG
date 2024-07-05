@@ -62,7 +62,11 @@ public class Melee : Enemy
     
     public override void TakenDamageState()
     {
-        
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
+    }
+
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
     }
 }

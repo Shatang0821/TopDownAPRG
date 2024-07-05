@@ -7,11 +7,19 @@ using UnityEngine;
 public class EnemyManager : UnitySingleton<EnemyManager>
 {
     private List<Enemy> _currentWaveEnemies;
+    private List<Enemy> _enemiesToRemove;
+    
     private GameObject _enemy;
     private EnemiesConfig _enemiesConfig;
-    
+
+    private Transform _playerTransform; //プレイヤーの変換情報
+    /// <summary>
+    /// EnemyManagerの初期化
+    /// </summary>
     public void Initialize()
     {
+        _playerTransform = FindObjectOfType<Player>().transform;
+        
         _enemiesConfig = ResManager.Instance.GetAssetCache<EnemiesConfig>("Enemies Config/Enemies_Config");
         if (!_enemiesConfig)
         {
@@ -19,31 +27,60 @@ public class EnemyManager : UnitySingleton<EnemyManager>
             return;
         }
         _currentWaveEnemies = new List<Enemy>();
+        _enemiesToRemove = new List<Enemy>();
         SpawnEnemy();
     }
-
+    
+    /// <summary>
+    /// 敵の生成
+    /// </summary>
     public void SpawnEnemy()
     {
         foreach (var enemy in _enemiesConfig.Enemies)
         {
-           var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
-            _currentWaveEnemies.Add(eObject.GetComponent<Enemy>());
+            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
+            var enemyComponent = eObject.GetComponent<Enemy>();
+            enemyComponent.SetPlayerTransform(_playerTransform);
+            _currentWaveEnemies.Add(enemyComponent);
         }
     }
-    public void ApplyDamageToEnemy(Enemy enemy, float damage)
+
+    /// <summary>
+    /// ウェーブに敵を登録する
+    /// </summary>
+    /// <param name="enemy">敵</param>
+    public void RegisterWaveEnemy(Enemy enemy)
     {
-        
-        if (_currentWaveEnemies.Contains(enemy))
-        {
-            enemy.TakeDamage(damage);
-        }
+        _currentWaveEnemies.Add(enemy);
+        enemy.OnDeath += HandleEnemyDeath;
+    }
+    
+    private void HandleEnemyDeath(Enemy enemy)
+    {
+        _enemiesToRemove.Add(enemy);
+        enemy.OnDeath -= HandleEnemyDeath;
+        // Wave管理などの追加処理
     }
 
     private void Update()
     {
         foreach (var enemy in _currentWaveEnemies)
         {
-            enemy.LogicUpdate();
+            if (enemy)
+            {
+                enemy.LogicUpdate(); 
+            }
+        }
+        
+        // 遅延削除処理
+        if (_enemiesToRemove.Count > 0)
+        {
+            foreach (var enemy in _enemiesToRemove)
+            {
+                _currentWaveEnemies.Remove(enemy);
+                // その他のクリーンアップ処理
+            }
+            _enemiesToRemove.Clear();
         }
     }
 }

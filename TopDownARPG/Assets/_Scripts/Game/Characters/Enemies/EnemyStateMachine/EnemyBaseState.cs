@@ -16,7 +16,7 @@ public class EnemyBaseState : BaseState
     public override void Enter()
     {
         stateTimer = 0;
-        //Debug.Log(this.GetType().ToString());
+        Debug.Log(this.GetType().ToString());
         enemy.SetAnimation(StateBoolHash,true);
     }
 
@@ -28,7 +28,7 @@ public class EnemyBaseState : BaseState
     public override void LogicUpdate()
     {
         stateTimer += Time.deltaTime;
-        if (enemy.Damaged)
+        if (enemy.IsTakenDamaged)
         {
             enemy.TakenDamageState();
         }
