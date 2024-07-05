@@ -65,8 +65,11 @@ public class StageManager : Singleton<StageManager>
     /// <param name="target">ターゲットの位置</param>
     public List<AStar.AstarNode> FindPath(Vector3 self, Vector3 target)
     {
+        Debug.Log("start Pos" + self);
+        Debug.Log("target Pos" + target);
         Vector2Int startGrid = WorldToGridPosition(self);
         Vector2Int endGrid = WorldToGridPosition(target);
+        
         Debug.Log(startGrid +","+endGrid);
         var path = _aStar.FindPath(startGrid, endGrid);
         
@@ -89,10 +92,10 @@ public class StageManager : Singleton<StageManager>
         
         // ワールド座標をローカル座標に変換
         Vector3 localPosition = _currentStagePrefab.transform.InverseTransformPoint(worldPosition);
-        
         // ローカル座標を基にグリッド座標に変換
-        int x = Mathf.Abs(Mathf.RoundToInt((localPosition.x) / stageConfig.CellSize));
-        int y = Mathf.Abs(Mathf.RoundToInt((localPosition.z) / stageConfig.CellSize));
+        // ローカル座標を基にグリッド座標に変換
+        int x = Mathf.FloorToInt(Mathf.Abs((localPosition.x / stageConfig.CellSize)));
+        int y = Mathf.FloorToInt(Mathf.Abs((localPosition.z / stageConfig.CellSize)));
         return new Vector2Int(x, y);
     }
     

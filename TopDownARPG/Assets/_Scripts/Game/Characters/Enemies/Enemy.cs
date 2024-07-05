@@ -21,12 +21,16 @@ public abstract  class Enemy : Entity
     public float AttackFieldOfView = 45.0f; 
     protected StateMachine enemyStateMachine;
 
-    protected List<AStar.AstarNode> path;
+    public List<AStar.AstarNode> Path;
+    public int CurrentPathIndex = 0;
+
+    protected bool _finding = false;
     //状態関係
     public bool Damaged;
     protected override void Awake()
     {
         base.Awake();
+        Path = new List<AStar.AstarNode>();
         enemyStateMachine = CreateStateMachine();
         player = FindObjectOfType<Player>().transform;
     }
@@ -34,18 +38,24 @@ public abstract  class Enemy : Entity
     protected virtual void Start()
     {
         enemyStateMachine.ChangeState(GetInitialState());
-        StartCoroutine(nameof(FindPath));
+    }
+    
+    /// <summary>
+    /// パスの探索
+    /// </summary>
+    public virtual void FindPath()
+    {
+        if (!_finding)
+        {
+            _finding = true;
+            CurrentPathIndex = 0;
+            Path = StageManager.Instance.FindPath(transform.position, player.position);
+            _finding = false;
+        }
+        
     }
 
-    IEnumerator FindPath()
-    {
-        while (true)
-        {
-            Debug.Log("aa");
-            path = StageManager.Instance.FindPath(transform.position, player.position);
-            yield return new WaitForSeconds(2.0f);
-        }
-    }
+
     
     protected virtual void Update()
     {
@@ -64,6 +74,9 @@ public abstract  class Enemy : Entity
         Damaged = true;
     }
 
+    public abstract void Move(Vector2 dir);
+
+    public abstract void StopMove();
     /// <summary>
     /// ステートマシンの初期化関数
     /// </summary>
@@ -198,14 +211,14 @@ public abstract  class Enemy : Entity
     
     private void DrawPath()
     {
-        if (path == null || path.Count == 0)
+        if (Path == null || Path.Count == 0)
             return;
 
         Gizmos.color = Color.green;
-        for (int i = 0; i < path.Count - 1; i++)
+        for (int i = 0; i < Path.Count - 1; i++)
         {
-            var current = path[i];
-            var next = path[i + 1];
+            var current = Path[i];
+            var next = Path[i + 1];
             Gizmos.DrawLine(
                 StageManager.Instance.GridToWorldPosition(current.Pos),
                 StageManager.Instance.GridToWorldPosition(next.Pos)

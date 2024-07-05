@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StagePrefab: {fileID: 2064173647722230053, guid: 414fb1c57a14c08479f965847b9927ea, type: 3}
   DataFilePath: Assets/MapData/map.csv
-  MapWidth: 16
-  MapHeight: 16
-  SpawnPos: {x: 0, y: -0.5, z: 0}
+  MapWidth: 32
+  MapHeight: 32
+  SpawnPos: {x: 0, y: 0, z: 0}
+  CellSize: 1

@@ -76,6 +76,8 @@ public class Player : Entity
             //TakeDamage(5);
         }
 
+        StageManager.Instance.WorldToGridPosition(this.transform.position);
+
 //        Rotation();
     }
 
