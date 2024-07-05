@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class AStar
@@ -36,7 +35,7 @@ public class AStar
             {
                 var type = map[y, x] == 1 ? BlockType.Walk : BlockType.Stop;
                 nodeArray[x, y] = new AstarNode(x, y, type);
-                Debug.Log($"Node initialized at ({x}, {y}) with type {type}");
+                //Debug.Log($"Node initialized at ({x}, {y}) with type {type}");
             }
         }
     }
@@ -83,8 +82,8 @@ public class AStar
         var startNode = nodeArray[start.x, start.y];
         var goalNode = nodeArray[goal.x, goal.y];
 
-        Debug.Log("Start Node: " + startNode.Pos + " Goal Node: " + goalNode.Pos);
-        Debug.Log("Start Type: " + startNode.BlockType + " Goal Type: " + goalNode.BlockType);
+        //Debug.Log("Start Node: " + startNode.Pos + " Goal Node: " + goalNode.Pos);
+        //Debug.Log("Start Type: " + startNode.BlockType + " Goal Type: " + goalNode.BlockType);
     
         if (IsMapExternal(startNode.Pos.x, startNode.Pos.y) || IsMapExternal(goalNode.Pos.x, goalNode.Pos.y))
         {
@@ -132,7 +131,7 @@ public class AStar
                 path.Reverse();
                 _closeList = path;
 
-//                Debug.Log("Path found: " + string.Join(" -> ", path.Select(n => n.Pos.ToString()).ToArray()));
+
                 return;
             }
             

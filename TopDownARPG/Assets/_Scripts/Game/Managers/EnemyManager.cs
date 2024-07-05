@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
@@ -35,6 +36,14 @@ public class EnemyManager : UnitySingleton<EnemyManager>
         if (_currentWaveEnemies.Contains(enemy))
         {
             enemy.TakeDamage(damage);
+        }
+    }
+
+    private void Update()
+    {
+        foreach (var enemy in _currentWaveEnemies)
+        {
+            enemy.LogicUpdate();
         }
     }
 }

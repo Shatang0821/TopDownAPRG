@@ -14,3 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Enemies:
   - {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
+  - {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
+  - {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
+  - {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
@@ -22,6 +23,7 @@ public abstract  class Enemy : Entity
     protected StateMachine enemyStateMachine;
 
     public List<AStar.AstarNode> Path;
+    public List<AStar.AstarNode> _path;
     public int CurrentPathIndex = 0;
 
     protected bool _finding = false;
@@ -31,6 +33,7 @@ public abstract  class Enemy : Entity
     {
         base.Awake();
         Path = new List<AStar.AstarNode>();
+        _path = new List<AStar.AstarNode>();
         enemyStateMachine = CreateStateMachine();
         player = FindObjectOfType<Player>().transform;
     }
@@ -47,17 +50,24 @@ public abstract  class Enemy : Entity
     {
         if (!_finding)
         {
+            Path.Clear();
             _finding = true;
             CurrentPathIndex = 0;
-            Path = StageManager.Instance.FindPath(transform.position, player.position);
+            // 新しいリストのコピーを取得
+            List<AStar.AstarNode> newPath = StageManager.Instance.FindPath(transform.position, player.position);
+            
+            if (newPath != null)
+            {
+                Path = new List<AStar.AstarNode>(newPath); // コピーを作成して代入
+            }
+            
+            _path = Path;
             _finding = false;
         }
         
     }
-
-
     
-    protected virtual void Update()
+    public virtual void LogicUpdate()
     {
         enemyStateMachine.LogicUpdate();
         CheckPlayerRange();
@@ -215,6 +225,8 @@ public abstract  class Enemy : Entity
             return;
 
         Gizmos.color = Color.green;
+        //Debug.Log("パスの長さ" + Path.Count);
+        //Debug.Log("Path found: " + string.Join(" -> ", Path.Select(n => n.Pos.ToString()).ToArray()));
         for (int i = 0; i < Path.Count - 1; i++)
         {
             var current = Path[i];
