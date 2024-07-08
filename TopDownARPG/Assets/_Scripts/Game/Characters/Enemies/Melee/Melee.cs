@@ -17,10 +17,13 @@ public enum MeleeStateEnum{
 public class Melee : Enemy
 {
     private MovementComponent _movementComponent;
+    public AttackComponent AttackComponent;
     protected override void Awake()
     {
         base.Awake();
         _movementComponent = new MovementComponent(Rigidbody, transform);
+        AttackComponent = GetComponent<AttackComponent>();
+        
         speed = new Observer<float>(2);
     }
 
@@ -45,7 +48,6 @@ public class Melee : Enemy
         
         return stateMachine;
     }
-    
 
     protected override Enum GetInitialState()
     {
@@ -64,9 +66,5 @@ public class Melee : Enemy
     {
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
     }
-
-    public override void TakeDamage(float amount)
-    {
-        base.TakeDamage(amount);
-    }
+    
 }

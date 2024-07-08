@@ -1,5 +1,6 @@
 ﻿public class MeleeAttackState : EnemyBaseState
 {
+    
     public MeleeAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
     }
@@ -14,5 +15,7 @@
         {
             enemyStateMachine.ChangeState(MeleeStateEnum.Idle);
         }
+        
+        
     }
 }
