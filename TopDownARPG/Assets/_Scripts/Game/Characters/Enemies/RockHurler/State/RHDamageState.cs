@@ -11,7 +11,7 @@ public class RHDamageState : RHMovementState
     public override void Enter()
     {
         base.Enter();
-        enemy.Damaged = false;
+        enemy.IsTakenDamaged = false;
     }
 
     public override void LogicUpdate()

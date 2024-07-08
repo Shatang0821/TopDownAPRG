@@ -39,16 +39,10 @@ public class EnemyManager : UnitySingleton<EnemyManager>
         
         foreach (var enemy in _enemiesConfig.Enemies)
         {
-<<<<<<< HEAD
-            Debug.Log("a");
-           var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
-            _currentWaveEnemies.Add(eObject.GetComponent<Enemy>());
-=======
             var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
             var enemyComponent = eObject.GetComponent<Enemy>();
             enemyComponent.SetPlayerTransform(_playerTransform);
             _currentWaveEnemies.Add(enemyComponent);
->>>>>>> Enemy01
         }
     }
 
