@@ -10,7 +10,7 @@ public class MapEditorWindow : EditorWindow
     private static int mapHeight;               //マップの高さ
     private static GameObject parentObject;     //マップの親オブジェクト
     // グリッド情報
-    private int _gridSize = 20;
+    private int _gridSize = 15;
     private int[,] grids; // グリッドの状態を管理するint型配列
     private bool _isPainting = false;            // 描くトリガー
     private bool _isErasing = false;             // 削除トリガー
