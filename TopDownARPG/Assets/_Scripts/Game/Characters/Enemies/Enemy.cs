@@ -1,30 +1,39 @@
 ﻿using System;
-using FrameWork.Audio;
-using FrameWork.FSM;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
+using StateMachine = FrameWork.FSM.StateMachine;
 
 public abstract  class Enemy : Entity
 {
-    protected Transform player;
-    public bool TargetFound;    //ターゲット特定
-    public bool InAttackRange;  //ターゲットが攻撃範囲内
-    //警戒範囲
-    public float DetectionRange = 5.0f;             //警戒範囲
-    public float DetectionFieldOfView = 45.0f;      //警戒視野角(度)
-    //攻撃範囲
-    public float AttackRange = 5.0f;
-    public float AttackFieldOfView = 45.0f; 
+    private Transform playerTransform;
+    public bool TargetFound { get; private set; }    // ターゲット特定
+    public bool InAttackRange { get; private set; }  // ターゲットが攻撃範囲内
+    public float DetectionRange = 5.0f;              // 警戒範囲
+    public float DetectionFieldOfView = 45.0f;       // 警戒視野角(度)
+    public float AttackRange = 5.0f;                 // 攻撃範囲
+    public float AttackFieldOfView = 45.0f;          // 攻撃視野角(度)
     protected StateMachine enemyStateMachine;
+    public List<AStar.AstarNode> Path { get; private set; }
+    public int CurrentPathIndex = 0;                 // パスの現在添え字
+    private bool _finding = false;
+    
+    public bool IsTakenDamaged = false;     //ダメージを受けたトリガー
 
-    //状態関係
-    public bool Damaged;
+    public bool IsUsePool = true;          //オブジェクトプールの利用
+    // 死亡アクション
+    public event Action<Enemy> OnDeath;
+    
     protected override void Awake()
     {
         base.Awake();
+        Path = new List<AStar.AstarNode>();
         enemyStateMachine = CreateStateMachine();
-        player = FindObjectOfType<Player>().transform;
     }
     
     protected virtual void Start()
@@ -32,21 +41,29 @@ public abstract  class Enemy : Entity
         enemyStateMachine.ChangeState(GetInitialState());
     }
 
-    protected virtual void Update()
+    public virtual void LogicUpdate()
     {
         enemyStateMachine.LogicUpdate();
         CheckPlayerRange();
     }
 
-    public override void TakeDamage(float amount)
+    protected void FixedUpdate()
     {
-        base.TakeDamage(amount);
-        Damaged = true;
-
-        //チンペン音
-        AudioManager.Instance.PlayAttack();
+        enemyStateMachine.PhysicsUpdate();
     }
+    
 
+    #region 抽象関数群
+
+    /// <summary>
+    /// 移動抽象関数
+    /// </summary>
+    /// <param name="dir">移動方向</param>
+    public abstract void Move(Vector2 dir);
+    /// <summary>
+    /// 移動中止抽象関数
+    /// </summary>
+    public abstract void StopMove();
     /// <summary>
     /// ステートマシンの初期化関数
     /// </summary>
@@ -57,23 +74,86 @@ public abstract  class Enemy : Entity
     /// </summary>
     /// <returns>状態の列挙型</returns>
     protected abstract Enum GetInitialState();
-
     /// <summary>
     /// ダメージ受けた時の詳細処理(ひるむ値などの計算)
     /// </summary>
     public abstract void TakenDamageState();
     
+
+    #endregion
+
+    #region API群
+
+    public override void TakeDamage(float amount)
+    {
+        base.TakeDamage(amount);
+        IsTakenDamaged = true;
+        if (currentHealth.Value <= 0)
+        {
+            Die();
+        }
+    }
+
+    /// <summary>
+    /// 死亡処理
+    /// </summary>
+    private void Die()
+    {
+        OnDeath?.Invoke(this);
+        // if (IsUsePool)
+        // {
+        //     //オブジェクトプールを使用するなら非アクティブ化
+        //     this.gameObject.SetActive(false);
+        // }
+        // else
+        // {
+        //     //オブジェクトプールを使用していないと破棄する
+        //     Destroy(this.gameObject);
+        // }
+    }
+
+    /// <summary>
+    /// プレイヤーの変換情報を持たせる
+    /// </summary>
+    /// <param name="player"></param>
+    public void SetPlayerTransform(Transform player)
+    {
+        playerTransform = player;
+    }
+    
+    /// <summary>
+    /// パスの探索
+    /// </summary>
+    public virtual void FindPath()
+    {
+        if (!_finding)
+        {
+            Path.Clear();
+            _finding = true;
+            CurrentPathIndex = 0;
+            List<AStar.AstarNode> newPath = StageManager.Instance.FindPath(transform.position, playerTransform.position);
+
+            if (newPath != null)
+            {
+                Path = new List<AStar.AstarNode>(newPath);
+            }
+
+            _finding = false;
+        }
+    }
+    
     /// <summary>
     /// プレイヤの方向
     /// </summary>
-    private Vector3 _directionToPlayer => (player.position - transform.position).normalized;
+    public Vector3 _directionToPlayer => (playerTransform.position - transform.position).normalized;
+    
     /// <summary>
     /// 警戒攻撃チェック
     /// </summary>
-    void CheckPlayerRange()
+    private void CheckPlayerRange()
     {
-        float distance = Vector3.Distance(transform.position, player.position);
-
+        float distance = Vector3.Distance(transform.position, playerTransform.position);
+        
         // 警戒範囲内かつ視野内にいるかをチェック
         if (distance <= DetectionRange)
         {
@@ -120,20 +200,9 @@ public abstract  class Enemy : Entity
         return angle;
     }
 
-    #region Debug
+    #endregion
 
-    // void OnGUI()
-    // {
-    //     // デバッグ情報を画面に表示
-    //     GUIStyle style = new GUIStyle();
-    //     style.fontSize = 24;
-    //     style.normal.textColor = Color.black;
-    //     
-    //     string message = TargetFound ? "Target Found!" : "Target Not Found";
-    //     GUI.Label(new Rect(10, 10, 300, 50), message, style);
-    //     message = InAttackRange ? "Can Attack" : "Can't Attack";
-    //     GUI.Label(new Rect(10, 30, 300, 50), message, style);
-    // }
+    #region Debug
     
     void OnDrawGizmos()
     {
@@ -160,6 +229,7 @@ public abstract  class Enemy : Entity
         
         Gizmos.DrawLine(position, position + leftBoundary);
         Gizmos.DrawLine(position, position + rightBoundary);
+        //DrawPath();
     }
     
     void DrawWireCircle(Vector3 center, float radius, float segmentLength)
@@ -176,7 +246,26 @@ public abstract  class Enemy : Entity
             prevPoint = newPoint;
         }
     }
+    
+    private void DrawPath()
+    {
+        if (Path == null || Path.Count == 0)
+            return;
 
+        Gizmos.color = Color.green;
+        //Debug.Log("パスの長さ" + Path.Count);
+        //Debug.Log("Path found: " + string.Join(" -> ", Path.Select(n => n.Pos.ToString()).ToArray()));
+        for (int i = 0; i < Path.Count - 1; i++)
+        {
+            var current = Path[i];
+            var next = Path[i + 1];
+            Gizmos.DrawLine(
+                StageManager.Instance.GridToWorldPosition(current.Pos),
+                StageManager.Instance.GridToWorldPosition(next.Pos)
+            );
+        }
+    }
+    
     #endregion
    
 }

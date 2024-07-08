@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using FrameWork.FSM;
+using FrameWork.EventCenter;
+using Unity.VisualScripting;
 using UnityEngine;
+using StateMachine = FrameWork.FSM.StateMachine;
 
 public enum MeleeStateEnum{
     Idle,
@@ -14,9 +16,22 @@ public enum MeleeStateEnum{
 
 public class Melee : Enemy
 {
+    private MovementComponent _movementComponent;
     protected override void Awake()
     {
         base.Awake();
+        _movementComponent = new MovementComponent(Rigidbody, transform);
+        speed = new Observer<float>(2);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+    }
+
+    public override void StopMove()
+    {
+        Rigidbody.velocity = Vector3.zero;
     }
 
     protected override StateMachine CreateStateMachine()
@@ -30,22 +45,28 @@ public class Melee : Enemy
         
         return stateMachine;
     }
+    
 
     protected override Enum GetInitialState()
     {
         return MeleeStateEnum.Idle;
     }
-
+    
+    public override void  Move(Vector2 dir)
+    {
+        if (dir != Vector2.zero)
+        {
+            _movementComponent.Move(dir,speed.Value,0.2f);
+        }
+    }
+    
     public override void TakenDamageState()
     {
-        
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
     }
 
-    //ƒ`ƒ“ƒyƒ“’Ç‰Á
-    protected override void OnCurrentHealthChanged(float newCurrentHealth)
+    public override void TakeDamage(float amount)
     {
-        base.OnCurrentHealthChanged(newCurrentHealth);
-
+        base.TakeDamage(amount);
     }
 }

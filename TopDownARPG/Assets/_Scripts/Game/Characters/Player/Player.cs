@@ -1,7 +1,5 @@
 using System;
 using FrameWork.EventCenter;
-using FrameWork.SceneLoader;
-using FrameWork.UI;
 using FrameWork.Utils;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,6 +16,7 @@ public class Player : Entity
     #region Component
     public PlayerInput _playerInput;
     private MovementComponent _movementComponent;
+    public AttackComponent AttackComponent;
     #endregion
     public Transform RayStartPoint;
 
@@ -36,6 +35,8 @@ public class Player : Entity
         _camera = Camera.main;
         _playerInput = new PlayerInput();
         _movementComponent = new MovementComponent(Rigidbody,transform);
+        
+        AttackComponent = GetComponent<AttackComponent>();
     }
 
     protected override void Awake()
@@ -59,7 +60,7 @@ public class Player : Entity
     
     private void Start()
     {
-       // maxHealth.Value -= 10.0f;
+        //maxHealth.Value -= 10.0f;
     }
 
     protected override void OnDisable()
@@ -78,10 +79,9 @@ public class Player : Entity
             //TakeDamage(5);
         }
 
-        if(Input.GetKeyDown(KeyCode.M)) 
-        {
-            maxHealth.Value -= 10.0f;
-        }
+        //AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
+        
+        StageManager.Instance.WorldToGridPosition(this.transform.position);
 
 //        Rotation();
     }
@@ -165,20 +165,6 @@ public class Player : Entity
         {
             // コンボのリセット処理など
             ComboConfig.ComboCount = 0;
-        }
-    }
-
-    //チンペン変更
-    protected override void OnCurrentHealthChanged(float newCurrentHealth)
-    {
-        base.OnCurrentHealthChanged(newCurrentHealth);
-        EventCenter.TriggerEvent<float>(HPBar_EVENT.Change, newCurrentHealth);
-
-        if (newCurrentHealth <= 0)
-        {
-            UIManager.Instance.RemoveUI("UIGame");
-            UIManager.Instance.ShowUI("UIEnd");
-            UIManager.Instance.ChangeUIPrefab("UIEnd");
         }
     }
 }

@@ -1,4 +1,3 @@
-using FrameWork.Audio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,10 +32,7 @@ public class PlayerAttackState : PlayerBaseState
             player.Rotation(toMouseDir,0f);
         }
 
-        //チンペン音
-        AudioManager.Instance.PlayAttack_E();
-
-        StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
+        player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
     }
 
     public override void LogicUpdate()
@@ -44,7 +40,9 @@ public class PlayerAttackState : PlayerBaseState
         base.LogicUpdate();
         var comboConfig = player.ComboConfig;
         var attackConfig = comboConfig.AttackConfigs[comboConfig.ComboCount-1];
-        //StableRolledFanRayCast(attackConfig.Angle, attackConfig.RayCount,attackConfig.RollAngle,attackConfig.Radius);
+        
+        //player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
+
         if (player.Damaged)
         {
             player.ComboConfig.ComboCount = 0;
@@ -112,59 +110,53 @@ public class PlayerAttackState : PlayerBaseState
         _hitEnemies.Clear();
     }
     
-    /// <summary>
-    /// 扇型レイを使って敵のダメージ処理させる
-    /// </summary>
-    /// <param name="angle">範囲</param>
-    /// <param name="rayCount">レイ数</param>
-    /// <param name="rollAngle">ロール角度</param>
-    /// <param name="radius">半径</param>
-    private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
-    {
-        Vector3 forward = player.RayStartPoint.forward;
-        Vector3 origin = player.RayStartPoint.position;
-
-        // 扇型の各ポイントを計算
-        List<Vector3> fanPoints = new List<Vector3>();
-        for (int i = 0; i <= rayCount; i++)
-        {
-            float currentAngle = -angle / 2 + (angle / rayCount) * i;
-            Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
-            fanPoints.Add(origin + direction * radius);
-        }
-
-        // ワールド空間でのロール角度の適用
-        Quaternion rollRotation = Quaternion.AngleAxis(rollAngle, player.RayStartPoint.forward);
-        for (int i = 0; i < fanPoints.Count; i++)
-        {
-            Vector3 localPoint = fanPoints[i] - origin;
-            fanPoints[i] = origin + rollRotation * localPoint;
-        }
-
-        // Rayを飛ばして衝突判定
-        foreach (var point in fanPoints)
-        {
-            Vector3 direction = (point - origin).normalized;
-            Ray ray = new Ray(origin, direction);
-            if (Physics.Raycast(ray, out RaycastHit hit, radius))
-            {
-                if (hit.collider.CompareTag("Enemy"))
-                {
-                    Enemy enemy = hit.collider.GetComponent<Enemy>();
-                    if (enemy != null && !_hitEnemies.Contains(enemy)) // ここを修正
-                    {
-                        _hitEnemies.Add(enemy); // 敵を追加
-                        //Debug.Log("Hit: " + hit.collider.name);
-                        EnemyManager.Instance.ApplyDamageToEnemy(enemy, 10);
-                    }
-                }
-                
-            }
-
-            // デバッグ用のRayを描画
-            Debug.DrawRay(origin, direction * radius, Color.red);
-        }
-    }
+    
+    // private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
+    // {
+    //     Vector3 forward = player.RayStartPoint.forward;
+    //     Vector3 origin = player.RayStartPoint.position;
+    //
+    //     // 扇型の各ポイントを計算
+    //     List<Vector3> fanPoints = new List<Vector3>();
+    //     for (int i = 0; i <= rayCount; i++)
+    //     {
+    //         float currentAngle = -angle / 2 + (angle / rayCount) * i;
+    //         Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
+    //         fanPoints.Add(origin + direction * radius);
+    //     }
+    //
+    //     // ワールド空間でのロール角度の適用
+    //     Quaternion rollRotation = Quaternion.AngleAxis(rollAngle, player.RayStartPoint.forward);
+    //     for (int i = 0; i < fanPoints.Count; i++)
+    //     {
+    //         Vector3 localPoint = fanPoints[i] - origin;
+    //         fanPoints[i] = origin + rollRotation * localPoint;
+    //     }
+    //
+    //     // Rayを飛ばして衝突判定
+    //     foreach (var point in fanPoints)
+    //     {
+    //         Vector3 direction = (point - origin).normalized;
+    //         Ray ray = new Ray(origin, direction);
+    //         if (Physics.Raycast(ray, out RaycastHit hit, radius))
+    //         {
+    //             if (hit.collider.CompareTag("Enemy"))
+    //             {
+    //                 Enemy enemy = hit.collider.GetComponent<Enemy>();
+    //                 if (enemy != null && !_hitEnemies.Contains(enemy)) // ここを修正
+    //                 {
+    //                     _hitEnemies.Add(enemy); // 敵を追加
+    //                     //ダメージ処理
+    //                     enemy.TakeDamage(10);
+    //                 }
+    //             }
+    //             
+    //         }
+    //
+    //         // デバッグ用のRayを描画
+    //         Debug.DrawRay(origin, direction * radius, Color.red);
+    //     }
+    // }
 
     private void MovePlayer()
     {
