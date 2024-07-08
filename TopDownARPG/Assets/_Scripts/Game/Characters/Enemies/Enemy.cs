@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FrameWork.Audio;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,6 +93,9 @@ public abstract  class Enemy : Entity
         {
             Die();
         }
+
+        //チンペン音
+        AudioManager.Instance.PlayAttack();
     }
 
     /// <summary>
