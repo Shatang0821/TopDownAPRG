@@ -28,7 +28,7 @@ public class EnemyBaseState : BaseState
     public override void LogicUpdate()
     {
         stateTimer += Time.deltaTime;
-        if (enemy.Damaged)
+        if (enemy.IsTakenDamaged)
         {
             enemy.TakenDamageState();
         }

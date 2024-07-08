@@ -7,34 +7,26 @@ public class AStar
     private int height; //高さ
     public AstarNode[,] nodeArray;
 
-    private List<AstarNode> _openList = new List<AstarNode>();
-    private List<AstarNode> _closeList = new List<AstarNode>();
-    
+    private List<AstarNode> _openList;
+    private List<AstarNode> _closeList;
+
     public enum BlockType
     {
         Walk,
         Stop
     }
-    
-    /// <summary>
-    /// マップ初期化
-    /// </summary>
-    /// <param name="map">マップデータ</param>
+
     public void InitMap(int[,] map)
     {
-        //マップデータ初期化
         this.width = map.GetLength(1);
         this.height = map.GetLength(0);
         nodeArray = new AstarNode[width, height];
-        
+
         InitAstarNodeArray(map);
-        _openList.Clear();
-        _closeList.Clear();
+        _openList = new List<AstarNode>(width * height);
+        _closeList = new List<AstarNode>(width * height);
     }
 
-    /// <summary>
-    /// ステージを作成するたびにリセットもしくは初期化させる 
-    /// </summary>
     private void InitAstarNodeArray(int[,] map)
     {
         for (int y = 0; y < height; y++)
@@ -43,37 +35,34 @@ public class AStar
             {
                 var type = map[y, x] == 1 ? BlockType.Walk : BlockType.Stop;
                 nodeArray[x, y] = new AstarNode(x, y, type);
+                //Debug.Log($"Node initialized at ({x}, {y}) with type {type}");
             }
         }
     }
-
-    /// <summary>
-    /// 位置ノード
-    /// </summary>
+    
+    private void ResetNodes()
+    {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
+                nodeArray[x, y].parent = null;
+                nodeArray[x, y].G = float.MaxValue;
+                nodeArray[x, y].H = 0;
+                nodeArray[x, y].F = 0;
+            }
+        }
+    }
+    
     public class AstarNode
     {
-        public BlockType BlockType; //ブロックタイプ
-        public Vector2Int Pos;  //グリッド位置
-        public AstarNode parent;     //親ノード
-        /// <summary>
-        /// スタートから現在の距離コスト
-        /// </summary>
+        public BlockType BlockType;
+        public Vector2Int Pos;
+        public AstarNode parent;
         public float G;
-        /// <summary>
-        /// 現在から終点までの距離コスト
-        /// </summary>
-        public float H; 
-        /// <summary>
-        /// コーストの合計
-        /// </summary>
+        public float H;
         public float F;
-        
-        /// <summary>
-        /// 初期化
-        /// </summary>
-        /// <param name="x">x位置</param>
-        /// <param name="y">y位置</param>
-        /// <param name="blockType">ブロックタイプ</param>
+
         public AstarNode(int x, int y, BlockType blockType)
         {
             this.Pos.x = x;
@@ -89,39 +78,29 @@ public class AStar
     {
         _openList.Clear();
         _closeList.Clear();
-
+        ResetNodes();
         var startNode = nodeArray[start.x, start.y];
         var goalNode = nodeArray[goal.x, goal.y];
-        
-        var startX = startNode.Pos.x;
-        var startY = startNode.Pos.y;
-        var goalX = goalNode.Pos.x;
-        var goalY = goalNode.Pos.y;
-        
-        //ノードが範囲内かをチェック
-        if (IsMapExternal(startX, startY) || IsMapExternal(goalX, goalY))
+
+        //Debug.Log("Start Node: " + startNode.Pos + " Goal Node: " + goalNode.Pos);
+        //Debug.Log("Start Type: " + startNode.BlockType + " Goal Type: " + goalNode.BlockType);
+    
+        if (IsMapExternal(startNode.Pos.x, startNode.Pos.y) || IsMapExternal(goalNode.Pos.x, goalNode.Pos.y))
         {
-            Debug.LogWarning("スタートもしくはゴールが範囲外");
+            Debug.LogWarning("Start or Goal is out of bounds");
             return null;
         }
 
-        
-        //ノードが障害物なのかをチェック
         if (startNode.BlockType == BlockType.Stop || goalNode.BlockType == BlockType.Stop)
         {
-            Debug.LogWarning("スタートもしくはゴールが障害物型");
+            Debug.LogWarning("Start or Goal is a blocking type");
             return null;
         }
-        
+
         FindEndPoint(startNode, goalNode);
         return _closeList;
     }
 
-    /// <summary>
-    /// ルート探索処理メソッド
-    /// </summary>
-    /// <param name="startNode">スタートノード</param>
-    /// <param name="goalNode">ゴールノード</param>
     private void FindEndPoint(AstarNode startNode, AstarNode goalNode)
     {
         startNode.G = 0;
@@ -129,14 +108,20 @@ public class AStar
         startNode.F = startNode.G + startNode.H;
         _openList.Add(startNode);
 
-        while (_openList.Count > 0)
+        int maxSteps = width * height * 10; // 適切な最大ステップ数を設定
+        int steps = 0;
+
+        while (_openList.Count > 0 && steps < maxSteps)
         {
             _openList.Sort((node1, node2) => node1.F.CompareTo(node2.F));
             var currentNode = _openList[0];
 
+//            Debug.Log("Current Node: " + currentNode.Pos);
+                
             if (currentNode.Pos == goalNode.Pos)
             {
-                // ゴールに到達したので経路を復元
+                Debug.Log("Current Node: " + currentNode.Pos);
+                Debug.Log("ここまで");
                 var path = new List<AstarNode>();
                 while (currentNode != null)
                 {
@@ -145,9 +130,12 @@ public class AStar
                 }
                 path.Reverse();
                 _closeList = path;
+
+
                 return;
             }
-
+            
+            
             _openList.Remove(currentNode);
             _closeList.Add(currentNode);
 
@@ -169,19 +157,21 @@ public class AStar
                         _openList.Add(neighbor);
                 }
             }
+           
+
+            steps++;
+        }
+
+        if (steps >= maxSteps)
+        {
+            Debug.LogWarning("Pathfinding terminated due to exceeding max steps.");
         }
     }
 
-    /// <summary>
-    /// 隣接ブロックの取得
-    /// </summary>
-    /// <param name="node"></param>
-    /// <returns></returns>
     private List<AstarNode> GetNeighbors(AstarNode node)
     {
-        var neighbors = new List<AstarNode>();
+        var neighbors = new List<AstarNode>(4); // 初期容量を設定
 
-        // 4方向（上下左右）を定義
         int[,] directions = new int[,]
         {
             { 0, 1 },  // 上
@@ -189,7 +179,7 @@ public class AStar
             { 0, -1 }, // 下
             { -1, 0 }  // 左
         };
-        
+
         for (int i = 0; i < 4; i++)
         {
             int checkX = node.Pos.x + directions[i, 0];
@@ -204,12 +194,6 @@ public class AStar
         return neighbors;
     }
 
-    /// <summary>
-    /// マップ外チェック
-    /// </summary>
-    /// <param name="x">x nodeポイント</param>
-    /// <param name="y">y nodeポイント</param>
-    /// <returns>マップ外true マップ内false</returns>
     private bool IsMapExternal(int x, int y)
     {
         return x < 0 || x >= width || y < 0 || y >= height;

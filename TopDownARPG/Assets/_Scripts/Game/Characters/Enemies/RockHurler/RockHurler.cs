@@ -15,8 +15,15 @@ public enum RHStateEnum
 
 public class RockHurler : Enemy
 {
+    public override void Move(Vector2 dir)
+    {
+        throw new NotImplementedException();
+    }
 
- 
+    public override void StopMove()
+    {
+        throw new NotImplementedException();
+    }
 
     protected override StateMachine CreateStateMachine()
     {

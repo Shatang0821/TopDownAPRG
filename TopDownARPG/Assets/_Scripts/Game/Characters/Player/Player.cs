@@ -16,6 +16,7 @@ public class Player : Entity
     #region Component
     public PlayerInput _playerInput;
     private MovementComponent _movementComponent;
+    public AttackComponent AttackComponent;
     #endregion
     public Transform RayStartPoint;
 
@@ -34,6 +35,8 @@ public class Player : Entity
         _camera = Camera.main;
         _playerInput = new PlayerInput();
         _movementComponent = new MovementComponent(Rigidbody,transform);
+        
+        AttackComponent = GetComponent<AttackComponent>();
     }
 
     protected override void Awake()
@@ -75,6 +78,10 @@ public class Player : Entity
         {
             //TakeDamage(5);
         }
+
+        //AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
+        
+        StageManager.Instance.WorldToGridPosition(this.transform.position);
 
 //        Rotation();
     }
