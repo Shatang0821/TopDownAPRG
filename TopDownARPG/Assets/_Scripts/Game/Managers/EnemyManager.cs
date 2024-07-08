@@ -23,8 +23,10 @@ public class EnemyManager : UnitySingleton<EnemyManager>
 
     public void SpawnEnemy()
     {
+        
         foreach (var enemy in _enemiesConfig.Enemies)
         {
+            Debug.Log("a");
            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
             _currentWaveEnemies.Add(eObject.GetComponent<Enemy>());
         }

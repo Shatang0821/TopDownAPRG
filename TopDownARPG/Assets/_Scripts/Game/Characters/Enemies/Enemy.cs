@@ -83,7 +83,7 @@ public abstract  class Enemy : Entity
     /// <summary>
     /// プレイヤの方向
     /// </summary>
-    private Vector3 _directionToPlayer => (player.position - transform.position).normalized;
+    public Vector3 _directionToPlayer => (player.position - transform.position).normalized;
     
     /// <summary>
     /// 警戒攻撃チェック

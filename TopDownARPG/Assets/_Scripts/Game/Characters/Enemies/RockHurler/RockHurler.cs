@@ -25,7 +25,7 @@ public class RockHurler : Enemy
         stateMachine.RegisterState(RHStateEnum.Idle, new RHIdleState("Idle", this, stateMachine));
         stateMachine.RegisterState(RHStateEnum.Move, new RHMoveState("Move", this, stateMachine));
         stateMachine.RegisterState(RHStateEnum.Attack, new RHAttackState("Attack", this, stateMachine));
-        //stateMachine.RegisterState(RHStateEnum.Damaged, new RHDamagedState("Damaged", this, stateMachine));
+        stateMachine.RegisterState(RHStateEnum.Damaged, new RHDamageState("Damaged", this, stateMachine));
 
         return stateMachine;
 
