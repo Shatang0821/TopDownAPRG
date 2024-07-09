@@ -19,3 +19,4 @@ MonoBehaviour:
   StartMoveTime: 0
   StopMoveTime: 0.4
   Speed: 2
+  AttackTiming: 0.45

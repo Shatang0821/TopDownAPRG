@@ -11,6 +11,8 @@ public enum PlayerEvent
 }
 public class Player : Entity
 {
+    //パワーのゲット
+    public int Power => power.Value;
     private Camera _camera; 
     private PlayerStateMachine _stateMachine;
     #region Component

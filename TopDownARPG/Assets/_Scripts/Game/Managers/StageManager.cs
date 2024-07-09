@@ -64,12 +64,12 @@ public class StageManager : Singleton<StageManager>
     /// <param name="target">ターゲットの位置</param>
     public List<AStar.AstarNode> FindPath(Vector3 self, Vector3 target)
     {
-        Debug.Log("start Pos" + self);
-        Debug.Log("target Pos" + target);
+//        Debug.Log("start Pos" + self);
+//        Debug.Log("target Pos" + target);
         Vector2Int startGrid = WorldToGridPosition(self);
         Vector2Int endGrid = WorldToGridPosition(target);
         
-        Debug.Log(startGrid +","+endGrid);
+//        Debug.Log(startGrid +","+endGrid);
         var path = _aStar.FindPath(startGrid, endGrid);
         
         if (path != null)

@@ -14,5 +14,7 @@ public class AttackConfig : ScriptableObject
     public float StartMoveTime = 0.0f;
     public float StopMoveTime = 0.0f;
     public float Speed = 2.0f;
+
+    public float AttackTiming = 0.2f;  //レイを飛ばすタイミング
     //public float AnimationTime;
 }

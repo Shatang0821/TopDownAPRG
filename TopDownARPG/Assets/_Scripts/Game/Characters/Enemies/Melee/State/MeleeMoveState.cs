@@ -16,11 +16,7 @@ public class MeleeMoveState : MeleeMovementState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (enemy.InAttackRange)
-        {
-            enemyStateMachine.ChangeState(MeleeStateEnum.Attack);
-            return;
-        }
+        if(!enemyStateMachine.CheckState(this)) return;
 
         if (!enemy.TargetFound)
         {

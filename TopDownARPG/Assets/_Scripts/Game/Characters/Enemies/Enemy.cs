@@ -147,7 +147,7 @@ public abstract  class Enemy : Entity
     }
     
     /// <summary>
-    /// プレイヤの方向
+    /// プレイヤの方向正規化済み
     /// </summary>
     public Vector3 _directionToPlayer => (playerTransform.position - transform.position).normalized;
     

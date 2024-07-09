@@ -62,6 +62,20 @@ public class Melee : Enemy
         }
     }
     
+    /// <summary>
+    /// ターゲット方向に回転
+    /// </summary>
+    /// <param name="targetDirection">ターゲット方向</param>
+    /// <param name="rotationSpeed">回転速度</param>
+    public void Rotation(Vector3 targetDirection, float rotationSpeed)
+    {
+        targetDirection.y = 0;
+        if (targetDirection.magnitude > 0.1f)
+        {
+            _movementComponent.RotateTowards(transform,targetDirection,rotationSpeed);
+        }
+    }
+    
     public override void TakenDamageState()
     {
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);

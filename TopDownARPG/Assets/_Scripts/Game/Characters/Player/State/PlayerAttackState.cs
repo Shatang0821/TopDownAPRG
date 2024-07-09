@@ -9,6 +9,7 @@ public class PlayerAttackState : PlayerBaseState
 {
     private bool _animetionEnd;
     private bool _canOtherState;
+    private bool _isAttacked = false;
     private ComboConfig _comboConfig;
     private AttackConfig _attackConfig;
     private HashSet<Enemy> _hitEnemies;
@@ -23,6 +24,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         player.SetAttackComboCount();
         base.Enter();
+        _isAttacked = false;
         _comboConfig = player.ComboConfig;
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
         
@@ -35,8 +37,6 @@ public class PlayerAttackState : PlayerBaseState
 
         //ƒ`ƒ“ƒyƒ“‰¹
         AudioManager.Instance.PlayAttack_E();
-
-        player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
     }
 
     public override void LogicUpdate()
@@ -46,7 +46,13 @@ public class PlayerAttackState : PlayerBaseState
         var attackConfig = comboConfig.AttackConfigs[comboConfig.ComboCount-1];
         
         //player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
-
+    
+        if (!_isAttacked && stateTimer > _attackConfig.AttackTiming)
+        {
+            _isAttacked = true;
+            player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius,player.Power);
+        }
+        
         if (player.Damaged)
         {
             player.ComboConfig.ComboCount = 0;
@@ -80,6 +86,8 @@ public class PlayerAttackState : PlayerBaseState
                 playerStateMachine.ChangeState(PlayerStateEnum.Idle);
             }
         }
+        
+        
     }
 
     public override void AnimationEventCalled()

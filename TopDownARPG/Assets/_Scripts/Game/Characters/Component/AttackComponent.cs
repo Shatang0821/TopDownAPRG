@@ -15,7 +15,7 @@ public class AttackComponent : MonoBehaviour
     /// <param name="rayCount">レイ数</param>
     /// <param name="rollAngle">ロール角度</param>
     /// <param name="radius">半径</param>
-    public void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
+    public void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius,float damage)
     {
         
         Vector3 forward = RayStartPoint.forward;
@@ -49,7 +49,7 @@ public class AttackComponent : MonoBehaviour
                 if (damagedEntity != null && !_hitEntities.Contains(damagedEntity))
                 {
                     _hitEntities.Add(damagedEntity);
-                    damagedEntity.TakeDamage(10);
+                    damagedEntity.TakeDamage(damage);
                     Debug.Log("Hit");
                 }
             }

@@ -15,22 +15,32 @@
         base.LogicUpdate();
         if (stateTimer > 0.5f)
         {
+            if (enemy.IsTakenDamaged)
+            {
+                enemy.TakenDamageState();
+                return;
+            }
+            
             if (enemy.TargetFound)
             {
                 if (enemy.InAttackRange)
                 {
                     enemyStateMachine.ChangeState(MeleeStateEnum.Attack);
+                    return;
                 }
                 else
                 {
-                    enemyStateMachine.ChangeState(MeleeStateEnum.Attack);
+                    enemyStateMachine.ChangeState(MeleeStateEnum.Move);
+                    return;
                 }
             }
             else
             {
                 enemyStateMachine.ChangeState(MeleeStateEnum.Idle);
+                return;
             }
-
+            
+           
             
         }
         
