@@ -29,7 +29,6 @@ public class EnemyBaseState : BaseState
     {
         stateTimer += Time.deltaTime;
         
-        
     }
 
     public override void PhysicsUpdate()

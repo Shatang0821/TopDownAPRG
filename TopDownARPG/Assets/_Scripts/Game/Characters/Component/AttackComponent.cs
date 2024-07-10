@@ -45,19 +45,20 @@ public class AttackComponent : MonoBehaviour
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray, out RaycastHit hit, radius,targetLayerMask))
             {
+                //攻撃が壁など環境にする抜けないように;
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                {
+                    continue; // レイをスキップする
+                }
+                //IDamagedインタフェースを使ってダメージ処理
                 IDamaged damagedEntity = hit.collider.GetComponent<IDamaged>();
                 if (damagedEntity != null && !_hitEntities.Contains(damagedEntity))
                 {
                     _hitEntities.Add(damagedEntity);
                     damagedEntity.TakeDamage(damage);
-                    Debug.Log("Hit");
                 }
             }
-
-            // デバッグ用のRayを描画
-            Debug.DrawRay(origin, direction * radius, Color.red);
         }
-
         ResetHits();
     }
 

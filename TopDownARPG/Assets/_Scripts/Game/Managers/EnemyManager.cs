@@ -78,7 +78,7 @@ public class EnemyManager : UnitySingleton<EnemyManager>
         {
             foreach (var enemy in _enemiesToRemove)
             {
-                enemy.gameObject.SetActive(false);
+                //非アクティブになってから消す
                 _currentWaveEnemies.Remove(enemy);
                 // その他のクリーンアップ処理
             }

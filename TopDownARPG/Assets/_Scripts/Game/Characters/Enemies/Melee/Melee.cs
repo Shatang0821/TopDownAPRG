@@ -6,7 +6,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using StateMachine = FrameWork.FSM.StateMachine;
 
-public enum MeleeStateEnum{
+public enum MeleeStateEnum
+{
     Idle,
     Move,
     Attack,
@@ -18,12 +19,13 @@ public class Melee : Enemy
 {
     private MovementComponent _movementComponent;
     public AttackComponent AttackComponent;
+
     protected override void Awake()
     {
         base.Awake();
         _movementComponent = new MovementComponent(Rigidbody, transform);
         AttackComponent = GetComponent<AttackComponent>();
-        
+
         speed = new Observer<float>(2);
     }
 
@@ -32,21 +34,31 @@ public class Melee : Enemy
         base.Start();
     }
 
-    public override void StopMove()
-    {
-        Rigidbody.velocity = Vector3.zero;
-    }
 
     protected override StateMachine CreateStateMachine()
     {
         var stateMachine = new EnemyStateMachine(this);
         //状態の登録 
-        stateMachine.RegisterState(MeleeStateEnum.Idle,new MeleeIdleState("Idle",this,stateMachine));
-        stateMachine.RegisterState(MeleeStateEnum.Move,new MeleeMoveState("Move",this,stateMachine));
-        stateMachine.RegisterState(MeleeStateEnum.Damaged,new MeleeDamagedState("Damaged",this,stateMachine));
-        stateMachine.RegisterState(MeleeStateEnum.Attack,new MeleeAttackState("Attack",this,stateMachine));
-        
+        stateMachine.RegisterState(MeleeStateEnum.Idle, new MeleeIdleState("Idle", this, stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Move, new MeleeMoveState("Move", this, stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Damaged, new MeleeDamagedState("Damaged", this, stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Attack, new MeleeAttackState("Attack", this, stateMachine));
+        stateMachine.RegisterState(MeleeStateEnum.Die, new MeleeDieState("Die", this, stateMachine));
         return stateMachine;
+    }
+    
+    
+    /// <summary>
+    /// アニメーションイベント
+    /// </summary>
+    private void AnimationEventCalled()
+    {
+        enemyStateMachine.AnimationEventCalled();
+    }
+
+    private void AnimationEndCalled()
+    {
+        enemyStateMachine.AnimationEndCalled();
     }
 
     protected override Enum GetInitialState()
@@ -54,12 +66,18 @@ public class Melee : Enemy
         return MeleeStateEnum.Idle;
     }
     
-    public override void  Move(Vector2 dir)
+
+    public override void Move(Vector2 dir)
     {
         if (dir != Vector2.zero)
         {
-            _movementComponent.Move(dir,speed.Value,0.2f);
+            _movementComponent.Move(dir, speed.Value, 0.2f);
         }
+    }
+    
+    public override void StopMove()
+    {
+        Rigidbody.velocity = Vector3.zero;
     }
     
     /// <summary>
@@ -72,13 +90,12 @@ public class Melee : Enemy
         targetDirection.y = 0;
         if (targetDirection.magnitude > 0.1f)
         {
-            _movementComponent.RotateTowards(transform,targetDirection,rotationSpeed);
+            _movementComponent.RotateTowards(transform, targetDirection, rotationSpeed);
         }
     }
-    
+
     public override void TakenDamageState()
     {
         enemyStateMachine.ChangeState(MeleeStateEnum.Damaged);
     }
-    
 }
