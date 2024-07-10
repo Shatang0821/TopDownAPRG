@@ -35,7 +35,7 @@ public class RHMoveState : RHMovementState
     #region “G‚ÌˆÚ“®
     void Movement()
     {
-        _player = -enemy._directionToPlayer;
+        _player = -enemy.DirectionToPlayer;
 
         _player.y = 0f;
         // Ös‰^“®‚Ì‚½‚ß‚Éƒ‰ƒ“ƒ_ƒ€‚È—v‘f‚ğ‰Á‚¦‚é

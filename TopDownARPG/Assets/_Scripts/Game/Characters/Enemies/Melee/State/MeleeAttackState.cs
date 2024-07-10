@@ -27,7 +27,7 @@ public class MeleeAttackState : EnemyBaseState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        _melee.Rotation(enemy._directionToPlayer,0.1f);
+        _melee.Rotation(enemy.DirectionToPlayer,0.1f);
         if (!_isAttacked && stateTimer > _attackTiming)
         {
             _isAttacked = true;

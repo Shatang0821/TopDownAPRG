@@ -134,8 +134,12 @@ public abstract class Enemy : Entity
     /// <summary>
     /// プレイヤの方向正規化済み
     /// </summary>
-    public Vector3 _directionToPlayer => (playerTransform.position - transform.position).normalized;
-
+    public Vector3 DirectionToPlayer => (playerTransform.position - transform.position).normalized;
+    
+    /// <summary>
+    /// プレイヤーまでの距離
+    /// </summary>
+    public float  DistanceToPlayer => Vector3.Distance(transform.position, playerTransform.position);
     /// <summary>
     /// 警戒攻撃チェック
     /// </summary>
@@ -146,7 +150,7 @@ public abstract class Enemy : Entity
         // 警戒範囲内かつ視野内にいるかをチェック
         if (distance <= DetectionRange)
         {
-            float detectionAngle = Vector3.Angle(transform.forward, _directionToPlayer);
+            float detectionAngle = Vector3.Angle(transform.forward, DirectionToPlayer);
             if (detectionAngle <= DetectionFieldOfView / 2)
             {
                 TargetFound = true;
@@ -160,7 +164,7 @@ public abstract class Enemy : Entity
         // 攻撃範囲内かつ視野内にいるかをチェック
         if (distance <= AttackRange)
         {
-            float attackAngle = Vector3.Angle(transform.forward, _directionToPlayer);
+            float attackAngle = Vector3.Angle(transform.forward, DirectionToPlayer);
             if (attackAngle <= AttackFieldOfView / 2)
             {
                 InAttackRange = true;

@@ -20,7 +20,7 @@ public class RHAttackState : RHMovementState
     {
         base.LogicUpdate();
 
-        _player = enemy._directionToPlayer;
+        _player = enemy.DirectionToPlayer;
 
         enemy.transform.forward = _player;
 

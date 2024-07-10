@@ -34,6 +34,10 @@ public class Melee : Enemy
         base.Start();
     }
 
+    private void Update()
+    {
+        Debug.Log(DistanceToPlayer);
+    }
 
     protected override StateMachine CreateStateMachine()
     {
