@@ -20,6 +20,5 @@ public class GameManager : PersistentUnitySingleton<GameManager>
     private void Start()
     {
         StageManager.Instance.SetStage(0);
-        //StageManager.Instance.FindPath(new Vector3(0,0,0), new Vector3(10,10,10) );
     }
 }

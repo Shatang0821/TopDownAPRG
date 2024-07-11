@@ -36,13 +36,14 @@ public class EnemyManager : UnitySingleton<EnemyManager>
     /// </summary>
     public void SpawnEnemy()
     {
-        
+        int i = 1;
         foreach (var enemy in _enemiesConfig.Enemies)
         {
-            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
+            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,i * 10), Quaternion.identity);
             var enemyComponent = eObject.GetComponent<Enemy>();
             enemyComponent.SetPlayerTransform(_playerTransform);
             RegisterWaveEnemy(enemyComponent);
+            i++;
         }
     }
 

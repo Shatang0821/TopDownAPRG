@@ -30,8 +30,7 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     private void InitFramework()
     {
         ManagerFactory.Instance.CreateManager<AudioManager>();
-        ManagerFactory.Instance.CreateManager<PoolManager>();
-
+        //ManagerFactory.Instance.CreateManager<PoolManager>();
     }
 
     /// <summary>

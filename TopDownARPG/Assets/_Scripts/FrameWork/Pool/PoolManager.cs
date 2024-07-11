@@ -8,8 +8,8 @@ namespace FrameWork.Pool
     public class PoolManager : MonoBehaviour, IInitializable
     {
     //例
-    //[SerializeField] ObjectPool[] enemyPools;
-
+    [SerializeField] UnityObjectPool[] enemyPools;
+    [SerializeField] UnityObjectPool[] bulletPools;
     // プレハブとそれに対応するプールのリファレンスを格納する辞書
     static Dictionary<GameObject, UnityObjectPool> dictionary;
 

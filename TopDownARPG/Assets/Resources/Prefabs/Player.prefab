@@ -831,15 +831,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3008572187293308318}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51171b56fc2490c4baea91f1063a0753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 5
-  angle: 45
-  rayCount: 10
-  rollAngle: 30
+  radius: 2
+  angle: 150
+  rayCount: 20
+  rollAngle: 52.5
 --- !u!1 &3147916441609620149
 GameObject:
   m_ObjectHideFlags: 0
@@ -2605,8 +2605,7 @@ GameObject:
   - component: {fileID: 2216689189759341826}
   - component: {fileID: 8054448224999601133}
   - component: {fileID: 306081154646219632}
-  - component: {fileID: 7574827719152846968}
-  - component: {fileID: 1583799217090440107}
+  - component: {fileID: 4206965884534659630}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2623,7 +2622,7 @@ Transform:
   m_GameObject: {fileID: 8909302511932035052}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.2, y: 0, z: -5.48}
+  m_LocalPosition: {x: -3.38, y: 0, z: 0.59}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2678,9 +2677,9 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 116
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!95 &8054448224999601133
 Animator:
   serializedVersion: 5
@@ -2715,37 +2714,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rigidbody: {fileID: 0}
+  AttackComponent: {fileID: 0}
   RayStartPoint: {fileID: 4527349287752044695}
   ComboConfig: {fileID: 11400000, guid: e9358a52df19d6b4d830bd46abfcf462, type: 2}
   Damaged: 0
---- !u!114 &7574827719152846968
+--- !u!114 &4206965884534659630
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8909302511932035052}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e0b2f7d8cf5c0041b35349e6c75a950, type: 3}
+  m_Script: {fileID: 11500000, guid: b6bd960b98f84380acc1a583d42390ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  clip: {fileID: 7400002, guid: 9700d1c263537004f9ea99e34b06e3e6, type: 3}
---- !u!114 &1583799217090440107
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8909302511932035052}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dded05997ca9b7343990367e8ee7d442, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clip1: {fileID: 7400002, guid: 9700d1c263537004f9ea99e34b06e3e6, type: 3}
-  clip2: {fileID: 7400002, guid: df7857828385d264db252ebbdcbb3df0, type: 3}
-  weight: 0
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 192
+  RayStartPoint: {fileID: 4527349287752044695}
 --- !u!1 &8932563404921736762
 GameObject:
   m_ObjectHideFlags: 0
