@@ -7,6 +7,8 @@ using FrameWork.Audio;
 using UnityEngine.EventSystems;
 using Unity.VisualScripting;
 using System;
+using TMPro;
+using System.IO;
 
 public class UIHomeCtrl : UICtrl
 {
@@ -30,10 +32,14 @@ public class UIHomeCtrl : UICtrl
     private enum SelectedElement { Button, BgmSlider, GseSlider }
     private SelectedElement selectedElement = SelectedElement.Button; // 初期状態ではボタンが選択されている
 
+    private API _api;
+
     // Awakeメソッドをオーバーライドして、UIコンポーネントを初期化する
     public override void Awake()
     {
         base.Awake();
+
+        _api = FindObjectOfType<API>();
 
         // ボタンに関数を関連付ける
         AddButtonListener("GameStart", () => StartCoroutine(PanelDelayCoroutine(GameStart)));
@@ -378,6 +384,19 @@ public class UIHomeCtrl : UICtrl
 
     private void Logout()
     {
+        string filePath = Application.persistentDataPath + "/LoginAccount.json";
+        string json = File.ReadAllText(filePath);
+        AccountManager accountManager = JsonUtility.FromJson<AccountManager>(json);
+
+
+        var accountname = accountManager.accountname;
+        var password = accountManager.password;
+        _api.isLogout = true; 
+        _api.StringSaveAccount(accountname, password);
+        _api.isLogout = false;
+        _api.isLogin = false; //次ログインするためにフラグをfalseにしておく
+
+
         Debug.Log("Logout");
         UIManager.Instance.RemoveUI("UIHome");
         UIManager.Instance.ShowUI("UILogin");
