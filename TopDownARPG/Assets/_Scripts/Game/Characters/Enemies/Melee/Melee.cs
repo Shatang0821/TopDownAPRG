@@ -36,7 +36,7 @@ public class Melee : Enemy
 
     private void Update()
     {
-        //Debug.Log(DistanceToPlayer);
+
     }
 
     protected override StateMachine CreateStateMachine()

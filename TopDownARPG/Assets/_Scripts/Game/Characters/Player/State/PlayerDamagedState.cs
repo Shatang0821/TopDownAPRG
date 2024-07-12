@@ -20,6 +20,11 @@ public class PlayerDamagedState : PlayerBaseState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
+        if (player.GetCurrentHealth <= 0)
+        {
+            playerStateMachine.ChangeState(PlayerStateEnum.Die);
+        }
         
         if (_canOtherState)
         {
