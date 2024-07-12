@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FrameWork.Audio;
 
 
 public class PlayerAttackState : PlayerBaseState
@@ -31,6 +32,9 @@ public class PlayerAttackState : PlayerBaseState
             toMouseDir = new Vector3(player._playerInput.MousePosition.x, 0, player._playerInput.MousePosition.y);
             player.Rotation(toMouseDir,0f);
         }
+
+        //ƒ`ƒ“ƒyƒ“‰¹
+        AudioManager.Instance.PlayAttack_E();
 
         player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
     }
