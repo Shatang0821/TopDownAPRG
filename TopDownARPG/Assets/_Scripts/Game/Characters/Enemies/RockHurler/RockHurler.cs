@@ -35,6 +35,7 @@ public class RockHurler : Enemy
         stateMachine.RegisterState(RHStateEnum.Move, new RHMoveState("Move", this, stateMachine));
         stateMachine.RegisterState(RHStateEnum.Attack, new RHAttackState("Attack", this, stateMachine));
         stateMachine.RegisterState(RHStateEnum.Damaged, new RHDamageState("Damaged", this, stateMachine));
+        stateMachine.RegisterState(RHStateEnum.Die, new RHDieState("Die", this, stateMachine));
 
         return stateMachine;
 
@@ -53,6 +54,11 @@ public class RockHurler : Enemy
     private void AnimationEventCalled()
     {
         enemyStateMachine.AnimationEventCalled();
+    }
+
+    private void AnimationEndCalled()
+    {
+        enemyStateMachine.AnimationEndCalled();
     }
 
 

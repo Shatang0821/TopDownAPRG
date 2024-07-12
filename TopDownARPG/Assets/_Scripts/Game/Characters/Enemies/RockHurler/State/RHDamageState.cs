@@ -18,14 +18,21 @@ public class RHDamageState : RHMovementState
     {
         base.LogicUpdate();
 
+        if(enemy.GetCurrentHealth <= 0 )
+        {
+            enemyStateMachine.ChangeState(RHStateEnum.Die);
+            return;
+        }
+
+        if (enemy.IsTakenDamaged)
+        {
+            enemy.TakenDamageState();
+            return;
+        }
 
         if (stateTimer > 0.5f)
         {
-            if (enemy.IsTakenDamaged)
-            {
-                enemy.TakenDamageState();
-                return;
-            }
+
             if (enemy.InAttackRange)
             {
                 if (enemy.TargetFound)
