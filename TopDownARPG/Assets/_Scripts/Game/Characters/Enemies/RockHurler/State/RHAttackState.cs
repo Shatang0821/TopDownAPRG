@@ -6,9 +6,15 @@ using UnityEngine;
 public class RHAttackState : RHMovementState
 {
     private GameObject RockPrefab; // 岩のプレハブ
+    private RockHurler _rockHurler;
     Vector3 _player;
     public RHAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        _rockHurler = enemy as RockHurler;
+        if (!_rockHurler)
+        {
+            Debug.LogWarning("キャッシュできませんでした");
+        }
     }
 
     public override void Enter()
@@ -20,7 +26,13 @@ public class RHAttackState : RHMovementState
     {
         base.LogicUpdate();
 
-        _player = enemy._directionToPlayer;
+        if (enemy.IsTakenDamaged)
+        {
+            enemy.TakenDamageState();
+            return;
+        }
+
+        _player = enemy.DirectionToPlayer;
 
         enemy.transform.forward = _player;
 
@@ -36,6 +48,6 @@ public class RHAttackState : RHMovementState
         // 岩のプレハブをロード（Resources フォルダー内に配置されていると仮定）
         RockPrefab = Resources.Load<GameObject>("Prefabs/Enemies/Rock-Purple");
         // プレハブを生成して初期化する
-        GameObject projectile = GameObject.Instantiate(RockPrefab, enemy.transform.position, Quaternion.identity);
+        GameObject projectile = GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
     }
 }

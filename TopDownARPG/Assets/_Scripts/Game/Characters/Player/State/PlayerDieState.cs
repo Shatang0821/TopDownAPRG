@@ -9,4 +9,15 @@ public class PlayerDieState : PlayerBaseState
         player, stateMachine)
     {
     }
+    
+    public override void AnimationEndCalled()
+    {
+        base.AnimationEndCalled();
+        Die();
+    }
+    
+    private void Die()
+    {
+        player.gameObject.SetActive(false);
+    }
 }

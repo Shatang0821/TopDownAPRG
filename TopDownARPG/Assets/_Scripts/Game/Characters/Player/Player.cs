@@ -11,6 +11,8 @@ public enum PlayerEvent
 }
 public class Player : Entity
 {
+    //パワーのゲット
+    public int Power => power.Value;
     private Camera _camera; 
     private PlayerStateMachine _stateMachine;
     #region Component
@@ -30,6 +32,8 @@ public class Player : Entity
     //被撃
     public bool Damaged = false;
     
+    //現在HP
+    public float GetCurrentHealth => currentHealth.Value;
     private void InitComponent()
     {
         _camera = Camera.main;

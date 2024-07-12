@@ -1,21 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.HID;
 
 public class RockBullet : MonoBehaviour
 {
-    GameObject _player;     // ƒvƒŒƒCƒ„[ƒIƒuƒWƒFƒNƒg
-    Rigidbody _rb;          // Šâ‚Ì Rigidbody ƒRƒ“ƒ|[ƒlƒ“ƒg
+    GameObject _player;     // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½g
+    Rigidbody _rb;          // ï¿½ï¿½ï¿½ Rigidbody ï¿½Rï¿½ï¿½ï¿½|ï¿½[ï¿½lï¿½ï¿½ï¿½g
 
-    public float moveSpeed = 10f; // Šâ‚ÌˆÚ“®‘¬“x
+    public float moveSpeed = 10f; // ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½x
     Vector3 directionToPlayer;
-    void Start()
+
+    private void OnEnable()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
         _rb = GetComponent<Rigidbody>();
-        // ƒvƒŒƒCƒ„[‚ÌˆÊ’u‚ğ–Ú•W‚Æ‚·‚é•ûŒüƒxƒNƒgƒ‹‚ğŒvZ
+        // ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌˆÊ’uï¿½ï¿½Ú•Wï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Z
         directionToPlayer = (_player.transform.position - transform.position).normalized;
+        directionToPlayer.y = 0;
     }
+
+
 
     void Update()
     {
@@ -25,7 +30,24 @@ public class RockBullet : MonoBehaviour
         }
 
 
-        // Šâ‚É‘¬“x‚ğ—^‚¦‚ÄƒvƒŒƒCƒ„[‚Ì•ûŒü‚É”ò‚Î‚·
+        // ï¿½ï¿½É‘ï¿½ï¿½xï¿½ï¿½^ï¿½ï¿½ï¿½Äƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì•ï¿½ï¿½ï¿½ï¿½É”ï¿½Î‚ï¿½
         _rb.velocity = directionToPlayer * moveSpeed;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        IDamaged damagedEntity = other.GetComponent<Collider>().GetComponent<IDamaged>();
+
+        if (damagedEntity != null)
+        {
+            damagedEntity.TakeDamage(5);
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            gameObject.SetActive(false);
+        }
+
+
     }
 }

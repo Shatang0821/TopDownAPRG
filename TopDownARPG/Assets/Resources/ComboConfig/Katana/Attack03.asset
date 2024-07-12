@@ -13,9 +13,10 @@ MonoBehaviour:
   m_Name: Attack03
   m_EditorClassIdentifier: 
   Radius: 2
-  Angle: 125.7
-  RayCount: 20
-  RollAngle: 180
-  StartMoveTime: 0.2
+  Angle: 360
+  RayCount: 35
+  RollAngle: 0
+  StartMoveTime: 0
   StopMoveTime: 0.4
   Speed: 2
+  AttackTiming: 0.45

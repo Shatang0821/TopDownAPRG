@@ -120,8 +120,8 @@ public class AStar
                 
             if (currentNode.Pos == goalNode.Pos)
             {
-                Debug.Log("Current Node: " + currentNode.Pos);
-                Debug.Log("ここまで");
+//                Debug.Log("Current Node: " + currentNode.Pos);
+//                Debug.Log("ここまで");
                 var path = new List<AstarNode>();
                 while (currentNode != null)
                 {

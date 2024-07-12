@@ -36,13 +36,14 @@ public class EnemyManager : UnitySingleton<EnemyManager>
     /// </summary>
     public void SpawnEnemy()
     {
-        
+        int i = 1;
         foreach (var enemy in _enemiesConfig.Enemies)
         {
-            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,25), Quaternion.identity);
+            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,i * 10), Quaternion.identity);
             var enemyComponent = eObject.GetComponent<Enemy>();
             enemyComponent.SetPlayerTransform(_playerTransform);
-            _currentWaveEnemies.Add(enemyComponent);
+            RegisterWaveEnemy(enemyComponent);
+            i++;
         }
     }
 
@@ -67,7 +68,7 @@ public class EnemyManager : UnitySingleton<EnemyManager>
     {
         foreach (var enemy in _currentWaveEnemies)
         {
-            if (enemy)
+            if (enemy && enemy.gameObject.activeSelf)
             {
                 enemy.LogicUpdate(); 
             }
@@ -78,6 +79,7 @@ public class EnemyManager : UnitySingleton<EnemyManager>
         {
             foreach (var enemy in _enemiesToRemove)
             {
+                //非アクティブになってから消す
                 _currentWaveEnemies.Remove(enemy);
                 // その他のクリーンアップ処理
             }

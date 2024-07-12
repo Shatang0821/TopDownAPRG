@@ -9,6 +9,7 @@ public class PlayerAttackState : PlayerBaseState
 {
     private bool _animetionEnd;
     private bool _canOtherState;
+    private bool _isAttacked = false;
     private ComboConfig _comboConfig;
     private AttackConfig _attackConfig;
     private HashSet<Enemy> _hitEnemies;
@@ -23,6 +24,7 @@ public class PlayerAttackState : PlayerBaseState
     {
         player.SetAttackComboCount();
         base.Enter();
+        _isAttacked = false;
         _comboConfig = player.ComboConfig;
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
         
@@ -35,8 +37,6 @@ public class PlayerAttackState : PlayerBaseState
 
         //チンペン音
         AudioManager.Instance.PlayAttack_E();
-
-        player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
     }
 
     public override void LogicUpdate()
@@ -46,7 +46,14 @@ public class PlayerAttackState : PlayerBaseState
         var attackConfig = comboConfig.AttackConfigs[comboConfig.ComboCount-1];
         
         //player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
-
+    
+        if (!_isAttacked && stateTimer > _attackConfig.AttackTiming)
+        {
+            _isAttacked = true;
+            player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius,player.Power);
+            
+        }
+        
         if (player.Damaged)
         {
             player.ComboConfig.ComboCount = 0;
@@ -80,13 +87,13 @@ public class PlayerAttackState : PlayerBaseState
                 playerStateMachine.ChangeState(PlayerStateEnum.Idle);
             }
         }
+        
+        
     }
 
     public override void AnimationEventCalled()
     {
         base.AnimationEventCalled();
-        //_canOtherState
-        //playerStateMachine.ChangeState(PlayerStateEnum.Idle);
         _canOtherState = true;
     }
 
@@ -114,60 +121,10 @@ public class PlayerAttackState : PlayerBaseState
         _hitEnemies.Clear();
     }
     
-    
-    // private void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
-    // {
-    //     Vector3 forward = player.RayStartPoint.forward;
-    //     Vector3 origin = player.RayStartPoint.position;
-    //
-    //     // 扇型の各ポイントを計算
-    //     List<Vector3> fanPoints = new List<Vector3>();
-    //     for (int i = 0; i <= rayCount; i++)
-    //     {
-    //         float currentAngle = -angle / 2 + (angle / rayCount) * i;
-    //         Vector3 direction = Quaternion.Euler(0, currentAngle, 0) * forward;
-    //         fanPoints.Add(origin + direction * radius);
-    //     }
-    //
-    //     // ワールド空間でのロール角度の適用
-    //     Quaternion rollRotation = Quaternion.AngleAxis(rollAngle, player.RayStartPoint.forward);
-    //     for (int i = 0; i < fanPoints.Count; i++)
-    //     {
-    //         Vector3 localPoint = fanPoints[i] - origin;
-    //         fanPoints[i] = origin + rollRotation * localPoint;
-    //     }
-    //
-    //     // Rayを飛ばして衝突判定
-    //     foreach (var point in fanPoints)
-    //     {
-    //         Vector3 direction = (point - origin).normalized;
-    //         Ray ray = new Ray(origin, direction);
-    //         if (Physics.Raycast(ray, out RaycastHit hit, radius))
-    //         {
-    //             if (hit.collider.CompareTag("Enemy"))
-    //             {
-    //                 Enemy enemy = hit.collider.GetComponent<Enemy>();
-    //                 if (enemy != null && !_hitEnemies.Contains(enemy)) // ここを修正
-    //                 {
-    //                     _hitEnemies.Add(enemy); // 敵を追加
-    //                     //ダメージ処理
-    //                     enemy.TakeDamage(10);
-    //                 }
-    //             }
-    //             
-    //         }
-    //
-    //         // デバッグ用のRayを描画
-    //         Debug.DrawRay(origin, direction * radius, Color.red);
-    //     }
-    // }
-
     private void MovePlayer()
     {
         var forward = player.transform.forward;
         player.Move(new Vector3(forward.x,forward.z,0),_attackConfig.Speed,0,false);
-        // player.Rigidbody.AddForce(player.transform.forward * _attackConfig.Speed,
-        //     ForceMode.VelocityChange);
     }
     
     

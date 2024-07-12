@@ -15,6 +15,8 @@ public class RHIdleState : RHMovementState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if (!enemyStateMachine.CheckState(this)) return;
+
         if (enemy.InAttackRange)
         {
             enemyStateMachine.ChangeState(RHStateEnum.Attack); 

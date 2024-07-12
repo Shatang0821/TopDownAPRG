@@ -2,22 +2,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.Playables;
 using UnityEngine.UI;
+using TMPro;
 
 public class API : MonoBehaviour
 {
 
     [SerializeField]
-    InputField accountname;
+    TMP_InputField accountname;
 
     [SerializeField]
-    InputField password;
-    private bool isLogout;
+    TMP_InputField password;
 
-    IEnumerator CreateAccount(InputField accountname,InputField password)
+    [SerializeField]
+    Text _username;
+
+    public bool isLogout;
+    public bool isLogin = false;
+
+    DataManager _dataManager; //データマネージャーのインスタンス
+
+    public IEnumerator CreateAccount(TMP_InputField accountname,TMP_InputField password)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -40,12 +49,14 @@ public class API : MonoBehaviour
         {
             Debug.Log("アカウント作成成功: " + request.downloadHandler.text);
             Debug.Log(getrequest.downloadHandler.text);
+            //作ったアカウントでログイン処理を行う
+            StartCoroutine(Login(accountname,password));
         }
 
 
     }
 
-    IEnumerator Login(InputField accountname, InputField password)
+    public IEnumerator Login(TMP_InputField accountname, TMP_InputField password)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -61,17 +72,22 @@ public class API : MonoBehaviour
         if (request.result != UnityWebRequest.Result.Success)
         {
             Debug.LogError("ログイン失敗: " + request.error);
-
+            isLogin = false;
         }
         else
         {
             Debug.Log("ログイン成功: " + request.downloadHandler.text);
+            //アカウントの保存
             SaveAccount(accountname,password);
+            //一緒にゲームの情報を持ってくる
             StartCoroutine(Get_Game_Info(accountname));
+            isLogin = true;
+
+            _username.text ="name：" + accountname.text;
         }
     }
 
-    IEnumerator Get_Game_Info(InputField accountname)
+    IEnumerator Get_Game_Info(TMP_InputField accountname)
     {
         // フォームデータを作成
         WWWForm form = new WWWForm();
@@ -80,7 +96,6 @@ public class API : MonoBehaviour
         UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/get_game_info", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
-
 
         if (request.result != UnityWebRequest.Result.Success)
         {
@@ -91,24 +106,20 @@ public class API : MonoBehaviour
         {
             Debug.Log("データ取得完了 ");
 
+            _dataManager = FindObjectOfType<DataManager>();
             // JSON文字列を直接取得
             string json = request.downloadHandler.text;
 
             // JSON文字列をクラスにデシリアライズする
             JsonGameData playerData = JsonUtility.FromJson<JsonGameData>(json);
 
-            // GameDataにデータをセット
-            GameData gameData = new GameData();
-            gameData.SetBasicData(playerData);
-
-            Debug.Log(gameData.ToString());
-
+            _dataManager.GameDataSet(playerData);
         }
     }
 
 
     #region アカウントの保存
-    void SaveAccount(InputField accountname, InputField password)
+    public void SaveAccount(TMP_InputField accountname, TMP_InputField password)
     {
         string filePath = Application.persistentDataPath + "/LoginAccount.json";
 
@@ -122,6 +133,7 @@ public class API : MonoBehaviour
             {
                 accountmanager.accountname = null;
                 accountmanager.password = null;
+                
                 Debug.Log("ログアウト");
             }
             else
@@ -150,6 +162,46 @@ public class API : MonoBehaviour
         streamWriter.Close();
     }
     #endregion
+
+    //保存したJsonデータからログアウト出来るように引数がstring型のを作った
+    public void StringSaveAccount(string accountname, string password)
+    {
+        string filePath = Application.persistentDataPath + "/LoginAccount.json";
+
+        AccountManager accountmanager = new AccountManager(); // accountmanager を初期化
+
+        if (File.Exists(filePath))
+        {
+            // ファイルが存在する場合はロードして追加
+            string json = File.ReadAllText(filePath);
+            accountmanager = JsonUtility.FromJson<AccountManager>(json);
+            if (isLogout)
+            {
+                accountmanager.accountname = null;
+                accountmanager.password = null;
+                _username.text = "name：";
+                Debug.Log("ログアウト");
+            }
+            else
+            {
+                Debug.Log("保存成功");
+            }
+
+            Debug.Log(filePath);
+        }
+        else
+        {
+            Debug.Log(filePath);
+        }
+
+        // JSONファイルに保存
+        string AccountsJson = JsonUtility.ToJson(accountmanager, true);
+        StreamWriter streamWriter = new StreamWriter(filePath);
+        streamWriter.Write(AccountsJson);
+        streamWriter.Flush();
+        streamWriter.Close();
+    }
+
 
     public void CheckSessionStatus()
     {

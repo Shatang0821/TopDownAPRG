@@ -24,6 +24,10 @@ public class Entity : MonoBehaviour, IDamaged
     protected Observer<float> speed;
 
     protected Animator animator;
+    public float GetMaxHealth => maxHealth.Value;           //最大HPを取得する
+    public float GetCurrentHealth => currentHealth.Value;   //現在HPを取得する
+    public int GetPower => power.Value;                     //攻撃力を取得する
+    public float GetSpeed => speed.Value;                   //移動速度を取得する
 
     [HideInInspector] public Rigidbody Rigidbody;
 
@@ -52,8 +56,8 @@ public class Entity : MonoBehaviour, IDamaged
          *  power = new Observer<int>(entityData.power, "abc");
          *  speed = new Observer<float>(entityData.speed, "cba");
          */
-        maxHealth = new Observer<float>(100);
-        currentHealth = new Observer<float>(100);
+        maxHealth = new Observer<float>(50);
+        currentHealth = new Observer<float>(maxHealth.Value);
         //テスト
         power = new Observer<int>(10);
         speed = new Observer<float>(5);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
 public class AttackComponent : MonoBehaviour
@@ -15,7 +16,7 @@ public class AttackComponent : MonoBehaviour
     /// <param name="rayCount">レイ数</param>
     /// <param name="rollAngle">ロール角度</param>
     /// <param name="radius">半径</param>
-    public void StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius)
+    public bool StableRolledFanRayCast(float angle, int rayCount, float rollAngle,float radius,float damage)
     {
         
         Vector3 forward = RayStartPoint.forward;
@@ -45,20 +46,31 @@ public class AttackComponent : MonoBehaviour
             Ray ray = new Ray(origin, direction);
             if (Physics.Raycast(ray, out RaycastHit hit, radius,targetLayerMask))
             {
+                //攻撃が壁など環境にする抜けないように;
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Environment"))
+                {
+                    continue; // レイをスキップする
+                }
+                //IDamagedインタフェースを使ってダメージ処理
                 IDamaged damagedEntity = hit.collider.GetComponent<IDamaged>();
                 if (damagedEntity != null && !_hitEntities.Contains(damagedEntity))
                 {
                     _hitEntities.Add(damagedEntity);
-                    damagedEntity.TakeDamage(10);
-                    Debug.Log("Hit");
+                    damagedEntity.TakeDamage(damage);
+                    
                 }
             }
-
-            // デバッグ用のRayを描画
-            Debug.DrawRay(origin, direction * radius, Color.red);
         }
-
+        
+        //当たったターゲットがいればtrueを返す
+        if (_hitEntities.Count > 0)
+        {
+            ResetHits();
+            return true;
+        }
+        
         ResetHits();
+        return false;
     }
 
     public void ResetHits()
