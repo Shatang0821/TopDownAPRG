@@ -547,7 +547,7 @@ Transform:
   m_GameObject: {fileID: 933713720871364536}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 25.49997, y: 0.00010108948, z: -23.499998}
+  m_LocalPosition: {x: 25.49997, y: 0, z: -23.499998}
   m_LocalScale: {x: 5, y: 1, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -789,8 +789,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.6526628, y: 1.8644774, z: 0.9874964}
-  m_Center: {x: -2.653009, y: 0.7694043, z: 0.031026617}
+  m_Size: {x: 5.9792485, y: 1.8644774, z: 0.6510657}
+  m_Center: {x: -2.7064853, y: 0.7694043, z: 0.028421048}
 --- !u!1 &1366664276837676414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1285,89 +1285,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!1 &2176090569019213465
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8590969547472282982}
-  - component: {fileID: 6866605310688318296}
-  - component: {fileID: 679321800602196042}
-  m_Layer: 6
-  m_Name: SM_Env_Gem_Large_01 (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8590969547472282982
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2176090569019213465}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 21.4497, y: -0.0144, z: -14.5812}
-  m_LocalScale: {x: 0.67580813, y: 1.0687424, z: 0.7383}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1333111451229585041}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6866605310688318296
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2176090569019213465}
-  m_Mesh: {fileID: 4300000, guid: e02f4a5ca9ccd734c8a30c5575edafc1, type: 3}
---- !u!23 &679321800602196042
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2176090569019213465}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 42b64fdb315e3054ea757d8d1c4bcfa7, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2184151121869014535
 GameObject:
   m_ObjectHideFlags: 0
@@ -1510,7 +1427,6 @@ Transform:
   - {fileID: 8058103491128347272}
   - {fileID: 2652062188672006463}
   - {fileID: 3522731351472264619}
-  - {fileID: 8590969547472282982}
   - {fileID: 6797036442607615977}
   - {fileID: 6632496940467817628}
   - {fileID: 504885589438429197}
@@ -1890,8 +1806,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.90704346, y: 1.7924137, z: 1.8013182}
-  m_Center: {x: -0.005771637, y: 0.89620686, z: 0.4331727}
+  m_Size: {x: 0.43154526, y: 1.7924137, z: 1.6858621}
+  m_Center: {x: 0.00012397766, y: 0.89620686, z: 0.37544465}
 --- !u!1 &2754452171185026075
 GameObject:
   m_ObjectHideFlags: 0
@@ -1995,8 +1911,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.1213598, y: 1.8644774, z: 2.518237}
-  m_Center: {x: -0.0038523825, y: 0.7694044, z: -0.61392975}
+  m_Size: {x: 0.97634375, y: 1.8644774, z: 3.659958}
+  m_Center: {x: 0.05254565, y: 0.7694044, z: 0.14433284}
 --- !u!1 &2783190499023113493
 GameObject:
   m_ObjectHideFlags: 0
@@ -2798,8 +2714,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.8362541, y: 1.7924137, z: 1.9366684}
-  m_Center: {x: 0.02333641, y: 0.89620686, z: 0.5666847}
+  m_Size: {x: 0.49, y: 1.7924137, z: 1.8701305}
+  m_Center: {x: 0.02333641, y: 0.89620686, z: 0.59995365}
 --- !u!1 &3987906381578812807
 GameObject:
   m_ObjectHideFlags: 0
@@ -4109,8 +4025,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.784643, y: 2.711155, z: 1.2499306}
-  m_Center: {x: 3.5006745, y: 1.315676, z: 0.052972738}
+  m_Size: {x: 8.503217, y: 2.711155, z: 0.85532004}
+  m_Center: {x: 3.6468527, y: 1.315676, z: -0.14864357}
 --- !u!1 &5441630204814572059
 GameObject:
   m_ObjectHideFlags: 0
@@ -4546,8 +4462,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1.2099164, y: 1.8644774, z: 3.2766533}
-  m_Center: {x: 0.06836689, y: 0.7694044, z: -0.9931388}
+  m_Size: {x: 1.0185088, y: 1.8644774, z: 3.470295}
+  m_Center: {x: 0.065619096, y: 0.7694044, z: -1.2522252}
 --- !u!1 &6053543723565469901
 GameObject:
   m_ObjectHideFlags: 0
@@ -5564,8 +5480,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 6.4694195, y: 1.794028, z: 0.9787241}
-  m_Center: {x: 2.5613873, y: 0.7341796, z: 0.053339545}
+  m_Size: {x: 6.0880246, y: 1.794028, z: 0.5474462}
+  m_Center: {x: 2.573209, y: 0.7341796, z: 0.094050184}
 --- !u!1 &6813451400364868194
 GameObject:
   m_ObjectHideFlags: 0
@@ -6814,8 +6730,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 8.460875, y: 2.711155, z: 1.0532624}
-  m_Center: {x: -3.338797, y: 1.315676, z: -0.02613511}
+  m_Size: {x: 7.719398, y: 2.711155, z: 0.84651023}
+  m_Center: {x: -3.3297656, y: 1.315676, z: 0.074127674}
 --- !u!1 &9003294624175186170
 GameObject:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65e6d6fbe2d8e74b9ee0970310ef931, type: 3}
   m_Name: StageDetail_00 2
   m_EditorClassIdentifier: 
-  StagePrefab: {fileID: 2511169240550446091, guid: a31c6d1c09f5cd34b88d57635868c4ef, type: 3}
+  StagePrefab: {fileID: 1938218005334160412, guid: a31c6d1c09f5cd34b88d57635868c4ef, type: 3}
   DataFilePath: Assets/MapData/Stage02.csv
   MapWidth: 32
   MapHeight: 32
