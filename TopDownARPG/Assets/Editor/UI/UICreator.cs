@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class UICreator : EditorWindow
 {
-    private static string _filePath = "/_Scripts/Game/UIControllers/";
+    private static string _filePath = "/_Scripts/Controllers/UIControllers/";
     
     [MenuItem("MyTool/UICreator")]
     public static void CreateUI()

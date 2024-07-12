@@ -1,0 +1,93 @@
+@startuml MainSystem
+class GameLevel {
+    string LevelName
+    List<TriggerZone> TriggerZones
+    List<SpawnPoint> EnemySpawnPoints
+    List<Portal> Portals
+    bool IsCleared
+    List<EnemyData> EnemiesData
+    GridMap GridMap
+}
+
+class TriggerZone {
+    Vector3 Position
+    float Radius
+    Action OnPlayerEnter
+}
+
+class SpawnPoint {
+    Vector3 Position
+    EnemyType EnemyType
+}
+
+class Portal {
+    Vector3 Position
+    string TargetLevel
+    bool IsActive
+}
+
+class EnemyData {
+    Vector3 Position
+    EnemyType EnemyType
+}
+
+class Enemy {
+    string Name
+    int Health
+    Vector3 Position
+    List<Vector3> Path
+    void TakeDamage(int amount)
+    void Die()
+    void MoveAlongPath()
+    void UpdatePath(List<Vector3> newPath)
+}
+
+class LevelManager {
+    GameLevel CurrentLevel
+    EnemyManager EnemyManager
+    Pathfinding Pathfinding
+    void LoadLevel(string levelName)
+    void InitializeLevel()
+    void SpawnEnemies(TriggerZone triggerZone)
+    void OnEnemyDefeated()
+    void ActivatePortals()
+    void OnPlayerEnterPortal(Portal portal)
+}
+
+class EnemyManager {
+    List<Enemy> Enemies
+    void Initialize(List<EnemyData> enemiesData)
+    Enemy SpawnEnemy(EnemyData data)
+    void AddEnemy(Enemy enemy)
+    void RemoveEnemy(Enemy enemy)
+    bool AreAllEnemiesDefeated()
+}
+
+class Pathfinding {
+    GridMap gridMap
+    void Initialize(GridMap map)
+    List<Vector3> FindPath(Vector3 start, Vector3 goal)
+}
+
+class GameManager {
+    Player Player
+    LevelManager LevelManager
+    void StartGame()
+    void Update()
+}
+
+GameLevel "1" *-- "many" TriggerZone
+GameLevel "1" *-- "many" SpawnPoint
+GameLevel "1" *-- "many" Portal
+GameLevel "1" *-- "many" EnemyData
+GameLevel "1" *-- GridMap
+
+LevelManager "1" *-- "1" GameLevel
+LevelManager "1" *-- "1" EnemyManager
+LevelManager "1" *-- "1" Pathfinding
+
+EnemyManager "1" *-- "many" Enemy
+
+GameManager "1" *-- "1" Player
+GameManager "1" *-- "1" LevelManager
+@enduml

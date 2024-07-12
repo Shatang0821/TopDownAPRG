@@ -30,7 +30,7 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     private void InitFramework()
     {
         ManagerFactory.Instance.CreateManager<AudioManager>();
-        //ManagerFactory.Instance.CreateManager<PoolManager>();
+        ManagerFactory.Instance.CreateManager<PoolManager>();
     }
 
     /// <summary>
@@ -38,6 +38,6 @@ public class GameLaunch : UnitySingleton<GameLaunch>
     /// </summary>
     private void InitGameLogic()
     {
-        //ManagerFactory.Instance.CreateManager<GameManager>();
+        ManagerFactory.Instance.CreateManager<GameManager>();
     }
 }
