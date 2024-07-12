@@ -2,6 +2,7 @@
 
 public class MeleeDieState : EnemyBaseState
  {
+     private bool _isDead;
      public MeleeDieState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
      {
      }
@@ -9,24 +10,29 @@ public class MeleeDieState : EnemyBaseState
         public override void Enter()
         {
             base.Enter();
+            _isDead = false;
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+            if (_isDead)
+            {
+                Die();
+            }
         }
 
         public override void AnimationEndCalled()
         {
             base.AnimationEndCalled();
-            Die();
+            _isDead = true;
         }
 
+        
         private void Die()
         {
-            enemy.RaiseOnDeathEvent();
+            _isDead = false;
             enemy.gameObject.SetActive(false);
+            enemy.RaiseOnDeathEvent();
         }
-        
-        
  }

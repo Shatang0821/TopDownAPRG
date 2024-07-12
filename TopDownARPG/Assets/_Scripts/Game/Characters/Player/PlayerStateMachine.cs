@@ -9,6 +9,7 @@ public enum PlayerStateEnum
     Attack,
     Dash,
     Damaged,
+    Die
 }
 
 public class PlayerStateMachine : StateMachine
@@ -20,6 +21,7 @@ public class PlayerStateMachine : StateMachine
         RegisterState(PlayerStateEnum.Attack,new PlayerAttackState("Attack",player,this));
         RegisterState(PlayerStateEnum.Dash,new PlayerDashState("Move",player,this));
         RegisterState(PlayerStateEnum.Damaged,new PlayerDamagedState("Damaged",player,this));
+        RegisterState(PlayerStateEnum.Die, new PlayerDieState("Die",player,this));
     }
     
     

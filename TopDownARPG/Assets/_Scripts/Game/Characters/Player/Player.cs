@@ -32,6 +32,8 @@ public class Player : Entity
     //被撃
     public bool Damaged = false;
     
+    //現在HP
+    public float GetCurrentHealth => currentHealth.Value;
     private void InitComponent()
     {
         _camera = Camera.main;
