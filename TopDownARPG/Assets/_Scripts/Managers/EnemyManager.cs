@@ -4,7 +4,7 @@ using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
-public class EnemyManager : UnitySingleton<EnemyManager>
+public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
 {
     private List<Enemy> _currentWaveEnemies;
     private List<Enemy> _enemiesToRemove;
@@ -85,5 +85,10 @@ public class EnemyManager : UnitySingleton<EnemyManager>
             }
             _enemiesToRemove.Clear();
         }
+    }
+
+    public void LogicUpdate()
+    {
+        
     }
 }

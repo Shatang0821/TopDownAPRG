@@ -19,7 +19,7 @@ namespace FrameWork.Factories
             {
                 gameObject.transform.parent = parent;
             }
-
+            
             var component = gameObject.AddComponent<T>();
             if (component is IInitializable initializable)
             {
