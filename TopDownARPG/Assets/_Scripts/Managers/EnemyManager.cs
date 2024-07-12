@@ -1,11 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Interface;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
-public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
+public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
 {
+    private List<WaveConfig> _waveConfigs;
+    private int _currentWaveIndex = 0;
+    
     private List<Enemy> _currentWaveEnemies;
     private List<Enemy> _enemiesToRemove;
     
@@ -13,12 +18,12 @@ public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
     private WaveConfig _waveConfig;
 
     private Transform _playerTransform; //プレイヤーの変換情報
+    
     /// <summary>
     /// EnemyManagerの初期化
     /// </summary>
-    public void Initialize()
+    public void Init()
     {
-        _playerTransform = FindObjectOfType<Player>().transform;
         
         _waveConfig = ResManager.Instance.GetAssetCache<WaveConfig>("Enemies Config/Enemies_Config");
         if (!_waveConfig)
@@ -28,22 +33,70 @@ public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
         }
         _currentWaveEnemies = new List<Enemy>();
         _enemiesToRemove = new List<Enemy>();
-        SpawnEnemy();
+    }
+
+    /// <summary>
+    /// データ構造のリセット
+    /// </summary>
+    public void Reset()
+    {
+        _currentWaveEnemies.Clear();
+        _enemiesToRemove.Clear();
     }
     
     /// <summary>
-    /// 敵の生成
+    /// ウェーブの設定
     /// </summary>
-    public void SpawnEnemy()
+    /// <param name="waveConfigs"></param>
+    public void SetWaveConfig(List<WaveConfig> waveConfigs)
     {
-        int i = 1;
-        foreach (var enemy in _waveConfig.Enemies)
+        this._waveConfigs = waveConfigs;
+        _currentWaveIndex = 0;
+    }
+
+
+    /// <summary>
+    /// プレイヤーの変換情報を設定する
+    /// </summary>
+    /// <param name="playerTransform"></param>
+    public void SetPlayerTransform(Transform playerTransform) {_playerTransform = playerTransform;}
+    
+    
+    /// <summary>
+    /// ウェーブの自動進行
+    /// </summary>
+    /// <returns>true ウェーブがまだある false ウェーブが終わり</returns>
+    public bool StartWave()
+    {
+        if (_currentWaveIndex < _waveConfigs.Count)
         {
-            var eObject = GameObject.Instantiate(enemy, new Vector3(5,0,i * 10), Quaternion.identity);
-            var enemyComponent = eObject.GetComponent<Enemy>();
-            enemyComponent.SetPlayerTransform(_playerTransform);
-            RegisterWaveEnemy(enemyComponent);
-            i++;
+            StartCoroutine(SpawnWave(_waveConfigs[_currentWaveIndex]));
+            _currentWaveIndex++;
+            return true;
+        }
+
+        //ウェーブが終わったら
+        return false;
+    }
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="waveConfig"></param>
+    /// <returns></returns>
+    private IEnumerator SpawnWave(WaveConfig waveConfig)
+    {
+        foreach (var spawnInfo in waveConfig.Enemies)
+        {
+            yield return new WaitForSeconds(spawnInfo.SpawnTime);
+            
+            //!!!! ローカル座標を世界座標に変換していない
+            var enemy = Instantiate(spawnInfo.EnemyPrefab, spawnInfo.SpawnLocalPosition, Quaternion.identity).GetComponent<Enemy>();
+
+            if (enemy != null)
+            {
+                RegisterWaveEnemy(enemy);
+            }
         }
     }
 
@@ -61,10 +114,9 @@ public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
     {
         _enemiesToRemove.Add(enemy);
         enemy.OnDeath -= HandleEnemyDeath;
-        // Wave管理などの追加処理
     }
 
-    private void Update()
+    public void LogicUpdate()
     {
         foreach (var enemy in _currentWaveEnemies)
         {
@@ -87,8 +139,5 @@ public class EnemyManager : UnitySingleton<EnemyManager> , IUpdatable
         }
     }
 
-    public void LogicUpdate()
-    {
-        
-    }
+    
 }

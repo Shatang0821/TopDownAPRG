@@ -33,15 +33,17 @@ public class Entity : MonoBehaviour, IDamageable
 
     public virtual void Initialize()
     {
+        InitValue();
         animator = GetComponentInChildren<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
     }
     
     protected virtual void Awake()
     {
-        InitValue();
         animator = GetComponentInChildren<Animator>();
         Rigidbody = GetComponent<Rigidbody>();
+
+        InitValue();
     }
 
     /// <summary>
@@ -65,14 +67,14 @@ public class Entity : MonoBehaviour, IDamageable
 
     protected virtual void OnEnable()
     {
-        maxHealth.Register(new Action<float>(OnMaxHealthChanged));
-        currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
+        //maxHealth.Register(new Action<float>(OnMaxHealthChanged));
+        //currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnDisable()
     {
-        maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
-        currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
+        //maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
+        //currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnMaxHealthChanged(float newMaxHealth)

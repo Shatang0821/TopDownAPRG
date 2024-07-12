@@ -5,11 +5,12 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// 入力処理
 /// </summary>
-public class PlayerInput
+public class PlayerInputComponent
 {
     #region 変数定義
 
     private PlayerInputAcion _inputActions;
+    
     //private InputDevice _currentDevice; //現在デバイス
     public Observer<InputDevice> CurrentDevice;
     //移動
@@ -26,7 +27,7 @@ public class PlayerInput
 
     #region クラスライフサイクル
 
-    public PlayerInput()
+    public PlayerInputComponent()
     {
         Init();
     }
@@ -37,7 +38,6 @@ public class PlayerInput
     public void Init()
     {
         _inputActions = new PlayerInputAcion();
-       //_currentDevice = Keyboard.current;
        CurrentDevice = new Observer<InputDevice>(Keyboard.current);
     }
 
@@ -57,36 +57,6 @@ public class PlayerInput
     #endregion
 
     #region デバイス
-    
-    //元の
-    
-    // /// <summary>
-    // /// デバイス切り替え処理
-    // /// </summary>
-    // /// <param name="obj"></param>
-    // /// <param name="actionChange"></param>
-    // private void OnActionChange(object obj, InputActionChange actionChange)
-    // {
-    //     if (actionChange == InputActionChange.ActionStarted)
-    //     {
-    //         var d = ((InputAction)obj).activeControl.device;
-    //         switch (d.device)
-    //         {
-    //             case Keyboard:
-    //                 if (_currentDevice == Keyboard.current)
-    //                     return;
-    //                 _currentDevice = Keyboard.current;
-    //                 Debug.Log(_currentDevice);
-    //                 break;
-    //             case Gamepad:
-    //                 if (_currentDevice == Gamepad.current)
-    //                     return;
-    //                 _currentDevice = Gamepad.current;
-    //                 Debug.Log(_currentDevice);
-    //                 break;
-    //         }
-    //     }
-    // }
     
     /// <summary>
     /// デバイス切り替え処理

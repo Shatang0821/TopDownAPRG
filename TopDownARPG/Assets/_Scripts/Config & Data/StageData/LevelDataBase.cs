@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "NewStageConfig", menuName = "Stage/StageData", order = 1)]
-public class StageDataBase : ScriptableObject
+public class LevelDataBase : ScriptableObject
 {
-    [FormerlySerializedAs("StageConfigs")] public StageDetail[] StageDetails;
+    public LevelData[] StageDetails;
 }

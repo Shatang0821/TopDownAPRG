@@ -30,14 +30,14 @@ public class PlayerAttackState : PlayerBaseState
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
         
         //マウス操作の場合マウス位置に回転
-        if (player._playerInput.CurrentDevice.Value == Keyboard.current)
+        if (player.PlayerInputComponent.CurrentDevice.Value == Keyboard.current)
         {
-            _toMouseDir = new Vector3(player._playerInput.MousePosition.x, 0, player._playerInput.MousePosition.y);
+            _toMouseDir = new Vector3(player.PlayerInputComponent.MousePosition.x, 0, player.PlayerInputComponent.MousePosition.y);
             player.RotationWithMouse(_toMouseDir,0f);
         }
-        else if (player._playerInput.CurrentDevice.Value == Gamepad.current)
+        else if (player.PlayerInputComponent.CurrentDevice.Value == Gamepad.current)
         {
-            _toStickDir = new Vector3(player._playerInput.Axis.x, 0, player._playerInput.Axis.y);
+            _toStickDir = new Vector3(player.PlayerInputComponent.Axis.x, 0, player.PlayerInputComponent.Axis.y);
             player.RotateWithPad(_toStickDir,0f);
         }
 

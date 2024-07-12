@@ -4,22 +4,22 @@ using UnityEngine;
 
 public class StageManager : Singleton<StageManager>
 {
-    private StageDataBase _gameStageDatabase;   //ゲームのすべてのステージデータ
+    private LevelDataBase _gameLevelDatabase;   //ゲームのすべてのステージデータ
     private int _currentStageIndex = 0; //現在ステージのインデクス
     private int _maxStageNum = 0;       //ステージ数
     private AStar _aStar;               //探索アルゴリズムインスタンス
     private int[,] _map;                //ステージデータ配列
 
     private GameObject _currentStagePrefab;//現在のステージオブジェクト
-    public void Initialize(StageDataBase stageDatabase)
+    public void Initialize(LevelDataBase levelDatabase)
     {
         _aStar = new AStar();
-        _gameStageDatabase = stageDatabase;
-        _maxStageNum = _gameStageDatabase.StageDetails.Length;
+        _gameLevelDatabase = levelDatabase;
+        _maxStageNum = _gameLevelDatabase.StageDetails.Length;
         Debug.Log("ステージロード前");
         for (int i = 0; i < _maxStageNum; i++)
         {
-            _gameStageDatabase.StageDetails[i].Initialize();
+            _gameLevelDatabase.StageDetails[i].Initialize();
         }
         Debug.Log("ステージロード後");
     }
@@ -48,7 +48,7 @@ public class StageManager : Singleton<StageManager>
             GameObject.Destroy(_currentStagePrefab);
         }
 
-        var stageConfig = _gameStageDatabase.StageDetails[_currentStageIndex];
+        var stageConfig = _gameLevelDatabase.StageDetails[_currentStageIndex];
         // Y軸を-135度回転させてオブジェクトを生成
         Quaternion rotation = Quaternion.Euler(0, -135, 0);
         _currentStagePrefab =
@@ -87,7 +87,7 @@ public class StageManager : Singleton<StageManager>
     /// <returns></returns>
     public Vector2Int WorldToGridPosition(Vector3 worldPosition)
     {
-        var stageConfig = _gameStageDatabase.StageDetails[_currentStageIndex];
+        var stageConfig = _gameLevelDatabase.StageDetails[_currentStageIndex];
         
         // ワールド座標をローカル座標に変換
         Vector3 localPosition = _currentStagePrefab.transform.InverseTransformPoint(worldPosition);
@@ -100,7 +100,7 @@ public class StageManager : Singleton<StageManager>
     
     public Vector3 GridToWorldPosition(Vector2Int gridPosition)
     {
-        var stageConfig = _gameStageDatabase.StageDetails[_currentStageIndex];
+        var stageConfig = _gameLevelDatabase.StageDetails[_currentStageIndex];
         // ローカル座標に変換
         Vector3 localPosition = new Vector3(gridPosition.x * stageConfig.CellSize + stageConfig.CellSize / 2, 0, -gridPosition.y * stageConfig.CellSize - stageConfig.CellSize / 2);
     

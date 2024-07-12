@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewStageDetail", menuName = "Stage/StageConfig", order = 1)]
-public class StageDetail : ScriptableObject
+public class LevelData : ScriptableObject
 {
+    public List<WaveConfig> WaveConfigs;  // ステージの敵ウェーブ
     public GameObject StagePrefab; // ステージオブジェクト
     public string DataFilePath; // ステージデータ
     public int[,] Map; // ステージ２次元データ

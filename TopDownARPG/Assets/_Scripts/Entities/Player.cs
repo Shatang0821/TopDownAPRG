@@ -18,7 +18,7 @@ public class Player : Entity
     private PlayerStateMachine _stateMachine;
     
     #region Component
-    public PlayerInput _playerInput;
+    public PlayerInputComponent PlayerInputComponent;
     private MovementComponent _movementComponent;
     public AttackComponent AttackComponent;
     #endregion
@@ -27,11 +27,11 @@ public class Player : Entity
 
     public ComboConfig ComboConfig;
     //移動
-    public Vector2 Axis => _playerInput.Axis;
+    public Vector2 Axis => PlayerInputComponent.Axis;
     //ダッシュ
-    public bool DashInput => _playerInput.Dash;
+    public bool DashInput => PlayerInputComponent.Dash;
     //攻撃
-    public bool AttackInput => _playerInput.Attack;
+    public bool AttackInput => PlayerInputComponent.Attack;
     //攻撃バッファの継続時間
     private float _attackInputBufferTime = 0.2f;            
     //攻撃入力バッファ
@@ -44,68 +44,68 @@ public class Player : Entity
     
     //現在HP
     public float GetCurrentHealth => currentHealth.Value;
+    
+    /// <summary>
+    /// コンポーネントの初期化
+    /// </summary>
     private void InitComponent()
     {
         _camera = Camera.main;
-        _playerInput = new PlayerInput();
+
+        PlayerInputComponent = new PlayerInputComponent();
+        PlayerInputComponent.Init();
+        
         _movementComponent = new MovementComponent(Rigidbody,transform);
         
         AttackComponent = GetComponent<AttackComponent>();
     }
 
-    protected override void Awake()
+    public override void Initialize()
     {
-        base.Awake();
+        base.Initialize();
+        
         InitComponent();
+        
         _waitAttackInputBufferTime = new WaitForSeconds(_attackInputBufferTime);
         _stateMachine = new PlayerStateMachine(this);
-    }
-    protected override void OnEnable()
-    {
-        base.OnEnable();
+        
         _stateMachine.ChangeState(PlayerStateEnum.Idle);
-        _playerInput.CurrentDevice.Register(new Action<InputDevice>(OnDeviceChanged));
-        _playerInput.OnEnable();
+        PlayerInputComponent.CurrentDevice.Register(new Action<InputDevice>(OnDeviceChanged));
+        PlayerInputComponent.OnEnable();
     }
     
     protected virtual void OnDeviceChanged(InputDevice device)
     {
         Debug.Log($"Maximum Health Changed to: {device}");
     }
-    
-    private void Start()
-    {
-        //maxHealth.Value -= 10.0f;
-    }
 
     protected override void OnDisable()
     {
         base.OnDisable();
-        _playerInput.CurrentDevice.UnRegister(new Action<InputDevice>(OnDeviceChanged));
-        _playerInput.OnDisable();
-        
+        PlayerInputComponent.CurrentDevice.UnRegister(new Action<InputDevice>(OnDeviceChanged));
+        PlayerInputComponent.OnDisable();
     }
 
-    private void Update()
+    /// <summary>
+    /// ロジック更新
+    /// </summary>
+    public void LogicUpdate()
     {
         _stateMachine.LogicUpdate();
-        if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            //TakeDamage(5);
-        }
-
-        //AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius);
-        
-        StageManager.Instance.WorldToGridPosition(this.transform.position);
-
-//        Rotation();
     }
 
-    private void FixedUpdate()
+    /// <summary>
+    /// 物理更新
+    /// </summary>
+    public void PhysicsUpdate()
     {
         _stateMachine.PhysicsUpdate();
     }
     
+    /// <summary>
+    /// ダメージを受ける処理
+    /// </summary>
+    /// <param name="amount">ダメージ数</param>
     public override void TakeDamage(float amount)
     {
         base.TakeDamage(amount);
@@ -153,7 +153,7 @@ public class Player : Entity
     public void RotationWithMouse(Vector3 targetDirection, float rotationSpeed)
     {
         // マウスの位置をスクリーンからワールド座標に変換
-        Vector3 mousePosition = _playerInput.MousePosition;
+        Vector3 mousePosition = PlayerInputComponent.MousePosition;
         mousePosition.z = _camera.transform.position.y; // カメラからの距離を調整
         Vector3 worldPosition = _camera.ScreenToWorldPoint(mousePosition);
         

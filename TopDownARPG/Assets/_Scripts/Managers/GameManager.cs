@@ -1,6 +1,8 @@
-﻿using FrameWork.Factories;
+﻿using System;
+using FrameWork.Factories;
 using FrameWork.Resource;
 using FrameWork.Utils;
+using UnityEngine.Serialization;
 
 public enum GameState
 {
@@ -24,20 +26,20 @@ public class GameManager : PersistentUnitySingleton<GameManager>
     private LevelManager _levelManager;
 
 
-    public StageDataBase stageDataBase;
+    [FormerlySerializedAs("stageDataBase")] public LevelDataBase levelDataBase;
 
     private void Start()
     {
-        stageDataBase = ResManager.Instance.GetAssetCache<StageDataBase>("StageDataBase/StageDataBase");
-        EnemyManager.Instance.Initialize();
-        StageManager.Instance.Initialize(stageDataBase);
+        levelDataBase = ResManager.Instance.GetAssetCache<LevelDataBase>("StageDataBase/StageDataBase");
+        
+        StageManager.Instance.Initialize(levelDataBase);
 
         StageManager.Instance.SetStage(0);
         
         ChangeState(GameState.Gameplay);
     }
 
-    void Update()
+    private void Update()
     {
         if (_playerManager != null)
         {
@@ -47,6 +49,19 @@ public class GameManager : PersistentUnitySingleton<GameManager>
         if (_enemyManager != null)
         {
             _enemyManager.LogicUpdate();
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (_playerManager != null)
+        {
+            _playerManager.PhysicsUpdate();
+        }
+
+        if (_enemyManager != null)
+        {
+            //_enemyManager.PhysicsUpdate();
         }
     }
 
@@ -86,7 +101,11 @@ public class GameManager : PersistentUnitySingleton<GameManager>
     {
         // 初始化需要的管理器
         _playerManager = ManagerFactory.Instance.CreateManager<PlayerManager>();
-        ChangeState(GameState.GameOver);
+        _enemyManager = ManagerFactory.Instance.CreateManager<EnemyManager>();
+        //カメラの設定
+        CameraManager.Instance.SetFollowTarget(_playerManager.GetPlayerInstance().transform);
+        
+        _enemyManager.SetPlayerTransform(_playerManager.GetPlayerInstance().transform);
     }
 
     /// <summary>
