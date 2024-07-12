@@ -5521,6 +5521,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 710275391866113805}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2661227883583484240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6337189450354115697}
+  m_Layer: 7
+  m_Name: BulletLauncher
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6337189450354115697
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2661227883583484240}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.49, y: 0.565, z: 0.37}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7239306727288005996}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2777622061766185058
 GameObject:
   m_ObjectHideFlags: 0
@@ -7142,6 +7173,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 710275391866113805}
+  - {fileID: 6337189450354115697}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3698944816211092064
@@ -7157,13 +7189,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rigidbody: {fileID: 0}
-  TargetFound: 0
-  InAttackRange: 0
   DetectionRange: 7
   DetectionFieldOfView: 360
   AttackRange: 12
   AttackFieldOfView: 360
-  Damaged: 0
+  CurrentPathIndex: 0
+  IsTakenDamaged: 0
+  IsUsePool: 1
+  BulletLauncher: {fileID: 6337189450354115697}
 --- !u!136 &9070005434411081792
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -7184,9 +7217,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.45
-  m_Height: 2.86
+  m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 0.35, z: 0}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!95 &3676575796038763128
 Animator:
   serializedVersion: 5
@@ -7233,7 +7266,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!1 &8595718346526317044
 GameObject:

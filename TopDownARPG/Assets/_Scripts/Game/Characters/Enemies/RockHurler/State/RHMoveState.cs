@@ -21,6 +21,8 @@ public class RHMoveState : RHMovementState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        if (!enemyStateMachine.CheckState(this)) return;
+
 
         Movement();
 

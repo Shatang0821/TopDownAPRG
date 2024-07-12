@@ -9,6 +9,7 @@ using Unity.VisualScripting;
 using System;
 using TMPro;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 public class UIHomeCtrl : UICtrl
 {
@@ -345,6 +346,8 @@ public class UIHomeCtrl : UICtrl
         {
             this.gameObject.SetActive(false);
         }
+
+        SceneManager.LoadScene("MainGame");
     }
 
     // 設定画面を表示する処理

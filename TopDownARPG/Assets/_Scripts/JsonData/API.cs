@@ -18,6 +18,9 @@ public class API : MonoBehaviour
     [SerializeField]
     TMP_InputField password;
 
+    [SerializeField]
+    Text _username;
+
     public bool isLogout;
     public bool isLogin = false;
 
@@ -79,6 +82,8 @@ public class API : MonoBehaviour
             //一緒にゲームの情報を持ってくる
             StartCoroutine(Get_Game_Info(accountname));
             isLogin = true;
+
+            _username.text ="name：" + accountname.text;
         }
     }
 
@@ -128,6 +133,7 @@ public class API : MonoBehaviour
             {
                 accountmanager.accountname = null;
                 accountmanager.password = null;
+                
                 Debug.Log("ログアウト");
             }
             else
@@ -173,6 +179,7 @@ public class API : MonoBehaviour
             {
                 accountmanager.accountname = null;
                 accountmanager.password = null;
+                _username.text = "name：";
                 Debug.Log("ログアウト");
             }
             else

@@ -15,6 +15,8 @@ public enum RHStateEnum
 
 public class RockHurler : Enemy
 {
+    public Transform BulletLauncher;
+
     public override void Move(Vector2 dir)
     {
         throw new NotImplementedException();
