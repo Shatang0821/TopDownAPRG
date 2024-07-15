@@ -49,32 +49,21 @@ public class Entity : MonoBehaviour, IDamageable
     /// <summary>
     /// データベースから数値を取得
     /// </summary>
-    public void InitValue( /*EntityData entityData*/)
+    public virtual void InitValue( /*EntityData entityData*/)
     {
-        /*
-         *  if(conectDatabase)
-         *  maxHealth = new Observer<float>(entityData.initialHealth, "OnMaxHpChange");
-         *  currentHealth = new Observer<float>(entityData.initialCurrentHealth, "OnCurrentHpChange");
-         *  power = new Observer<int>(entityData.power, "abc");
-         *  speed = new Observer<float>(entityData.speed, "cba");
-         */
-        maxHealth = new Observer<float>(50);
-        currentHealth = new Observer<float>(maxHealth.Value);
-        //テスト
-        power = new Observer<int>(10);
-        speed = new Observer<float>(5);
+
     }
 
     protected virtual void OnEnable()
     {
         //maxHealth.Register(new Action<float>(OnMaxHealthChanged));
-        //currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
+        currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnDisable()
     {
         //maxHealth.UnRegister(new Action<float>(OnMaxHealthChanged));
-        //currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
+        currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
     }
 
     protected virtual void OnMaxHealthChanged(float newMaxHealth)

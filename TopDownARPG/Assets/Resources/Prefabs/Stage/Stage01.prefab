@@ -380,7 +380,7 @@ GameObject:
   - component: {fileID: 7270999561620510269}
   - component: {fileID: 8162344784930588160}
   - component: {fileID: 6524944887139217183}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1578,7 +1578,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5848058139986319660}
   - component: {fileID: 7777399390224895878}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Door02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3129,7 +3129,7 @@ GameObject:
   - component: {fileID: 8537305923198520659}
   - component: {fileID: 6421457800824659343}
   - component: {fileID: 6078943976616582171}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: cm
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3426,7 +3426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8209421575548272576}
   - component: {fileID: 1700938854508629553}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3498,7 +3498,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2909758122051113417}
   - component: {fileID: 8393114716548215413}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Virtual Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4271,7 +4271,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6016400095507596134}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Door01
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -72,15 +72,13 @@ public class UILoginCtrl : UICtrl
     {
         var accountname = View["Account"].GetComponent<TMP_InputField>();
         var password = View["Password"].GetComponent<TMP_InputField>();
-        StartCoroutine(_api.Login(accountname, password));
-
-        if (_api.isLogin)
+        //StartCoroutine(_api.Login(accountname, password));
+        StartCoroutine(SignIn());
+        //if (_api.isLogin)
         {
             StartCoroutine(SignIn());
         }
         
-
-
     }
 
     private void Complete()

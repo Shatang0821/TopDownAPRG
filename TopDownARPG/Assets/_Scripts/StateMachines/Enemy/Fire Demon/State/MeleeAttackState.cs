@@ -46,16 +46,9 @@ public class MeleeAttackState : EnemyBaseState
         {
             if (enemy.TargetFound)
             {
-                if (enemy.InAttackRange)
-                {
-                    enemyStateMachine.ChangeState(FDStateEnum.Attack);
-                    return;
-                }
-                else
-                {
-                    enemyStateMachine.ChangeState(FDStateEnum.Move);
-                    return;
-                }
+
+                enemyStateMachine.ChangeState(FDStateEnum.Move);
+                return;
             }
             else
             {

@@ -60,6 +60,16 @@ public class Player : Entity
         AttackComponent = GetComponent<AttackComponent>();
     }
 
+    public override void InitValue()
+    {
+        base.InitValue();
+        maxHealth = new Observer<float>(100);
+        currentHealth = new Observer<float>(maxHealth.Value);
+        //テスト
+        power = new Observer<int>(10);
+        speed = new Observer<float>(5);
+    }
+
     public override void Initialize()
     {
         base.Initialize();
@@ -70,7 +80,10 @@ public class Player : Entity
         _stateMachine = new PlayerStateMachine(this);
         
         _stateMachine.ChangeState(PlayerStateEnum.Idle);
+        
         PlayerInputComponent.CurrentDevice.Register(new Action<InputDevice>(OnDeviceChanged));
+        currentHealth.Register(new Action<float>(OnCurrentHealthChanged));
+        
         PlayerInputComponent.OnEnable();
     }
     
@@ -83,7 +96,14 @@ public class Player : Entity
     {
         base.OnDisable();
         PlayerInputComponent.CurrentDevice.UnRegister(new Action<InputDevice>(OnDeviceChanged));
+        currentHealth.UnRegister(new Action<float>(OnCurrentHealthChanged));
         PlayerInputComponent.OnDisable();
+    }
+
+    protected override void OnCurrentHealthChanged(float newCurrentHealth)
+    {
+        base.OnCurrentHealthChanged(newCurrentHealth);
+        EventCenter.TriggerEvent(HPBar_EVENT.Change, newCurrentHealth);
     }
 
     /// <summary>

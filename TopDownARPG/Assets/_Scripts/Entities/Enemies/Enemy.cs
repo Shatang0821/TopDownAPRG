@@ -1,6 +1,7 @@
 ﻿using FrameWork.Audio;
 using System;
 using System.Collections.Generic;
+using FrameWork.EventCenter;
 using UnityEngine;
 using StateMachine = FrameWork.FSM.StateMachine;
 
@@ -35,6 +36,16 @@ public abstract class Enemy : Entity
     protected virtual void Start()
     {
         enemyStateMachine.ChangeState(GetInitialState());
+    }
+
+    public override void InitValue()
+    {
+        base.InitValue();
+        maxHealth = new Observer<float>(50);
+        currentHealth = new Observer<float>(maxHealth.Value);
+        //テスト
+        power = new Observer<int>(5);
+        speed = new Observer<float>(5);
     }
 
     public virtual void LogicUpdate()

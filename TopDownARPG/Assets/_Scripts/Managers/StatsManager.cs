@@ -56,7 +56,7 @@ public class StatsManager : MonoBehaviour
     public void UpdateStats(float currentValue, float maxValue)
     {
         targetFillAmout = currentValue / maxValue;
-        Debug.Log("UpdateStats called. Target Fill Amount: " + targetFillAmout);
+//        Debug.Log("UpdateStats called. Target Fill Amount: " + targetFillAmout);
 
         if (bufferedFillingCoroutine != null)
         {
@@ -93,7 +93,7 @@ public class StatsManager : MonoBehaviour
             currentFillAmout = Mathf.Lerp(previousFillAmount, targetFillAmout, t);
             image.fillAmount = currentFillAmout;
 
-            Debug.Log("Buffered Filling - Current Fill Amount: " + currentFillAmout);
+//            Debug.Log("Buffered Filling - Current Fill Amount: " + currentFillAmout);
 
             yield return null;
         }

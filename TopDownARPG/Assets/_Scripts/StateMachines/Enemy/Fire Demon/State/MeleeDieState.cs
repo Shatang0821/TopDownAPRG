@@ -16,6 +16,10 @@ public class MeleeDieState : EnemyBaseState
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+            if (stateTimer >= 3.0f)
+            {
+                Die();
+            }
             if (_isDead)
             {
                 Die();
