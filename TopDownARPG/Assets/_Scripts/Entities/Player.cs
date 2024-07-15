@@ -74,7 +74,7 @@ public class Player : Entity
         PlayerInputComponent.OnEnable();
     }
     
-    protected virtual void OnDeviceChanged(InputDevice device)
+    protected void OnDeviceChanged(InputDevice device)
     {
         Debug.Log($"Maximum Health Changed to: {device}");
     }

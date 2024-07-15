@@ -1,5 +1,6 @@
 ﻿using FrameWork.Interface;
 using FrameWork.Resource;
+using FrameWork.Utils;
 using UnityEngine;
 
 public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
@@ -10,7 +11,7 @@ public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
     public void Init()
     {
         _playerPrefab = ResManager.Instance.GetAssetCache<GameObject>("Prefabs/Player");
-        _player = Instantiate(_playerPrefab, new Vector3(-50,-50,-50), Quaternion.identity).GetComponent<Player>();
+        _player = Instantiate(_playerPrefab, GameManager.Instance.LevelManager.GetPlayerSpawnPos(), Quaternion.identity).GetComponent<Player>();
         _player.Initialize();
     }
     public void LogicUpdate()
@@ -33,8 +34,10 @@ public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
     {
         if (_player != null)
         {
-            _player.gameObject.transform.position = newPosition;
+            DebugLogger.Log("プレイヤーの位置更新" + newPosition);
+            _player.transform.position = newPosition;
         }
+        
     }
     
     /// <summary>

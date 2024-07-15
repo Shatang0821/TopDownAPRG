@@ -9,7 +9,7 @@ public class CameraManager : UnitySingleton<CameraManager>
 {
     CinemachineVirtualCamera _virtualCamera;
 
-    private void Awake()
+    public void Initialize()
     {
         _virtualCamera = GetComponent<CinemachineVirtualCamera>();
     }

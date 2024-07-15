@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace FrameWork.Pool
 {
-    public class PoolManager : MonoBehaviour, IInitializable
+    public class PoolManager : MonoBehaviour
     {
     //例
     [SerializeField] UnityObjectPool[] enemyPools;
@@ -13,17 +13,14 @@ namespace FrameWork.Pool
     // プレハブとそれに対応するプールのリファレンスを格納する辞書
     static Dictionary<GameObject, UnityObjectPool> dictionary;
 
-    public void Init()
+
+    protected void Awake()
     {
         DebugLogger.Log("Init PoolManager");
         dictionary = new Dictionary<GameObject, UnityObjectPool>();
-        //例
-        //Initialize(enemyPools);
-    }
-
-    public void LogicUpdate()
-    {
-        throw new System.NotImplementedException();
+        
+        Initialize(enemyPools);
+        Initialize(bulletPools);
     }
 
     // Unityエディタでのみ実行されるデストラクタ。各プールのサイズを検証。

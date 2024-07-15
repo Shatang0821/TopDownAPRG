@@ -5,17 +5,20 @@ using UnityEngine.InputSystem.HID;
 
 public class RockBullet : MonoBehaviour
 {
-    GameObject _player;     // �v���C���[�I�u�W�F�N�g
-    Rigidbody _rb;          // ��� Rigidbody �R���|�[�l���g
+    GameObject _player;     
+    Rigidbody _rb;          
 
-    public float moveSpeed = 10f; // ��̈ړ����x
+    public float moveSpeed = 10f; 
     Vector3 directionToPlayer;
 
     private void OnEnable()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
+        if(_player == null)
+        {
+            return;
+        }
         _rb = GetComponent<Rigidbody>();
-        // �v���C���[�̈ʒu��ڕW�Ƃ�������x�N�g�����v�Z
         directionToPlayer = (_player.transform.position - transform.position).normalized;
         directionToPlayer.y = 0;
     }
@@ -29,8 +32,7 @@ public class RockBullet : MonoBehaviour
             return;
         }
 
-
-        // ��ɑ��x��^���ăv���C���[�̕����ɔ�΂�
+        
         _rb.velocity = directionToPlayer * moveSpeed;
     }
 
@@ -41,11 +43,13 @@ public class RockBullet : MonoBehaviour
         if (damageableEntity != null)
         {
             damageableEntity.TakeDamage(5);
-            gameObject.SetActive(false);
+            Destroy(this.gameObject);
+            //gameObject.SetActive(false);
         }
         else
         {
-            gameObject.SetActive(false);
+            Destroy(this.gameObject);
+            //gameObject.SetActive(false);
         }
 
 

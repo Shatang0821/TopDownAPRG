@@ -7,6 +7,7 @@ using UnityEngine.Serialization;
 public class WaveConfig : ScriptableObject 
 {
     public List<EnemySpawnInfo> Enemies;
+    public GameObject SpawnEffect;
 }
 
 [Serializable]

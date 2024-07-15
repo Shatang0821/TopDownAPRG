@@ -52,7 +52,7 @@ public class MeleeMoveState : MeleeMovementState
         
         if (enemy.Path != null && enemy.Path.Count != 0 && enemy.CurrentPathIndex < enemy.Path.Count)
         {
-            Vector3 targetPosition = StageManager.Instance.GridToWorldPosition(enemy.Path[enemy.CurrentPathIndex].Pos);
+            Vector3 targetPosition = GameManager.Instance.LevelManager.GridToWorldPosition(enemy.Path[enemy.CurrentPathIndex].Pos);
             
             var targetDirection = (targetPosition - enemy.transform.position).normalized;
             targetDirection.y = 0; 

@@ -28,7 +28,7 @@ public class UILoginCtrl : UICtrl
             password.text = accountmanager.password;
         }
 
-            AddButtonListener("Register", Register);
+        AddButtonListener("Register", Register);
         AddButtonListener("SingIn", SingIn);
         AddButtonListener("RegistrationScreenPanel/Complete", Complete);
         AddButtonListener("RegistrationScreenPanel/Back", Back);
@@ -78,6 +78,7 @@ public class UILoginCtrl : UICtrl
         {
             StartCoroutine(SignIn());
         }
+        
 
 
     }

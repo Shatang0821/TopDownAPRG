@@ -1,30 +1,48 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.EventCenter;
 using FrameWork.Interface;
+using FrameWork.Pool;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
+enum EnemyEventEnum
+{
+    OnStartWave,
+    OnWaveClear,
+}
 public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
 {
     private List<WaveConfig> _waveConfigs;
     private int _currentWaveIndex = 0;
     
-    private List<Enemy> _currentWaveEnemies;
-    private List<Enemy> _enemiesToRemove;
+    public List<Enemy> _currentWaveEnemies;
+    public List<Enemy> _enemiesToRemove;
     
     private GameObject _enemy;
     private WaveConfig _waveConfig;
 
     private Transform _playerTransform; //プレイヤーの変換情報
-    
+
+    private Transform _level;
+
+    private void OnEnable()
+    {
+        EventCenter.AddListener(EnemyEventEnum.OnStartWave, StartWave);
+    }
+
+    private void OnDisable()
+    {
+        EventCenter.RemoveListener(EnemyEventEnum.OnStartWave, StartWave);
+    }
+
     /// <summary>
     /// EnemyManagerの初期化
     /// </summary>
     public void Init()
     {
-        
         _waveConfig = ResManager.Instance.GetAssetCache<WaveConfig>("Enemies Config/Enemies_Config");
         if (!_waveConfig)
         {
@@ -33,6 +51,11 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
         }
         _currentWaveEnemies = new List<Enemy>();
         _enemiesToRemove = new List<Enemy>();
+    }
+
+    public void SetLevel(Transform level)
+    {
+        _level = level;
     }
 
     /// <summary>
@@ -66,17 +89,13 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
     /// ウェーブの自動進行
     /// </summary>
     /// <returns>true ウェーブがまだある false ウェーブが終わり</returns>
-    public bool StartWave()
+    public void StartWave()
     {
         if (_currentWaveIndex < _waveConfigs.Count)
         {
             StartCoroutine(SpawnWave(_waveConfigs[_currentWaveIndex]));
             _currentWaveIndex++;
-            return true;
         }
-
-        //ウェーブが終わったら
-        return false;
     }
     
     /// <summary>
@@ -90,11 +109,13 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
         {
             yield return new WaitForSeconds(spawnInfo.SpawnTime);
             
-            //!!!! ローカル座標を世界座標に変換していない
-            var enemy = Instantiate(spawnInfo.EnemyPrefab, spawnInfo.SpawnLocalPosition, Quaternion.identity).GetComponent<Enemy>();
-
+            var worldSpawnPos = GameManager.Instance.LevelManager.CurrentStageInstance.transform.TransformPoint(spawnInfo.SpawnLocalPosition);
+            Debug.Log(worldSpawnPos);
+            var enemy = PoolManager.Release(spawnInfo.EnemyPrefab,worldSpawnPos,Quaternion.identity).GetComponent<Enemy>();
+            
             if (enemy != null)
             {
+                enemy.SetPlayerTransform(_playerTransform);
                 RegisterWaveEnemy(enemy);
             }
         }
@@ -114,6 +135,7 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
     {
         _enemiesToRemove.Add(enemy);
         enemy.OnDeath -= HandleEnemyDeath;
+        
     }
 
     public void LogicUpdate()
@@ -127,15 +149,18 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
         }
         
         // 遅延削除処理
-        if (_enemiesToRemove.Count > 0)
+        if (_enemiesToRemove.Count == _currentWaveEnemies.Count && _enemiesToRemove.Count != 0)
         {
-            foreach (var enemy in _enemiesToRemove)
+            foreach (var deleteEnemy in _enemiesToRemove)
             {
                 //非アクティブになってから消す
-                _currentWaveEnemies.Remove(enemy);
+                _currentWaveEnemies.Remove(deleteEnemy);
                 // その他のクリーンアップ処理
             }
             _enemiesToRemove.Clear();
+            _currentWaveEnemies.Clear();
+            
+            EventCenter.TriggerEvent(EnemyEventEnum.OnWaveClear);
         }
     }
 

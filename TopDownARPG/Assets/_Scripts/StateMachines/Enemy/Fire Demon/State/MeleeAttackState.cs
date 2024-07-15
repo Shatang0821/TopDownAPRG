@@ -28,10 +28,10 @@ public class MeleeAttackState : EnemyBaseState
     {
         base.LogicUpdate();
         _fireDemon.Rotation(enemy.DirectionToPlayer,0.1f);
+        
         if (!_isAttacked && stateTimer > _attackTiming)
         {
             _isAttacked = true;
-            Debug.Log("Attack");
             if (_fireDemon != null) _fireDemon.AttackComponent.StableRolledFanRayCast(angle, rayCount, rollAngle, radius, 10);
         }
         
@@ -44,8 +44,24 @@ public class MeleeAttackState : EnemyBaseState
         
         if (stateTimer > 1.2f)
         {
-            enemyStateMachine.ChangeState(FDStateEnum.Idle);
-            return;
+            if (enemy.TargetFound)
+            {
+                if (enemy.InAttackRange)
+                {
+                    enemyStateMachine.ChangeState(FDStateEnum.Attack);
+                    return;
+                }
+                else
+                {
+                    enemyStateMachine.ChangeState(FDStateEnum.Move);
+                    return;
+                }
+            }
+            else
+            {
+                enemyStateMachine.ChangeState(FDStateEnum.Idle);
+                return;
+            }
         }
 
         

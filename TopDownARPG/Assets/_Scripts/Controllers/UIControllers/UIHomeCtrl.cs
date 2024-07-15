@@ -341,13 +341,14 @@ public class UIHomeCtrl : UICtrl
         UIManager.Instance.RemoveUI("UIHome");
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
-
+    
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);
         }
 
-        SceneManager.LoadScene("MainGame");
+       GameManager.Instance.ChangeState(GameState.Gameplay);
+       //SceneManager.LoadScene("MainGame");
     }
 
     // 設定画面を表示する処理

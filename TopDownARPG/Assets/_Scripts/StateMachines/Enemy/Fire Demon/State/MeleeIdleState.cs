@@ -23,6 +23,7 @@ public class MeleeIdleState : MeleeMovementState
             {
                 //移動
                 enemyStateMachine.ChangeState(FDStateEnum.Move);
+                return;
             }
             
         }

@@ -20,6 +20,7 @@ public class MeleeDieState : EnemyBaseState
             {
                 Die();
             }
+            
         }
 
         public override void AnimationEndCalled()

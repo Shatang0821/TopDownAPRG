@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Pool;
 using Unity.Properties;
 using UnityEngine;
 
@@ -48,6 +49,8 @@ public class RHAttackState : RHMovementState
         // 岩のプレハブをロード（Resources フォルダー内に配置されていると仮定）
         RockPrefab = Resources.Load<GameObject>("Prefabs/Enemies/Rock-Purple");
         // プレハブを生成して初期化する
-        GameObject projectile = GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
+        GameObject projectile =
+            //PoolManager.Release(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
+            GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
     }
 }

@@ -120,7 +120,7 @@ public abstract class Enemy : Entity
             _finding = true;
             CurrentPathIndex = 0;
             List<AStar.AstarNode> newPath =
-                StageManager.Instance.FindPath(transform.position, playerTransform.position);
+                GameManager.Instance.LevelManager.FindPath(transform.position, playerTransform.position);
 
             if (newPath != null)
             {
@@ -253,8 +253,8 @@ public abstract class Enemy : Entity
             var current = Path[i];
             var next = Path[i + 1];
             Gizmos.DrawLine(
-                StageManager.Instance.GridToWorldPosition(current.Pos),
-                StageManager.Instance.GridToWorldPosition(next.Pos)
+                GameManager.Instance.LevelManager.GridToWorldPosition(current.Pos),
+                GameManager.Instance.LevelManager.GridToWorldPosition(next.Pos)
             );
         }
     }

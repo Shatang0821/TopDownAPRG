@@ -25,6 +25,13 @@ public class MeleeDamagedState : EnemyBaseState
         
         if (enemy.IsTakenDamaged)
         {
+            if(enemy.GetCurrentHealth <= 0)
+            {
+            
+                enemyStateMachine.ChangeState(FDStateEnum.Die);
+                return;
+            }
+            
             enemy.TakenDamageState();
             return;
         }

@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using FrameWork.Factories;
 using FrameWork.Resource;
 using FrameWork.Utils;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 public enum GameState
@@ -17,49 +19,55 @@ public enum GameState
 public class GameManager : PersistentUnitySingleton<GameManager>
 {
     //プレイヤーマネージャー
-    private PlayerManager _playerManager;
+    public PlayerManager PlayerManager;
 
     //エネミーマネージャー
-    private EnemyManager _enemyManager;
+    public EnemyManager EnemyManager;
 
     //レベルマネージャー
-    private LevelManager _levelManager;
+    public LevelManager LevelManager;
 
 
     [FormerlySerializedAs("stageDataBase")] public LevelDataBase levelDataBase;
-
-    private void Start()
+    protected override void Awake()
     {
-        levelDataBase = ResManager.Instance.GetAssetCache<LevelDataBase>("StageDataBase/StageDataBase");
+        base.Awake();
         
-        StageManager.Instance.Initialize(levelDataBase);
+    }
 
-        StageManager.Instance.SetStage(0);
-        
-        ChangeState(GameState.Gameplay);
+    private void  Start()
+    {
+        ChangeState(GameState.Title);
+        //ChangeState(GameState.Gameplay);
     }
 
     private void Update()
     {
-        if (_playerManager != null)
+        if (PlayerManager != null)
         {
-            _playerManager.LogicUpdate();
+            PlayerManager.LogicUpdate();
         }
 
-        if (_enemyManager != null)
+        if (EnemyManager != null)
         {
-            _enemyManager.LogicUpdate();
+            EnemyManager.LogicUpdate();
         }
+
+        if (LevelManager != null)
+        {
+            LevelManager.LogicUpdate();
+        }
+            
     }
 
     private void FixedUpdate()
     {
-        if (_playerManager != null)
+        if (PlayerManager != null)
         {
-            _playerManager.PhysicsUpdate();
+            PlayerManager.PhysicsUpdate();
         }
 
-        if (_enemyManager != null)
+        if (EnemyManager != null)
         {
             //_enemyManager.PhysicsUpdate();
         }
@@ -99,13 +107,31 @@ public class GameManager : PersistentUnitySingleton<GameManager>
     /// </summary>
     private void InitializeGameplayState()
     {
-        // 初始化需要的管理器
-        _playerManager = ManagerFactory.Instance.CreateManager<PlayerManager>();
-        _enemyManager = ManagerFactory.Instance.CreateManager<EnemyManager>();
-        //カメラの設定
-        CameraManager.Instance.SetFollowTarget(_playerManager.GetPlayerInstance().transform);
+        StartCoroutine(nameof(InitializeGameplayStateCoroutine));
+    }
+    
+    private IEnumerator InitializeGameplayStateCoroutine()
+    {
+        // 必要なマネージャーの生成
+        LevelManager = ManagerFactory.Instance.CreateManager<LevelManager>();
+        LevelManager.InitializeLevel();
         
-        _enemyManager.SetPlayerTransform(_playerManager.GetPlayerInstance().transform);
+        PlayerManager = ManagerFactory.Instance.CreateManager<PlayerManager>();
+        EnemyManager = ManagerFactory.Instance.CreateManager<EnemyManager>();
+        
+
+        // 必要なマネージャーの初期化
+        
+        EnemyManager.SetPlayerTransform(PlayerManager.GetPlayerInstance().transform);
+        LevelManager.SetParameters(PlayerManager.GetPlayerInstance().GetComponent<Player>(),EnemyManager);
+        LevelManager.SetWaveConfigToEnemyManager(EnemyManager);
+        
+        // カメラの設定
+        CameraManager.Instance.Initialize();
+        CameraManager.Instance.SetFollowTarget(PlayerManager.GetPlayerInstance().transform);
+        
+        
+        yield break;
     }
 
     /// <summary>
@@ -121,16 +147,16 @@ public class GameManager : PersistentUnitySingleton<GameManager>
     /// </summary>
     private void DestroyManagers()
     {
-        if (_playerManager != null)
+        if (PlayerManager != null)
         {
-            Destroy(_playerManager.gameObject);
-            _playerManager = null;
+            Destroy(PlayerManager.gameObject);
+            PlayerManager = null;
         }
 
-        if (_enemyManager != null)
+        if (EnemyManager != null)
         {
-            Destroy(_enemyManager.gameObject);
-            _enemyManager = null;
+            Destroy(EnemyManager.gameObject);
+            EnemyManager = null;
         }
     }
 }
