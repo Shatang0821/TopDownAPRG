@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Audio;
 using FrameWork.Pool;
 using Unity.Properties;
 using UnityEngine;
@@ -21,6 +22,8 @@ public class RHAttackState : RHMovementState
     public override void Enter()
     {
         base.Enter();
+        //ƒ`ƒ“ƒyƒ“‰¹
+        AudioManager.Instance.PlayLRE_Attack();
     }
 
     public override void LogicUpdate()

@@ -1,3 +1,4 @@
+using FrameWork.Audio;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -45,6 +46,9 @@ public class RockBullet : MonoBehaviour
             damageableEntity.TakeDamage(5);
             Destroy(this.gameObject);
             //gameObject.SetActive(false);
+
+            //ƒ`ƒ“ƒyƒ“‰¹
+            AudioManager.Instance.PlayLRE_Hit();
         }
         else
         {

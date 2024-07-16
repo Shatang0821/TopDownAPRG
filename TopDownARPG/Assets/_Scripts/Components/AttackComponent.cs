@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FrameWork.Audio;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UnityEngine;
 
@@ -57,7 +58,9 @@ public class AttackComponent : MonoBehaviour
                 {
                     _hitEntities.Add(damageableEntity);
                     damageableEntity.TakeDamage(damage);
-                    
+
+                    //チンペン音
+                    AudioManager.Instance.PlayCRE_Hit();
                 }
             }
         }

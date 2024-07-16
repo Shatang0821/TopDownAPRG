@@ -1,4 +1,5 @@
-﻿using FrameWork.Utils;
+﻿using FrameWork.Audio;
+using FrameWork.Utils;
 using UnityEngine;
 
 public class MeleeAttackState : EnemyBaseState
@@ -22,6 +23,9 @@ public class MeleeAttackState : EnemyBaseState
         base.Enter();
         
         _isAttacked = false;
+
+        //チンペン音
+        AudioManager.Instance.PlayCRE_Attack();
     }
 
     public override void LogicUpdate()
