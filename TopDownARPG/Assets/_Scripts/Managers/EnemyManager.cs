@@ -58,6 +58,27 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
         _level = level;
     }
 
+    private void OnDestroy()
+    {
+        if(_currentWaveEnemies != null)
+        {
+            foreach (var enemy in _currentWaveEnemies)
+            {
+                enemy.gameObject.SetActive(false);
+            }
+        }
+        
+        if(_enemiesToRemove != null)
+        {
+            foreach (var enemy in _enemiesToRemove)
+            {
+                enemy.gameObject.SetActive(false);
+            }
+        }
+        
+        Reset();
+    }
+
     /// <summary>
     /// データ構造のリセット
     /// </summary>

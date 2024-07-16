@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using FrameWork.EventCenter;
+using FrameWork.UI;
 using FrameWork.Utils;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -130,6 +131,14 @@ public class Player : Entity
     {
         base.TakeDamage(amount);
         Damaged = true;
+    }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+        UIManager.Instance.RemoveAll();
+        UIManager.Instance.ShowUI("UIEnd");
+        GameManager.Instance.ChangeState(GameState.GameOver);
     }
     
     /// <summary>

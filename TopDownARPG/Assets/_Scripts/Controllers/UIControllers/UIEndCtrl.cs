@@ -65,6 +65,7 @@ public class UIEndCtrl : UICtrl
         UIManager.Instance.ShowUI("UIGame");
         UIManager.Instance.ChangeUIPrefab("UIGame");
 
+        GameManager.Instance.ChangeState(GameState.Gameplay);
         if (this.gameObject != null)
         {
             this.gameObject.SetActive(false);

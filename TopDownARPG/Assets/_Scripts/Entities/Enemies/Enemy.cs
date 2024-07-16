@@ -33,8 +33,9 @@ public abstract class Enemy : Entity
         enemyStateMachine = CreateStateMachine();
     }
 
-    protected virtual void Start()
+    protected override void OnEnable()
     {
+        base.OnEnable();
         enemyStateMachine.ChangeState(GetInitialState());
     }
 

@@ -52,11 +52,6 @@ public class GameManager : PersistentUnitySingleton<GameManager>
         {
             EnemyManager.LogicUpdate();
         }
-
-        if (LevelManager != null)
-        {
-            LevelManager.LogicUpdate();
-        }
             
     }
 
@@ -158,5 +153,12 @@ public class GameManager : PersistentUnitySingleton<GameManager>
             Destroy(EnemyManager.gameObject);
             EnemyManager = null;
         }
+
+        if (LevelManager != null)
+        {
+            Destroy(LevelManager.gameObject);
+            LevelManager = null;
+        }
+            
     }
 }

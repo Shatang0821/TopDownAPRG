@@ -24,6 +24,7 @@ public class PlayerDamagedState : PlayerBaseState
         if (player.GetCurrentHealth <= 0)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Die);
+            return;
         }
         
         if (_canOtherState)
@@ -31,10 +32,12 @@ public class PlayerDamagedState : PlayerBaseState
             if (player.Axis != Vector2.zero)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+                return;
             }
             else
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Move);
+                return;
             }
         }
     }

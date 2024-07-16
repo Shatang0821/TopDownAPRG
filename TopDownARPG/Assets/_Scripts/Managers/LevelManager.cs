@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 using FrameWork.Interface;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
-public class LevelManager : MonoBehaviour,IInitializable,IUpdatable
+public class LevelManager : MonoBehaviour,IInitializable
 {
     private LevelDataBase _gameLevelDatabase;   //すべてのステージデータ
     
@@ -37,12 +38,14 @@ public class LevelManager : MonoBehaviour,IInitializable,IUpdatable
             _gameLevelDatabase.StageDetails[i].Initialize();
         }
     }
-    
-    public void LogicUpdate()
+
+    private void OnDestroy()
     {
-        
+        if(CurrentStageInstance != null)
+            Destroy(CurrentStageInstance);
+        Destroy(gameObject);
     }
-    
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
