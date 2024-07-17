@@ -9,7 +9,16 @@ public class PlayerDieState : PlayerBaseState
         player, stateMachine)
     {
     }
-    
+
+    public override void LogicUpdate()
+    {
+        base.LogicUpdate();
+        if (stateTimer >= 3.0f)
+        {
+            player.Die();
+        }
+    }
+
     public override void AnimationEndCalled()
     {
         base.AnimationEndCalled();
