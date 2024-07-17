@@ -26,7 +26,7 @@ public class FireDemon : Enemy
         _movementComponent = new MovementComponent(Rigidbody, transform);
         AttackComponent = GetComponent<AttackComponent>();
 
-        speed = new Observer<float>(2);
+        
     }
     protected override StateMachine CreateStateMachine()
     {

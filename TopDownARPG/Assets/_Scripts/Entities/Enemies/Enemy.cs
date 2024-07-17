@@ -47,7 +47,7 @@ public abstract class Enemy : Entity
         currentHealth = new Observer<float>(maxHealth.Value);
         //テスト
         power = new Observer<int>(5);
-        speed = new Observer<float>(5);
+        speed = new Observer<float>(2);
     }
 
     public virtual void LogicUpdate()
