@@ -36,6 +36,7 @@ public abstract class Enemy : Entity
     protected override void OnEnable()
     {
         base.OnEnable();
+        InitValue();
         enemyStateMachine.ChangeState(GetInitialState());
     }
 
