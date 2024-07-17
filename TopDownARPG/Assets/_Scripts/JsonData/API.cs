@@ -19,7 +19,7 @@ public class API : MonoBehaviour
     TMP_InputField password;
 
     [SerializeField]
-    Text _username;
+    //Text _username;
 
     public bool isLogout;
     public bool isLogin = false;
@@ -86,7 +86,7 @@ public class API : MonoBehaviour
             StartCoroutine(Get_Game_Info(accountname));
             isLogin = true;
 
-            _username.text ="name：" + accountname.text;
+            //_username.text ="name：" + accountname.text;
         }
     }
 
@@ -182,7 +182,7 @@ public class API : MonoBehaviour
             {
                 accountmanager.accountname = null;
                 accountmanager.password = null;
-                _username.text = "name：";
+                //_username.text = "name：";
                 Debug.Log("ログアウト");
             }
             else

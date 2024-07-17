@@ -29,16 +29,10 @@ public class GameManager : PersistentUnitySingleton<GameManager>
 
 
     [FormerlySerializedAs("stageDataBase")] public LevelDataBase levelDataBase;
-    protected override void Awake()
-    {
-        base.Awake();
-        
-    }
 
     private void  Start()
     {
         ChangeState(GameState.Title);
-        //ChangeState(GameState.Gameplay);
     }
 
     private void Update()
@@ -124,8 +118,6 @@ public class GameManager : PersistentUnitySingleton<GameManager>
         // カメラの設定
         CameraManager.Instance.Initialize();
         CameraManager.Instance.SetFollowTarget(PlayerManager.GetPlayerInstance().transform);
-        
-        
         yield break;
     }
 

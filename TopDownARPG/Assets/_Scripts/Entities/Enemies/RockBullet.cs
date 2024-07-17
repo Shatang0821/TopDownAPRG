@@ -1,3 +1,4 @@
+using System;
 using FrameWork.Audio;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,14 +13,20 @@ public class RockBullet : MonoBehaviour
     public float moveSpeed = 10f; 
     Vector3 directionToPlayer;
 
+    private void Awake()
+    {
+        _rb = GetComponent<Rigidbody>();
+    }
+
     private void OnEnable()
     {
         _player = GameObject.FindGameObjectWithTag("Player");
+        _rb.velocity = Vector3.zero;
         if(_player == null)
         {
             return;
         }
-        _rb = GetComponent<Rigidbody>();
+        
         directionToPlayer = (_player.transform.position - transform.position).normalized;
         directionToPlayer.y = 0;
     }

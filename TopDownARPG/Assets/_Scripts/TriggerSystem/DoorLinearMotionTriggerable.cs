@@ -39,11 +39,11 @@ public class DoorLinearMotionTriggerable : TriggerReceiver
 
     private IEnumerator CloseDooreCoroutine()
     {
-        float moveTime = 0f;
+        float moveTime = 1.6f;
 
         while (moveTime < _duration)
         {
-            transform.Translate(-1 * _motionIncrement * Time.deltaTime);
+            transform.Translate(_motionIncrement * (-5 * Time.deltaTime));
             moveTime += Time.deltaTime;
 
             _isOpen = false;
