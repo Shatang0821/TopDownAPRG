@@ -1,4 +1,5 @@
-﻿using FrameWork.Interface;
+﻿using System;
+using FrameWork.Interface;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
@@ -45,4 +46,13 @@ public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
     /// </summary>
     /// <returns>プレイヤーのオブジェクト</returns>
     public GameObject GetPlayerInstance() => _player.gameObject;
+
+    private void OnDestroy()
+    {
+        if (_player != null)
+        {
+            Destroy(_player.gameObject);
+            _player = null;
+        }
+    }
 }

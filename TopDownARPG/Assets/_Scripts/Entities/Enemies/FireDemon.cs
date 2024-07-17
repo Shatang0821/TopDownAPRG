@@ -29,16 +29,6 @@ public class FireDemon : Enemy
         speed = new Observer<float>(2);
     }
 
-    protected override void Start()
-    {
-        base.Start();
-    }
-
-    private void Update()
-    {
-
-    }
-
     protected override StateMachine CreateStateMachine()
     {
         var stateMachine = new EnemyStateMachine(this);

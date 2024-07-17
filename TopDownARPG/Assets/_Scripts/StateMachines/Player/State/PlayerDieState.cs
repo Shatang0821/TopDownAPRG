@@ -13,11 +13,7 @@ public class PlayerDieState : PlayerBaseState
     public override void AnimationEndCalled()
     {
         base.AnimationEndCalled();
-        Die();
+        player.Die();
     }
     
-    private void Die()
-    {
-        player.gameObject.SetActive(false);
-    }
 }
