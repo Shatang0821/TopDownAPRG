@@ -16,7 +16,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 78bda8f6865cfbd41a685d496ae0b693, type: 2}
   - {fileID: 11400000, guid: a86decaf657db8d4c97278955e1e1a5f, type: 2}
   StagePrefab: {fileID: 7576449515863224654, guid: eb839b61f881ba844b95f09df94ab09d, type: 3}
-  DataFilePath: Assets/MapData/Stage01.csv
+  DataFilePath: Config & Data/LevelDataBase/MapData/Stage01
   MapWidth: 32
   MapHeight: 32
   SpawnPos: {x: 0, y: 0, z: 0}

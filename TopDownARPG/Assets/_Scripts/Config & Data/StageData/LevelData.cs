@@ -58,7 +58,14 @@
         {
             try
             {
-                string[] lines = File.ReadAllLines(filePath);
+                TextAsset csvFile = Resources.Load<TextAsset>(DataFilePath);
+                if (csvFile == null)
+                {
+                    Debug.LogError("CSVƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ: " + DataFilePath);
+                    return;
+                }
+                
+                string[] lines = csvFile.text.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 0)
                 {
                     Map = new int[lines.Length, lines[0].Split(',').Length];
