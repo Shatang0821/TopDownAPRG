@@ -63,6 +63,7 @@ public class Stage01Controller : MonoBehaviour
         Door02virtualCamera.Priority = 6;
         Door1.OnTriggerReceived();
         Door2.OnTriggerReceived();
+        
         StartCoroutine(ResetCamera(Door02virtualCamera, 3f));
     }
 
