@@ -1,93 +1,189 @@
 @startuml MainSystem
-class GameLevel {
-    string LevelName
-    List<TriggerZone> TriggerZones
-    List<SpawnPoint> EnemySpawnPoints
-    List<Portal> Portals
-    bool IsCleared
-    List<EnemyData> EnemiesData
-    GridMap GridMap
+class GameManager {
+    - PlayerManager : PlayerManager
+    - EnemyManager : EnemyManager
+    - LevelManager : LevelManager
+    - GameState : GameState
+    + ChangeState(GameState newState) : void
+    + InitializeGameplayStateCoroutine() : IEnumerator
 }
 
-class TriggerZone {
-    Vector3 Position
-    float Radius
-    Action OnPlayerEnter
-}
-
-class SpawnPoint {
-    Vector3 Position
-    EnemyType EnemyType
-}
-
-class Portal {
-    Vector3 Position
-    string TargetLevel
-    bool IsActive
-}
-
-class EnemyData {
-    Vector3 Position
-    EnemyType EnemyType
-}
-
-class Enemy {
-    string Name
-    int Health
-    Vector3 Position
-    List<Vector3> Path
-    void TakeDamage(int amount)
-    void Die()
-    void MoveAlongPath()
-    void UpdatePath(List<Vector3> newPath)
-}
-
-class LevelManager {
-    GameLevel CurrentLevel
-    EnemyManager EnemyManager
-    Pathfinding Pathfinding
-    void LoadLevel(string levelName)
-    void InitializeLevel()
-    void SpawnEnemies(TriggerZone triggerZone)
-    void OnEnemyDefeated()
-    void ActivatePortals()
-    void OnPlayerEnterPortal(Portal portal)
+class PlayerManager {
+    - _playerPrefab : GameObject
+    - _player : Player
+    + Init() : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + UpdatePlayerPosition(Vector3 newPosition) : void
+    + GetPlayerInstance() : GameObject
 }
 
 class EnemyManager {
-    List<Enemy> Enemies
-    void Initialize(List<EnemyData> enemiesData)
-    Enemy SpawnEnemy(EnemyData data)
-    void AddEnemy(Enemy enemy)
-    void RemoveEnemy(Enemy enemy)
-    bool AreAllEnemiesDefeated()
+    - _waveConfigs : List<WaveConfig>
+    - _currentWaveEnemies : List<Enemy>
+    - _enemiesToRemove : List<Enemy>
+    - _currentWaveIndex : int
+    + Init() : void
+    + SetWaveConfig(List<WaveConfig>) : void
+    + StartWave() : void
+    + LogicUpdate() : void
+    + RegisterWaveEnemy(Enemy enemy) : void
+    + HandleEnemyDeath(Enemy enemy) : void
 }
 
-class Pathfinding {
-    GridMap gridMap
-    void Initialize(GridMap map)
-    List<Vector3> FindPath(Vector3 start, Vector3 goal)
+class LevelManager {
+    - _gameLevelDatabase : LevelDataBase
+    - _currentStageIndex : int
+    - _currentLevelData : LevelData
+    - _maxLevelNum : int
+    - _aStar : AStar
+    - _map : int[,]
+    + Init() : void
+    + InitializeLevel() : void
+    + SetParameters(Player player, EnemyManager enemyManager) : void
+    + GetPlayerSpawnPos() : Vector3
+    + SetWaveConfigToEnemyManager(EnemyManager enemyManager) : void
+    + UpdateLevel() : void
+    + ResetLevel() : void
 }
 
-class GameManager {
-    Player Player
-    LevelManager LevelManager
-    void StartGame()
-    void Update()
+class Player {
+    + Power : int
+    + Axis : Vector2
+    + DashInput : bool
+    + AttackInput : bool
+    + GetCurrentHealth : float
+    + InitValue() : void
+    + Initialize() : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + Move() : void
+    + RotationWithMouse(Vector3 targetDirection, float rotationSpeed) : void
 }
 
-GameLevel "1" *-- "many" TriggerZone
-GameLevel "1" *-- "many" SpawnPoint
-GameLevel "1" *-- "many" Portal
-GameLevel "1" *-- "many" EnemyData
-GameLevel "1" *-- GridMap
+class Enemy {
+    + TargetFound : bool
+    + InAttackRange : bool
+    + IsTakenDamaged : bool
+    + InitValue() : void
+    + LogicUpdate() : void
+    + TakeDamage(float amount) : void
+    + SetPlayerTransform(Transform player) : void
+    + FindPath() : void
+}
 
-LevelManager "1" *-- "1" GameLevel
-LevelManager "1" *-- "1" EnemyManager
-LevelManager "1" *-- "1" Pathfinding
+class AstarNode {
+        - BlockType : BlockType
+        - Pos : Vector2Int
+        - parent : AstarNode
+        - G : float
+        - H : float
+        - F : float
+        + AstarNode(int x, int y, BlockType blockType)
+    }
 
-EnemyManager "1" *-- "many" Enemy
+class AStar {
+    - width : int
+    - height : int
+    - nodeArray : AstarNode[,]
+    - _openList : List<AstarNode>
+    - _closeList : List<AstarNode>
+    + InitMap(int[,] map) : void
+    + FindPath(Vector2Int start, Vector2Int goal) : List<AstarNode>
+    + IsMapExternal(int x, int y) : bool
+    + GetNeighbors(AstarNode node) : List<AstarNode>
+    
+    enum BlockType { Walk, Stop }
+    
+    
+}
 
-GameManager "1" *-- "1" Player
-GameManager "1" *-- "1" LevelManager
+class StateMachine {
+    - currentState : IState
+    - CurrentState : Enum
+    - _stateTable : Dictionary<Enum, IState>
+    + Initialize(Enum startState) : void
+    + ChangeState(Enum newState) : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + AnimationEventCalled() : void
+    + AnimationEndCalled() : void
+    + RegisterState(Enum stateEnum, IState state) : void
+    + CheckState(IState state) : bool
+}
+
+class IState {
+    + Enter() : void
+    + Exit() : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + AnimationEventCalled() : void
+    + AnimationEndCalled() : void
+}
+
+class PlayerStateMachine extends StateMachine {
+    + PlayerStateMachine(Player player) : void
+}
+
+class EnemyStateMachine extends StateMachine {
+    + EnemyStateMachine(Enemy enemy) : void
+}
+
+class PoolManager {
+    - enemyPools : UnityObjectPool[]
+    - bulletPools : UnityObjectPool[]
+    - dictionary : Dictionary<GameObject, UnityObjectPool>
+    + Release(GameObject prefab) : GameObject
+    + Release(GameObject prefab, Vector3 position) : GameObject
+    + Release(GameObject prefab, Vector3 position, Quaternion rotation) : GameObject
+    + Release(GameObject prefab, Vector3 position, Quaternion rotation, Vector3 localScale) : GameObject
+    + Initialize(UnityObjectPool[] pools) : void
+}
+
+class UnityObjectPool {
+    - prefab : GameObject
+    - size : int
+    - _availableQueue : Queue<GameObject>
+    - _parent : Transform
+    + Prefab : GameObject
+    + Size : int
+    + RuntimeSize : int
+    + Initialize(Transform parent) : void
+    + preparedObject() : GameObject
+    + preparedObject(Vector3 position) : GameObject
+    + preparedObject(Vector3 position, Quaternion rotation) : GameObject
+    + preparedObject(Vector3 position, Quaternion rotation, Vector3 localScale) : GameObject
+}
+
+class ObjectPool<T> {
+    - _availableInstances : Queue<T>
+    - Size : int
+    - RuntimeSize : int
+    - _maxSize : int
+    + GetInstance() : T
+    + ReturnInstance(T instance) : void
+}
+
+interface IPoolable {
+    + IsActive : bool
+    + Reset() : void
+}
+
+GameManager --> PlayerManager
+GameManager --> EnemyManager
+GameManager --> LevelManager
+
+PlayerManager --> Player
+EnemyManager --> Enemy
+LevelManager --> AStar
+AStar --> AstarNode
+
+StateMachine --> IState
+PlayerStateMachine --> Player
+EnemyStateMachine --> Enemy
+
+PoolManager --> UnityObjectPool
+UnityObjectPool --> GameObject
+ObjectPool --> IPoolable
+
 @enduml
