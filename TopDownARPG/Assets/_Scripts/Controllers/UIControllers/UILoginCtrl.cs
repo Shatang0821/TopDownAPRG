@@ -16,6 +16,8 @@ public class UILoginCtrl : UICtrl
     private List<Selectable> _currentSelectables;
     private int _currentSelectionIndex = 0;
 
+    private Button[] buttons; // すべてのボタンを格納する配列
+
     public override void Awake()
     {
         base.Awake();
@@ -47,22 +49,22 @@ public class UILoginCtrl : UICtrl
         _registerSelectables.Add(View["RegistrationScreenPanel/Password (1)"].GetComponent<TMP_InputField>());
         _registerSelectables.Add(View["RegistrationScreenPanel/Password (2)"].GetComponent<TMP_InputField>());
         _registerSelectables.Add(View["RegistrationScreenPanel/Complete"].GetComponent<Button>());
-        _registerSelectables.Add(View["RegistrationScreenPanel/Back"].GetComponent<Button>());
 
         // 添加按钮事件
         AddButtonListener("Register", Register);
         AddButtonListener("SingIn", SingIn);
         AddButtonListener("RegistrationScreenPanel/Complete", Complete);
-        AddButtonListener("RegistrationScreenPanel/Back", Back);
 
         // 隐藏注册界面
         View["RegistrationScreenPanel"].SetActive(false);
 
-        // 添加按钮悬停效果
-        AddButtonHoverEffect("Register");
-        AddButtonHoverEffect("SingIn");
-        AddButtonHoverEffect("RegistrationScreenPanel/Complete");
-        AddButtonHoverEffect("RegistrationScreenPanel/Back");
+        // ボタンの配列を初期化
+        buttons = new Button[]
+        {
+        View["Register"].GetComponent<Button>(),
+        View["SingIn"].GetComponent<Button>(),
+        View["RegistrationScreenPanel/Complete"].GetComponent<Button>(),
+        };
 
         // 播放背景音乐
         if (!AudioManager.Instance.IsBgmPlaying())
@@ -70,6 +72,12 @@ public class UILoginCtrl : UICtrl
             AudioManager.Instance.PlayBgmPlayer();
         }
         AudioManager.Instance.StopAllNonBgmPlayers();
+
+        // すべてのボタンにホバーエフェクトを追加
+        foreach (var button in buttons)
+        {
+            AddButtonHoverEffect(button);
+        }
     }
 
     void Start()
@@ -78,25 +86,102 @@ public class UILoginCtrl : UICtrl
         _currentSelectables[_currentSelectionIndex].Select();
     }
 
+    // ボタンが押されたときのスケール効果を実装するコルーチン
+    private IEnumerator ScaleButtonOnPress(Button button)
+    {
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerDown(null);
+            yield return new WaitForSeconds(0.2f);
+            hoverEffect.OnPointerUp(null);
+        }
+    }
+
+    private IEnumerator ExecuteWithDelay(System.Action action, Button button)
+    {
+        // 触发按钮的缩放效果
+        yield return StartCoroutine(ScaleButtonOnPress(button));
+
+        // 在缩放效果完成后执行传入的action
+        action.Invoke();
+
+        // 恢复按钮的缩放状态
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerUp(null); // 恢复按钮状态
+        }
+    }
+
+
+
     private void SelectPreviousInput()
     {
+        // 手动取消当前选择的元素（如果是按钮）
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动调用 Deselect
+            }
+        }
+
         _currentSelectionIndex--;
         if (_currentSelectionIndex < 0)
         {
             _currentSelectionIndex = _currentSelectables.Count - 1;
         }
+
         _currentSelectables[_currentSelectionIndex].Select();
+
+        // 手动选中新的元素（如果是按钮）
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动调用 Select
+            }
+        }
     }
 
     private void SelectNextInput()
     {
+        // 手动取消当前选择的元素（如果是按钮）
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动调用 Deselect
+            }
+        }
+
         _currentSelectionIndex++;
         if (_currentSelectionIndex >= _currentSelectables.Count)
         {
             _currentSelectionIndex = 0;
         }
+
         _currentSelectables[_currentSelectionIndex].Select();
+
+        // 手动选中新的元素（如果是按钮）
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动调用 Select
+            }
+        }
     }
+
 
     private void ExecuteCurrentSelection()
     {
@@ -106,16 +191,31 @@ public class UILoginCtrl : UICtrl
         {
             Button button = current as Button;
 
-            if (button.name == "Register")
-            {
-                Register();
-            }
-            else
-            {
-                button.onClick.Invoke();
-            }
+            // 启动缩放效果
+            StartCoroutine(ScaleButtonOnPress(button));
+
+            // 等待特效完成后再执行跳转效果
+            StartCoroutine(HandleButtonClick(button));
         }
     }
+
+    // 处理按钮点击后的延迟效果
+    private IEnumerator HandleButtonClick(Button button)
+    {
+        // 等待与 ButtonHoverEffect 中的 ScaleTo 一样的时间
+        yield return new WaitForSeconds(0.2f); // 调整此时间与 ScaleTo 方法的延迟一致
+
+        if (button.name == "Register")
+        {
+            Register();
+        }
+        else
+        {
+            button.onClick.Invoke();
+        }
+    }
+
+
 
     private void Update()
     {
@@ -148,26 +248,27 @@ public class UILoginCtrl : UICtrl
 
     private void Register()
     {
-        Debug.Log("Register");
-        bool currentStatus = View["RegistrationScreenPanel"].activeSelf;
-        View["RegistrationScreenPanel"].SetActive(!currentStatus);
+        StartCoroutine(ExecuteWithDelay(() => {
+            Debug.Log("Register");
+            bool currentStatus = View["RegistrationScreenPanel"].activeSelf;
+            View["RegistrationScreenPanel"].SetActive(!currentStatus);
 
-        if (!currentStatus)
-        {
-            _currentSelectables = _registerSelectables;  // 切换到注册界面的可选择元素
-            _currentSelectionIndex = 0; // 重置选择索引
-        }
-        else
-        {
-            _currentSelectables = _loginSelectables;  // 切换回登录界面的可选择元素
-            _currentSelectionIndex = 0; // 重置选择索引
-        }
+            if (!currentStatus)
+            {
+                _currentSelectables = _registerSelectables;  // 切换到注册界面的可选择元素
+                _currentSelectionIndex = 0; // 重置选择索引
+            }
+            else
+            {
+                _currentSelectables = _loginSelectables;  // 切换回登录界面的可选择元素
+                _currentSelectionIndex = 0; // 重置选择索引
+            }
 
-        _currentSelectables[_currentSelectionIndex].Select();  // 选中第一个元素
-
-        // 确保切换到注册界面后不再触发登录操作
-        StopAllCoroutines();
+            _currentSelectables[_currentSelectionIndex].Select();  // 选中第一个元素
+            StopAllCoroutines();
+        }, View["Register"].GetComponent<Button>()));
     }
+
 
     private void SingIn()
     {
@@ -195,34 +296,9 @@ public class UILoginCtrl : UICtrl
         }
     }
 
-    private void Back()
+    // ボタンにホバーエフェクトを追加する
+    private void AddButtonHoverEffect(Button button)
     {
-        if (View["RegistrationScreenPanel"].activeSelf)
-        {
-            View["RegistrationScreenPanel"].SetActive(false);
-            _currentSelectables = _loginSelectables;
-            _currentSelectionIndex = 0;
-
-            // 手动设置选中对象
-            GameObject defaultButton = _currentSelectables[_currentSelectionIndex].gameObject;
-            EventSystem.current.SetSelectedGameObject(defaultButton);
-
-            // 确保放大效果被触发
-            Button selectedButton = defaultButton.GetComponent<Button>();
-            if (selectedButton != null)
-            {
-                selectedButton.OnSelect(null);  // 手动触发选择事件
-            }
-        }
-        Debug.Log("Back");
-    }
-
-
-
-
-    private void AddButtonHoverEffect(string buttonName)
-    {
-        Button button = View[buttonName].GetComponent<Button>();
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
     }
@@ -239,4 +315,6 @@ public class UILoginCtrl : UICtrl
             this.gameObject.SetActive(false);
         }
     }
+
+
 }

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -54,7 +53,8 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (button == null) button = GetComponent<Button>();  // Ensure button is not null
         if (button.interactable)
         {
-            ScaleButton(originalScale * 1.8f);
+            // 使用协程延迟恢复到原始大小
+            StartCoroutine(DelayedScale(originalScale, 0.2f));
         }
     }
 
@@ -95,5 +95,11 @@ public class ButtonHoverEffect : MonoBehaviour, IPointerEnterHandler, IPointerEx
         }
 
         transform.localScale = targetScale;
+    }
+
+    private IEnumerator DelayedScale(Vector3 targetScale, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ScaleButton(targetScale);
     }
 }
