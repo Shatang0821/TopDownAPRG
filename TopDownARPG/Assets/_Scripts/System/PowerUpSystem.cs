@@ -27,7 +27,7 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
 
         _healthPowerUp = new PowerUp<float>
         {
-            CurrentLevel = 1,
+            CurrentLevel = 0,
             MaxLevel = 5,
             BaseCost = 100,
             BaseInCreaseValue = 10,

@@ -7,7 +7,7 @@
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (player.DashInput)
+        if (playerInputComponent.Dash)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Dash);
             return;
@@ -18,7 +18,7 @@
             return;
         }
         
-        if (player.AttackInput)
+        if (playerInputComponent.Attack)
         {
             playerStateMachine.ChangeState(PlayerStateEnum.Attack);
             return;

@@ -29,7 +29,7 @@ public class PlayerDamagedState : PlayerBaseState
         
         if (_canOtherState)
         {
-            if (player.Axis != Vector2.zero)
+            if (playerInputComponent.Axis != Vector2.zero)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Idle);
                 return;

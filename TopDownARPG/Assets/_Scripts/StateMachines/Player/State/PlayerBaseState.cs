@@ -7,11 +7,13 @@ public class PlayerBaseState : BaseState
 {
     protected PlayerStateMachine playerStateMachine;
     protected Player player;
-    
+    protected PlayerInputComponent playerInputComponent;
     public PlayerBaseState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName)
     {
         this.player = player;
         this.playerStateMachine = stateMachine;
+        playerInputComponent = player.GetComponent<PlayerInputComponent>();
+        if(playerInputComponent == null) Debug.LogError("PlayerInputComponentが見つかりません");
     }
 
     /// <summary>

@@ -2608,6 +2608,7 @@ GameObject:
   - component: {fileID: 9152967425415224534}
   - component: {fileID: 4206965884534659630}
   - component: {fileID: 7057775696835027708}
+  - component: {fileID: 7664812370543424194}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2716,7 +2717,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rigidbody: {fileID: 0}
-  AttackComponent: {fileID: 0}
   RayStartPoint: {fileID: 4527349287752044695}
   ComboConfig: {fileID: 11400000, guid: e9358a52df19d6b4d830bd46abfcf462, type: 2}
   Damaged: 0
@@ -2733,6 +2733,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerBaseData: {fileID: 11400000, guid: 79912104219c54f43a093794407c0886, type: 2}
+  _maxStats:
+    Health: 0
+    MagicPoint: 0
+    AttackPower: 0
+    DefensePower: 0
+    Speed: 0
+  _currentStats:
+    Health: 0
+    MagicPoint: 0
+    AttackPower: 0
+    DefensePower: 0
+    Speed: 0
+  _maxSpecificStats:
+    MpRecoverySpeed: 0
+    DashCoolTime: 0
+  _currentSpecificStats:
+    MpRecoverySpeed: 0
+    DashCoolTime: 0
 --- !u!114 &4206965884534659630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2759,6 +2777,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0c50e95e42dc4032b41b9f86ae05f2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &7664812370543424194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8909302511932035052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66cc93f409cf98d4ca206ad63cd3c069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8932563404921736762

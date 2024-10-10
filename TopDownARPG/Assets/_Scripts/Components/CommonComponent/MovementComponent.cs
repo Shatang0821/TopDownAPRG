@@ -10,7 +10,7 @@
         {
             _rigidbody = GetComponent<Rigidbody>();
         }
-
+    
         public void Move(Vector3 vector,float speed,float rotationSpeed,bool rotation = true)
         {
             Vector3 movement = new Vector3(vector.x, 0,vector.y);
@@ -45,6 +45,10 @@
             
         }
         
+        /// <summary>
+        /// 水平方向の速度を取得します。Y軸を無視します。
+        /// </summary>
+        /// <returns></returns>
         private Vector3 GetCurrentHorizontalVelocity()
         {
             Vector3 horizontalVelocity = _rigidbody.velocity;

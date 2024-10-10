@@ -15,10 +15,24 @@ public class PlayerAttackState : PlayerBaseState
     private HashSet<Enemy> _hitEnemies;
     private Vector3 _toMouseDir; //マウス向き方向
     private Vector3 _toStickDir; //スティック向き方向
+    private Camera _camera; //カメラ
+    
+    //Component
+    private AttackComponent _attackComponent;
+    private MovementComponent _movementComponent;
+    
+    
     public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
         _hitEnemies = new HashSet<Enemy>();
+        
+        _attackComponent = player.GetComponent<AttackComponent>();
+        if(_attackComponent == null) Debug.LogError("AttackComponentが見つかりません");
+        _movementComponent = player.GetComponent<MovementComponent>();
+        if(_movementComponent == null) Debug.LogError("MovementComponentが見つかりません");
+        
+        _camera = Camera.main;
     }
 
     public override void Enter()
@@ -30,15 +44,14 @@ public class PlayerAttackState : PlayerBaseState
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
         
         //マウス操作の場合マウス位置に回転
-        if (player.PlayerInputComponent.CurrentDevice.Value == Keyboard.current)
+        if (playerInputComponent.CurrentDevice.Value == Keyboard.current)
         {
-            _toMouseDir = new Vector3(player.PlayerInputComponent.MousePosition.x, 0, player.PlayerInputComponent.MousePosition.y);
-            player.RotationWithMouse(_toMouseDir,0f);
+           RotationWithMouse(0f);
         }
-        else if (player.PlayerInputComponent.CurrentDevice.Value == Gamepad.current)
+        else if (playerInputComponent.CurrentDevice.Value == Gamepad.current)
         {
-            _toStickDir = new Vector3(player.PlayerInputComponent.Axis.x, 0, player.PlayerInputComponent.Axis.y);
-            player.RotateWithPad(_toStickDir,0f);
+            _toStickDir = new Vector3(playerInputComponent.Axis.x, 0, playerInputComponent.Axis.y);
+            RotateWithPad(_toStickDir,0f);
         }
 
         //チンペン音
@@ -53,13 +66,14 @@ public class PlayerAttackState : PlayerBaseState
         if (!_isAttacked && stateTimer > _attackConfig.AttackTiming)
         {
             _isAttacked = true;
-            player.AttackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,_attackConfig.RollAngle,_attackConfig.Radius,player.Power);
+            _attackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,
+                _attackConfig.RollAngle, _attackConfig.Radius, player.Power);
             
         }
 
-        if (player.AttackInput)
+        if (playerInputComponent.Attack)
         {
-            player.SetAttackInputBufferTimer();
+            playerInputComponent.SetAttackInputBufferTimer();
         }
         
         if (player.Damaged)
@@ -70,12 +84,12 @@ public class PlayerAttackState : PlayerBaseState
         }
         if (_canOtherState)
         {
-            if ((player.HasAttackInputBuffer|| player.AttackInput) && comboConfig.ComboCount < comboConfig.AttackConfigs.Count)
+            if ((playerInputComponent.HasAttackInputBuffer|| playerInputComponent.Attack) && comboConfig.ComboCount < comboConfig.AttackConfigs.Count)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Attack);
                 return;
             }
-            if (player.Axis != Vector2.zero)
+            if (playerInputComponent.Axis != Vector2.zero)
             {
                 player.ComboConfig.ComboCount = 0;
                 playerStateMachine.ChangeState(PlayerStateEnum.Move);
@@ -86,7 +100,7 @@ public class PlayerAttackState : PlayerBaseState
         if (_animetionEnd)
         {
             player.ComboConfig.ComboCount = 0;
-            if (player.Axis != Vector2.zero)
+            if (playerInputComponent.Axis != Vector2.zero)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Move);
             }
@@ -133,9 +147,43 @@ public class PlayerAttackState : PlayerBaseState
     private void MovePlayer()
     {
         var forward = player.transform.forward;
-        player.Move(new Vector3(forward.x,forward.z,0),_attackConfig.Speed,0,false);
+        _movementComponent.Move(new Vector3(forward.x,forward.z,0),_attackConfig.Speed,0,false);
     }
     
+    /// <summary>
+    /// ターゲット方向に回転
+    /// </summary>
+    /// <param name="targetDirection">ターゲット方向</param>
+    /// <param name="rotationSpeed">回転速度</param>
+    public void RotationWithMouse(float rotationSpeed)
+    {
+        // マウスの位置をスクリーンからワールド座標に変換
+        Vector3 mousePosition = playerInputComponent.MousePosition;
+        mousePosition.z = _camera.transform.position.y; // カメラからの距離を調整
+        Vector3 worldPosition = _camera.ScreenToWorldPoint(mousePosition);
+        
+        // プレイヤーの位置からマウスの位置へのベクトルを計算
+        Vector3 direction = worldPosition - player.transform.position;
+        direction.y = 0;
+
+        if (direction.magnitude > 0.1f)
+        {
+            _movementComponent.RotateTowards(player.transform,direction,rotationSpeed);
+        }
+    }
     
+    /// <summary>
+    /// パッド入力による回転
+    /// </summary>
+    /// <param name="inputDirection">入力方向ベクトル</param>
+    /// <param name="rotationSpeed">回転速度</param>
+    public void RotateWithPad(Vector3 inputDirection, float rotationSpeed)
+    {
+        // パッド入力がある場合に回転
+        if (inputDirection.magnitude > 0.1f)
+        {
+            _movementComponent.RotateTowards(player.transform, inputDirection, rotationSpeed);
+        }
+    } 
 
 }
