@@ -15,10 +15,12 @@ public class PlayerData
 {
     public int id;
     public int maxhealth;
-    public int currenthealth;
+    public int defense;
     public int power;
-    public float speed; 
+    public int speed; 
     public int mp;
+    public int dashcooltime;
+    public int coin;
 }
 
 [System.Serializable]

@@ -73,12 +73,7 @@ public class UILoginCtrl : UICtrl
         var accountname = View["Account"].GetComponent<TMP_InputField>();
         var password = View["Password"].GetComponent<TMP_InputField>();
         StartCoroutine(_api.Login(accountname, password));
-        StartCoroutine(SignIn());
-        if (_api.isLogin)
-        {
-            StartCoroutine(SignIn());
-        
-        }
+       
         
     }
 
@@ -113,7 +108,7 @@ public class UILoginCtrl : UICtrl
         hoverEffect.SetOriginalScale(button.transform.localScale);
     }
 
-    IEnumerator SignIn()
+    public IEnumerator SignIn()
     {
         yield return new WaitForSeconds(1.0f);
         Debug.Log("SingIn");

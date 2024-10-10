@@ -26,6 +26,7 @@ public class API : MonoBehaviour
     public bool isBadrequest = false;
 
     DataManager _dataManager; //データマネージャーのインスタンス
+    UILoginCtrl _loginCtrl;
 
     public IEnumerator CreateAccount(TMP_InputField accountname,TMP_InputField password)
     {
@@ -67,7 +68,7 @@ public class API : MonoBehaviour
         form.AddField("password", password.text);
 
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://10.22.53.100/r06/3n/ARPGDataManagement/api/login", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/login", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
 
@@ -80,12 +81,14 @@ public class API : MonoBehaviour
         else
         {
             Debug.Log("ログイン成功: " + request.downloadHandler.text);
+            _loginCtrl = FindObjectOfType<UILoginCtrl>();
             //アカウントの保存
             SaveAccount(accountname,password);
             //一緒にゲームの情報を持ってくる
             StartCoroutine(Get_Game_Info(accountname));
             isLogin = true;
 
+            StartCoroutine(_loginCtrl.SignIn());
             //_username.text ="name：" + accountname.text;
         }
     }
@@ -96,7 +99,7 @@ public class API : MonoBehaviour
         WWWForm form = new WWWForm();
         form.AddField("user_name", accountname.text);
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://10.22.53.100/r06/3n/ARPGDataManagement/api/get_game_info", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/get_game_info", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
 
@@ -117,6 +120,36 @@ public class API : MonoBehaviour
             JsonGameData playerData = JsonUtility.FromJson<JsonGameData>(json);
 
             _dataManager.GameDataSet(playerData);
+            
+        }
+    }
+    
+    public IEnumerator UpDate_Status(TMP_InputField accountname)
+    {
+        // フォームデータを作成
+        WWWForm form = new WWWForm();
+        form.AddField("user_name", accountname.text);
+        form.AddField("maxhealth", _dataManager.maxhealth);
+        form.AddField("power", _dataManager.power);
+        form.AddField("defense", _dataManager.defense);
+        form.AddField("speed", _dataManager.speed);
+        form.AddField("mp", _dataManager.mp);
+        form.AddField("dashcooltime", _dataManager.dashcooltime);
+        form.AddField("coin", _dataManager.coin);
+        // POSTリクエストを作成
+        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/update_status", form);
+        // リクエストを送信して応答を待つ
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("アップデート失敗: " + request.error);
+
+        }
+        else
+        {
+            Debug.Log("アップデート完了 ");
+
         }
     }
 
