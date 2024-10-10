@@ -55,8 +55,8 @@ public class Player : Entity
 
         PlayerInputComponent = new PlayerInputComponent();
         PlayerInputComponent.Init();
-        
-        _movementComponent = new MovementComponent(Rigidbody,transform);
+
+        _movementComponent = GetComponent<MovementComponent>();
         
         AttackComponent = GetComponent<AttackComponent>();
     }

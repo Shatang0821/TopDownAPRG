@@ -5,7 +5,7 @@ using Cinemachine;
 using FrameWork.Utils;
 using UnityEngine;
 
-public class CameraManager : UnitySingleton<CameraManager>
+public class CameraManager : Singleton<CameraManager>
 {
     CinemachineVirtualCamera _virtualCamera;
 

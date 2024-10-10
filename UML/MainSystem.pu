@@ -1,4 +1,15 @@
 @startuml MainSystem
+
+package "Component"{
+    class CloseAttackComponent{
+        
+    }
+
+    class MovementComponent{
+        + Move() : void
+    }
+}
+
 class GameManager {
     - PlayerManager : PlayerManager
     - EnemyManager : EnemyManager
@@ -47,31 +58,6 @@ class LevelManager {
     + ResetLevel() : void
 }
 
-class Player {
-    + Power : int
-    + Axis : Vector2
-    + DashInput : bool
-    + AttackInput : bool
-    + GetCurrentHealth : float
-    + InitValue() : void
-    + Initialize() : void
-    + LogicUpdate() : void
-    + PhysicsUpdate() : void
-    + Move() : void
-    + RotationWithMouse(Vector3 targetDirection, float rotationSpeed) : void
-}
-
-class Enemy {
-    + TargetFound : bool
-    + InAttackRange : bool
-    + IsTakenDamaged : bool
-    + InitValue() : void
-    + LogicUpdate() : void
-    + TakeDamage(float amount) : void
-    + SetPlayerTransform(Transform player) : void
-    + FindPath() : void
-}
-
 class AstarNode {
         - BlockType : BlockType
         - Pos : Vector2Int
@@ -96,37 +82,6 @@ class AStar {
     enum BlockType { Walk, Stop }
     
     
-}
-
-class StateMachine {
-    - currentState : IState
-    - CurrentState : Enum
-    - _stateTable : Dictionary<Enum, IState>
-    + Initialize(Enum startState) : void
-    + ChangeState(Enum newState) : void
-    + LogicUpdate() : void
-    + PhysicsUpdate() : void
-    + AnimationEventCalled() : void
-    + AnimationEndCalled() : void
-    + RegisterState(Enum stateEnum, IState state) : void
-    + CheckState(IState state) : bool
-}
-
-class IState {
-    + Enter() : void
-    + Exit() : void
-    + LogicUpdate() : void
-    + PhysicsUpdate() : void
-    + AnimationEventCalled() : void
-    + AnimationEndCalled() : void
-}
-
-class PlayerStateMachine extends StateMachine {
-    + PlayerStateMachine(Player player) : void
-}
-
-class EnemyStateMachine extends StateMachine {
-    + EnemyStateMachine(Enemy enemy) : void
 }
 
 class PoolManager {
@@ -169,21 +124,116 @@ interface IPoolable {
     + Reset() : void
 }
 
+class StateMachine {
+    - currentState : IState
+    - CurrentState : Enum
+    - _stateTable : Dictionary<Enum, IState>
+    + Initialize(Enum startState) : void
+    + ChangeState(Enum newState) : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + AnimationEventCalled() : void
+    + AnimationEndCalled() : void
+    + RegisterState(Enum stateEnum, IState state) : void
+    + CheckState(IState state) : bool
+}
+
+class IState {
+    + Enter() : void
+    + Exit() : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + AnimationEventCalled() : void
+    + AnimationEndCalled() : void
+}
+
+class PlayerStateMachine extends StateMachine {
+    + PlayerStateMachine(Player player) : void
+}
+
+class EnemyStateMachine extends StateMachine {
+    + EnemyStateMachine(Enemy enemy) : void
+}
+
+ struct Stats{
+    + HP : float
+    + MP : float
+    + Def : float
+    + Atk : float
+    + Speed : int
+ }
+
+
+class EntityBase(ScriptableObject){
+    - stats : Stats
+    - Sprite : sprite
+}
+
+class PlayerStats{
+    - stats : EntityBase
+
+    - CurrentPower : int
+    - CurrentHP : float
+    - CurrentMP : float
+    
+    + SetBasePower() : void
+    + SetBaseHP() : void
+    + SetBaseMP() : void
+}
+
+class PlayerInput{
+    + Axis : Vector2
+    + DashInput : bool
+    + AttackInput : bool
+}
+
+class Player {
+    + InitValue() : void
+    + Initialize() : void
+    + LogicUpdate() : void
+    + PhysicsUpdate() : void
+    + RotationWithMouse(Vector3 targetDirection, float rotationSpeed) : void
+}
+
+Player *-- PlayerInput : has
+Player o-- CloseAttackComponent : has
+Player *-- PlayerStateMachine : has
+Player o-- PlayerManager 
+
+class Enemy {
+    + TargetFound : bool
+    + InAttackRange : bool
+    + IsTakenDamaged : bool
+    + InitValue() : void
+    + LogicUpdate() : void
+    + TakeDamage(float amount) : void
+    + SetPlayerTransform(Transform player) : void
+    + FindPath() : void
+}
+
+class FireDemon{
+
+}
+
+FireDemon *-- CloseAttackComponent : has
+
+
 GameManager --> PlayerManager
 GameManager --> EnemyManager
 GameManager --> LevelManager
 
-PlayerManager --> Player
 EnemyManager --> Enemy
 LevelManager --> AStar
 AStar --> AstarNode
 
-StateMachine --> IState
-PlayerStateMachine --> Player
+StateMachine -up-> IState
+
 EnemyStateMachine --> Enemy
 
 PoolManager --> UnityObjectPool
 UnityObjectPool --> GameObject
 ObjectPool --> IPoolable
 
+
+Enemy --> FireDemon
 @enduml

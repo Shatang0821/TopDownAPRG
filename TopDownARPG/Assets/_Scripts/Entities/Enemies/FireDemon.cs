@@ -23,7 +23,7 @@ public class FireDemon : Enemy
     protected override void Awake()
     {
         base.Awake();
-        _movementComponent = new MovementComponent(Rigidbody, transform);
+        _movementComponent = GetComponent<MovementComponent>();
         AttackComponent = GetComponent<AttackComponent>();
 
         

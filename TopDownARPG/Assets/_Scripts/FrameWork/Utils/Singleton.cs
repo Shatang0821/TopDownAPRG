@@ -2,39 +2,7 @@ using UnityEngine;
 
 namespace FrameWork.Utils
 {
-    // ジェネリックシングルトンクラス。任意の型Tの唯一のインスタンスを保持します。
-    public class Singleton<T> where T : new()
-    {
-        // 唯一のインスタンスを保持する静的変数。
-        private static T _instance;
-
-        // スレッドセーフなシングルトン実装のためのミューテックス。
-        private static object mutex = new object();
-
-        // インスタンスへのアクセスを提供するプロパティ。
-        public static T Instance
-        {
-            get
-            {
-                // インスタンスがまだ作成されていない場合
-                if (_instance == null)
-                {
-                    lock (mutex) // スレッドセーフにするためのロック
-                    {
-                        // ダブルチェックロッキング
-                        if (_instance == null)
-                        {
-                            _instance = new T(); // 新しいインスタンスを作成
-                        }
-                    }
-                }
-
-                return _instance;
-            }
-        }
-    }
-
-    public class PersistentUnitySingleton<T> : MonoBehaviour where T : Component
+    public class PersistentSingleton<T> : MonoBehaviour where T : Component
     {
         // 唯一のインスタンスを保持する静的変数。
         private static T _instance = null;
@@ -81,7 +49,7 @@ namespace FrameWork.Utils
         }
     }
 
-    public class UnitySingleton<T> : MonoBehaviour where T : Component
+    public class Singleton<T> : MonoBehaviour where T : Component
     {
         // 唯一のインスタンスを保持する静的変数。
         private static T _instance = null;

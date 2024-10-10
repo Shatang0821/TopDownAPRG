@@ -2605,7 +2605,9 @@ GameObject:
   - component: {fileID: 2216689189759341826}
   - component: {fileID: 8054448224999601133}
   - component: {fileID: 306081154646219632}
+  - component: {fileID: 9152967425415224534}
   - component: {fileID: 4206965884534659630}
+  - component: {fileID: 7057775696835027708}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -2718,6 +2720,19 @@ MonoBehaviour:
   RayStartPoint: {fileID: 4527349287752044695}
   ComboConfig: {fileID: 11400000, guid: e9358a52df19d6b4d830bd46abfcf462, type: 2}
   Damaged: 0
+--- !u!114 &9152967425415224534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8909302511932035052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b3e4966a6e2464fac1df407e62ffd53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerBaseData: {fileID: 11400000, guid: 79912104219c54f43a093794407c0886, type: 2}
 --- !u!114 &4206965884534659630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2734,6 +2749,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 192
   RayStartPoint: {fileID: 4527349287752044695}
+--- !u!114 &7057775696835027708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8909302511932035052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c50e95e42dc4032b41b9f86ae05f2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8932563404921736762
 GameObject:
   m_ObjectHideFlags: 0
