@@ -115,17 +115,17 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
     /// <summary>
     /// 強化を適用する
     /// </summary>
-    /// <param name="stats">基本ステータス</param>
-    /// <param name="playerSpecificStats">固有ステータス</param>
-    public void ApplyValues(ref Stats stats, ref PlayerSpecificStats playerSpecificStats)
+    /// <param name="status">基本ステータス</param>
+    /// <param name="playerSpecificStatus">固有ステータス</param>
+    public void ApplyValues(ref Status status, ref PlayerSpecificStatus playerSpecificStatus)
     {
-        stats.Health += _healthPowerUp.GetValueIncrease(x => x);
-        stats.MagicPoint += _magicPointPowerUp.GetValueIncrease(x => x);
-        stats.AttackPower += _attackPowerPowerUp.GetValueIncrease(x => x);
-        stats.DefensePower += _defensePowerPowerUp.GetValueIncrease(x => x);
-        stats.Speed += _speedPowerUp.GetValueIncrease(x => x);
-        playerSpecificStats.MpRecoverySpeed += _magicPointPowerUp.GetValueIncrease(x => x);
-        playerSpecificStats.DashCoolTime -= _dashCoolTimePowerUp.GetValueIncrease(x => x);
+        status.Health += _healthPowerUp.GetValueIncrease(x => x);
+        status.MagicPoint += _magicPointPowerUp.GetValueIncrease(x => x);
+        status.AttackPower += _attackPowerPowerUp.GetValueIncrease(x => x);
+        status.DefensePower += _defensePowerPowerUp.GetValueIncrease(x => x);
+        status.Speed += _speedPowerUp.GetValueIncrease(x => x);
+        playerSpecificStatus.MpRecoverySpeed += _magicPointPowerUp.GetValueIncrease(x => x);
+        playerSpecificStatus.DashCoolTime -= _dashCoolTimePowerUp.GetValueIncrease(x => x);
     }
 
     #region UPGRADE

@@ -1,17 +1,18 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public abstract class EntityBaseData : ScriptableObject
 {
-    [SerializeField] private Stats _stats;  // Entityの基本数値
-    public Stats BaseStats => _stats;
+    [SerializeField] private Status status;  // Entityの基本数値
+    public Status BaseStatus => status;
 }
 
 /// <summary>
 /// Entity基本数値
 /// </summary>
 [Serializable]
-public struct Stats
+public struct Status
 {
     public float Health;
     public float MagicPoint;

@@ -1,18 +1,19 @@
 ﻿
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "PlayerBaseData", menuName = "PlayerBaseData")]
 public class PlayerBaseData : EntityBaseData
 {  
-    public PlayerSpecificStats PlayerSpecificStats; // プレイヤ固有ステータス
+    public PlayerSpecificStatus playerSpecificStatus; // プレイヤ固有ステータス
 }
 
 /// <summary>
 /// プレイヤ固有ステータス
 /// </summary>
 [Serializable]
-public struct PlayerSpecificStats
+public struct PlayerSpecificStatus
 {
     public float MpRecoverySpeed; // MP回復速度
     public float DashCoolTime;    // ダッシュクールタイム
