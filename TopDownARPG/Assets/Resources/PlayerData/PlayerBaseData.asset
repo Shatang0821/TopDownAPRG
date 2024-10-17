@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bd4f6eb62a1495f858e79ba58b8b7c7, type: 3}
   m_Name: PlayerBaseData
   m_EditorClassIdentifier: 
-  _stats:
-    Health: 100
-    MagicPoint: 100
+  status:
+    Health: 0
+    MagicPoint: 0
     AttackPower: 0
     DefensePower: 0
     Speed: 5
-  PlayerSpecificStats:
+  playerSpecificStatus:
     MpRecoverySpeed: 0
     DashCoolTime: 0
