@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 
@@ -8,7 +9,7 @@ public class FanRaycast : MonoBehaviour
     public int rayCount = 10;   // Rayの数
     public float rollAngle = 30.0f; // 扇型のロール角度
 
-    void Update()
+    private void OnDrawGizmos()
     {
         Vector3 forward = transform.forward;
         Vector3 origin = transform.position;
@@ -30,19 +31,11 @@ public class FanRaycast : MonoBehaviour
             fanPoints[i] = origin + rollRotation * localPoint;
         }
 
-        // Rayを飛ばして衝突判定
-        foreach (var point in fanPoints)
+        // ギズモ描画
+        Gizmos.color = Color.red;
+        for (int i = 0; i < fanPoints.Count; i++)
         {
-            Vector3 direction = (point - origin).normalized;
-            Ray ray = new Ray(origin, direction);
-            if (Physics.Raycast(ray, out RaycastHit hit, radius))
-            {
-                Debug.Log("Hit: " + hit.collider.name);
-                // 衝突処理を追加
-            }
-
-            // デバッグ用のRayを描画
-            Debug.DrawRay(origin, direction * radius, Color.red);
+            Gizmos.DrawLine(origin, fanPoints[i]);
         }
     }
 }

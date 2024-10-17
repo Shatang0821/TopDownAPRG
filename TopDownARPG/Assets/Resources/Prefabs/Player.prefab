@@ -10583,7 +10583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2693624861615474494}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: -0, y: -0.3491117, z: -0, w: 0.93708116}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10591,7 +10591,7 @@ Transform:
   - {fileID: 2982461303603781128}
   - {fileID: 3575213056827875890}
   m_Father: {fileID: 8564380153451995212}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -40.866, z: 0}
 --- !u!198 &1653654181107710432
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -15536,15 +15536,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3008572187293308318}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51171b56fc2490c4baea91f1063a0753, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  radius: 2
-  angle: 150
+  radius: 3.5
+  angle: 70
   rayCount: 20
-  rollAngle: 52.5
+  rollAngle: 0
 --- !u!1 &3147916441609620149
 GameObject:
   m_ObjectHideFlags: 0
