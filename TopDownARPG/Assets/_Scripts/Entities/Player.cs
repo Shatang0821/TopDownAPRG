@@ -23,8 +23,6 @@ public class Player : Entity
     #endregion
     
     public Transform RayStartPoint;
-
-    public ComboConfig ComboConfig;
     
     //被撃
     public bool Damaged = false;
@@ -100,34 +98,6 @@ public class Player : Entity
         UIManager.Instance.RemoveAll();
         UIManager.Instance.ShowUI("UIEnd");
         GameManager.Instance.ChangeState(GameState.GameOver);
-    }
-    
-    /// <summary>
-    /// アニメーションイベント
-    /// </summary>
-    private void AnimationEventCalled()
-    {
-        _stateMachine.AnimationEventCalled();
-    }
-
-    private void AnimationEndCalled()
-    {
-        _stateMachine.AnimationEndCalled();
-    }
-    
-    /// <summary>
-    /// コンボのカウントを設定します。
-    /// </summary>
-    public void SetAttackComboCount()
-    {
-        animator.SetInteger("ComboCounter", ComboConfig.ComboCount);
-        ComboConfig.ComboCount++;
-    
-        if (ComboConfig.ComboCount > ComboConfig.AttackConfigs.Count) // コンボの最大数を超えたらリセットするなどの処理を追加します
-        {
-            // コンボのリセット処理など
-            ComboConfig.ComboCount = 0;
-        }
     }
     
 }

@@ -8,12 +8,23 @@ public class PlayerBaseState : BaseState
     protected PlayerStateMachine playerStateMachine;
     protected Player player;
     protected PlayerInputComponent playerInputComponent;
-    public PlayerBaseState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName)
+    
+    protected Animator animator;
+    protected PlayerStateConfig playerStateConfig;
+
+    protected string stateConfigPath = "Config & Data/StateConfig/PlayerStateConfig/";
+
+    protected static float transitionDuration;
+    public PlayerBaseState(string animName, Player player, PlayerStateMachine stateMachine) : base(animName)
     {
         this.player = player;
         this.playerStateMachine = stateMachine;
+        transitionDuration = 0.0f;
+        
         playerInputComponent = player.GetComponent<PlayerInputComponent>();
         if(playerInputComponent == null) Debug.LogError("PlayerInputComponentが見つかりません");
+        animator = player.GetComponent<Animator>();
+        if(animator == null) Debug.LogError("Animatorが見つかりません");
     }
 
     /// <summary>
@@ -22,8 +33,7 @@ public class PlayerBaseState : BaseState
     public override void Enter()
     {
         stateTimer = 0;
-        //DebugLogger.Log(this.GetType().ToString() + "Enter");
-        player.SetAnimation(StateBoolHash, true);
+        animator.CrossFade(StateBoolHash, transitionDuration);
     }
 
     /// <summary>
@@ -51,5 +61,17 @@ public class PlayerBaseState : BaseState
 
     public override void AnimationEndCalled()
     {
+    }
+
+    /// <summary>
+    /// ステート変更処理
+    /// </summary>
+    /// <param name="state"></param>
+    protected void ChangeState(PlayerStateEnum state)
+    {
+        //遷移時間の設定
+        transitionDuration = playerStateConfig.GetTransitionDuration(state.ToString());
+        Debug.Log(state.ToString() + "へ遷移,時間は:" + transitionDuration);
+        playerStateMachine.ChangeState(state);
     }
 }

@@ -40,20 +40,6 @@ public class FireDemon : Enemy
         return stateMachine;
     }
     
-    
-    /// <summary>
-    /// アニメーションイベント
-    /// </summary>
-    private void AnimationEventCalled()
-    {
-        enemyStateMachine.AnimationEventCalled();
-    }
-
-    private void AnimationEndCalled()
-    {
-        enemyStateMachine.AnimationEndCalled();
-    }
-
     protected override Enum GetInitialState()
     {
         return FDStateEnum.Idle;

@@ -1,46 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Resources;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using FrameWork.Audio;
+using FrameWork.Resource;
 
 
 public class PlayerAttackState : PlayerBaseState
 {
-    private bool _animetionEnd;
-    private bool _canOtherState;
-    private bool _isAttacked = false;
-    private ComboConfig _comboConfig;
-    private AttackConfig _attackConfig;
     private HashSet<Enemy> _hitEnemies;
     private Vector3 _toMouseDir; //マウス向き方向
     private Vector3 _toStickDir; //スティック向き方向
     private Camera _camera; //カメラ
-    
+    private bool _raycastTrigger = false; //レイキャストトリガー
     //Component
     private AttackComponent _attackComponent;
     private MovementComponent _movementComponent;
-    
+    //Config
+    private AttackConfig _attackConfig;
+    private ComboConfig _comboConfig;
     
     public PlayerAttackState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
         _hitEnemies = new HashSet<Enemy>();
+        _camera = Camera.main;
         
         _attackComponent = player.GetComponent<AttackComponent>();
         if(_attackComponent == null) Debug.LogError("AttackComponentが見つかりません");
         _movementComponent = player.GetComponent<MovementComponent>();
         if(_movementComponent == null) Debug.LogError("MovementComponentが見つかりません");
-        
-        _camera = Camera.main;
+        _comboConfig = ResManager.Instance.GetAssetCache<ComboConfig>("Config & Data/ComboConfig/Katana/KatanaCombo");
+        if(_comboConfig == null) Debug.LogError("ComboConfigが見つかりません");
+        playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerAttack01_Config");
+        if(playerStateConfig == null) Debug.LogError("PlayerAttack01_Configが見つかりません");
     }
 
     public override void Enter()
     {
-        player.SetAttackComboCount();
+        SetAttackComboCount();
         base.Enter();
-        _isAttacked = false;
-        _comboConfig = player.ComboConfig;
         _attackConfig = _comboConfig.AttackConfigs[_comboConfig.ComboCount - 1];
         
         //マウス操作の場合マウス位置に回転
@@ -61,70 +61,51 @@ public class PlayerAttackState : PlayerBaseState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        var comboConfig = player.ComboConfig;
         
-        if (!_isAttacked && stateTimer > _attackConfig.AttackTiming)
+        // レイキャストトリガー時間になったらレイキャストを行う
+        if (!_raycastTrigger && stateTimer > _attackConfig.RaycastTriggerTime)
         {
-            _isAttacked = true;
+            _raycastTrigger = true;
             _attackComponent.StableRolledFanRayCast(_attackConfig.Angle, _attackConfig.RayCount,
                 _attackConfig.RollAngle, _attackConfig.Radius, player.Power);
-            
         }
-
+        
+        // 攻撃入力があればバッファを設定
         if (playerInputComponent.Attack)
         {
             playerInputComponent.SetAttackInputBufferTimer();
         }
+        // 部分ロック時間内に攻撃入力があれば攻撃状態に遷移
+        if (playerStateConfig.partialLockTime < stateTimer)
+        {
+            // if ((playerInputComponent.HasAttackInputBuffer|| playerInputComponent.Attack) && _comboConfig.ComboCount < _comboConfig.AttackConfigs.Count)
+            // {
+            //     playerStateMachine.ChangeState(PlayerStateEnum.Attack);
+            //     return;
+            // }
+            if (playerInputComponent.Axis != Vector2.zero)
+            {
+                ChangeState(PlayerStateEnum.Move);
+                return;
+            }
+        }
         
-        if (player.Damaged)
+        // 完全ロック時間終えたら
+        if (playerStateConfig.fullLockTime < stateTimer)
         {
-            player.ComboConfig.ComboCount = 0;
-            playerStateMachine.ChangeState(PlayerStateEnum.Damaged);
-            return;
-        }
-        if (_canOtherState)
-        {
-            if ((playerInputComponent.HasAttackInputBuffer|| playerInputComponent.Attack) && comboConfig.ComboCount < comboConfig.AttackConfigs.Count)
-            {
-                playerStateMachine.ChangeState(PlayerStateEnum.Attack);
-                return;
-            }
             if (playerInputComponent.Axis != Vector2.zero)
             {
-                player.ComboConfig.ComboCount = 0;
-                playerStateMachine.ChangeState(PlayerStateEnum.Move);
-                return;
-            }
-        }
-
-        if (_animetionEnd)
-        {
-            player.ComboConfig.ComboCount = 0;
-            if (playerInputComponent.Axis != Vector2.zero)
-            {
-                playerStateMachine.ChangeState(PlayerStateEnum.Move);
+                ChangeState(PlayerStateEnum.Move);
             }
             else
             {
-                playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+                ChangeState(PlayerStateEnum.Idle);
             }
         }
         
         
     }
-
-    public override void AnimationEventCalled()
-    {
-        base.AnimationEventCalled();
-        _canOtherState = true;
-    }
-
-    public override void AnimationEndCalled()
-    {
-        base.AnimationEndCalled();
-        _animetionEnd = true;
-    }
-
+    
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
@@ -137,8 +118,8 @@ public class PlayerAttackState : PlayerBaseState
     public override void Exit()
     {
         base.Exit();
-        _canOtherState = false;
-        _animetionEnd = false;
+        _raycastTrigger = false;
+        _comboConfig.ComboCount = 0;
         _toMouseDir = Vector3.zero;
         _toStickDir = Vector3.zero;
         _hitEnemies.Clear();
@@ -185,5 +166,20 @@ public class PlayerAttackState : PlayerBaseState
             _movementComponent.RotateTowards(player.transform, inputDirection, rotationSpeed);
         }
     } 
+    
+    /// <summary>
+    /// コンボのカウントを設定します。
+    /// </summary>
+    public void SetAttackComboCount()
+    {
+        animator.SetInteger("ComboCounter", _comboConfig.ComboCount);
+        _comboConfig.ComboCount++;
+    
+        if (_comboConfig.ComboCount > _comboConfig.AttackConfigs.Count) // コンボの最大数を超えたらリセットするなどの処理を追加します
+        {
+            // コンボのリセット処理など
+            _comboConfig.ComboCount = 0;
+        }
+    }
 
 }

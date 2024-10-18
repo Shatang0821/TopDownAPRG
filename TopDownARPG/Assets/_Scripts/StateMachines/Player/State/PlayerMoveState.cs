@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using FrameWork.Resource;
 using UnityEngine;
 
 public class PlayerMoveState : PlayerMovementState
@@ -14,17 +13,16 @@ public class PlayerMoveState : PlayerMovementState
         if (_movementComponent == null) Debug.LogError("MovementComponent‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
         _playerStatusComponent = player.GetComponent<PlayerStatusComponent>();
         if (_playerStatusComponent == null) Debug.LogError("PlayerStatasComponent‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
+        playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerMove_Config");
+        if(playerStateConfig == null) Debug.LogError("PlayerMove_Config‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (!playerStateMachine.CheckState(this))
-            return;
-
         if (playerInputComponent.Axis == Vector2.zero)
         {
-            playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+            ChangeState(PlayerStateEnum.Idle);
             return;
         }
     }
@@ -32,7 +30,7 @@ public class PlayerMoveState : PlayerMovementState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        _movementComponent.Move(playerInputComponent.Axis,_playerStatusComponent.CurrentStatus.Speed,0.2f);
+        _movementComponent.Move(playerInputComponent.Axis,_playerStatusComponent.CurrentStatus.Speed,0.6f);
     }
     
 }

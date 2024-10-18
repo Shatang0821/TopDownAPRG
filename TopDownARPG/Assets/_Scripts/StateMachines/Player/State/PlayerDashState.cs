@@ -28,7 +28,6 @@ public class PlayerDashState : PlayerBaseState
         if(stateTimer < _duration) return;
         if (playerInputComponent.Axis != Vector2.zero)
         {
-            player.ComboConfig.ComboCount = 0;
             playerStateMachine.ChangeState(PlayerStateEnum.Move);
             return;
         }
