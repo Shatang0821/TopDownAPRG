@@ -16,7 +16,7 @@ public enum GameState
 /// <summary>
 /// ゲームプレイ全体の管理を行うクラスとメモリ管理
 /// </summary>
-public class GameManager : PersistentUnitySingleton<GameManager>
+public class GameManager : PersistentSingleton<GameManager>
 {
     //プレイヤーマネージャー
     public PlayerManager PlayerManager;

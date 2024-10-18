@@ -40,7 +40,7 @@ public class StatsManager : MonoBehaviour
 
     public virtual void Initialize(float currentValue, float maxValue)
     {
-        // 调试信息：确保引用已分配
+        
         Debug.Log("Initialize called");
         Debug.Log("fillImageBack: " + (fillImageBack != null ? "Assigned" : "Not Assigned"));
         Debug.Log("fillImageFront: " + (fillImageFront != null ? "Assigned" : "Not Assigned"));

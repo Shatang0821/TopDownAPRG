@@ -18,11 +18,5 @@ public class PlayerDieState : PlayerBaseState
             player.Die();
         }
     }
-
-    public override void AnimationEndCalled()
-    {
-        base.AnimationEndCalled();
-        player.Die();
-    }
     
 }

@@ -1,22 +1,22 @@
 ﻿
+    using System;
     using UnityEngine;
 
-    public class MovementComponent
+    public class MovementComponent : MonoBehaviour
     {
-        private Transform _transform;
         private Rigidbody _rigidbody;
-        public MovementComponent(Rigidbody rigidbody,Transform transform)
+
+        private void Awake()
         {
-            _rigidbody = rigidbody;
-            _transform = transform;
+            _rigidbody = GetComponent<Rigidbody>();
         }
-        
+    
         public void Move(Vector3 vector,float speed,float rotationSpeed,bool rotation = true)
         {
             Vector3 movement = new Vector3(vector.x, 0,vector.y);
             if (rotation)
             {
-                RotateTowards(_transform, movement, rotationSpeed);
+                RotateTowards(transform, movement, rotationSpeed);
             }
             Vector3 currentHorizontalVelocity = GetCurrentHorizontalVelocity();
             _rigidbody.AddForce(movement * speed - currentHorizontalVelocity,
@@ -45,6 +45,10 @@
             
         }
         
+        /// <summary>
+        /// 水平方向の速度を取得します。Y軸を無視します。
+        /// </summary>
+        /// <returns></returns>
         private Vector3 GetCurrentHorizontalVelocity()
         {
             Vector3 horizontalVelocity = _rigidbody.velocity;

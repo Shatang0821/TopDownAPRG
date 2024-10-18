@@ -51,15 +51,4 @@ public class RockHurler : Enemy
         enemyStateMachine.ChangeState(RHStateEnum.Damaged);
     }
 
-    private void AnimationEventCalled()
-    {
-        enemyStateMachine.AnimationEventCalled();
-    }
-
-    private void AnimationEndCalled()
-    {
-        enemyStateMachine.AnimationEndCalled();
-    }
-
-
 }

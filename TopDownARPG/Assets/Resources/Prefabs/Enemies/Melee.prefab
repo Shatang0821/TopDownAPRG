@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8481116503749101387}
   - component: {fileID: 4974985365361209182}
   - component: {fileID: 7049359769537773752}
+  - component: {fileID: 798238816947757751}
   m_Layer: 7
   m_Name: Melee
   m_TagString: Enemy
@@ -146,6 +147,18 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 72
   RayStartPoint: {fileID: 7985516472833417934}
+--- !u!114 &798238816947757751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3437016293230610375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c50e95e42dc4032b41b9f86ae05f2a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6683040375430443176
 GameObject:
   m_ObjectHideFlags: 0

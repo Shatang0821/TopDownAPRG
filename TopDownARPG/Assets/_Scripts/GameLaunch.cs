@@ -5,7 +5,7 @@ using FrameWork.Resource;
 using FrameWork.UI;
 using FrameWork.Utils;
 
-public class GameLaunch : UnitySingleton<GameLaunch>
+public class GameLaunch : Singleton<GameLaunch>
 {
     protected override void Awake()
     {

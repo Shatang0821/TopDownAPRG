@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FrameWork.Audio
 {
-    public class AudioManager : PersistentUnitySingleton<AudioManager>
+    public class AudioManager : PersistentSingleton<AudioManager>
     {
         [SerializeField] AudioSource BgmPlayer;        //普通BGM
         [SerializeField] AudioSource WinBgm;　　　　 　//勝つBGM   

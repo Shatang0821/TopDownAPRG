@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using FrameWork.EventCenter;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,7 +7,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// 入力処理
 /// </summary>
-public class PlayerInputComponent
+public class PlayerInputComponent : MonoBehaviour
 {
     #region 変数定義
 
@@ -23,11 +25,18 @@ public class PlayerInputComponent
     // マウスの位置
     public Vector2 MousePosition => Mouse.current.position.ReadValue();
     
+    //攻撃バッファの継続時間
+    private float _attackInputBufferTime = 0.2f;            
+    //攻撃入力バッファ
+    private WaitForSeconds _waitAttackInputBufferTime;
+    //バッファ持ちチェック
+    public bool HasAttackInputBuffer { get; private set; }
+    
     #endregion
 
     #region クラスライフサイクル
 
-    public PlayerInputComponent()
+    private void Awake()
     {
         Init();
     }
@@ -39,24 +48,52 @@ public class PlayerInputComponent
     {
         _inputActions = new PlayerInputAcion();
        CurrentDevice = new Observer<InputDevice>(Keyboard.current);
+       _waitAttackInputBufferTime = new WaitForSeconds(_attackInputBufferTime);
     }
 
-    public void OnEnable()
+    private void OnEnable()
     {
         _inputActions.Enable();
         CurrentDevice.Value = Gamepad.current;
         InputSystem.onActionChange += OnActionChange;
+        CurrentDevice.Register(new Action<InputDevice>(OnDeviceChanged));
     }
 
-    public void OnDisable()
+    private void OnDisable()
     {
         _inputActions.Disable();
         InputSystem.onActionChange -= OnActionChange;
+        CurrentDevice.UnRegister(new Action<InputDevice>(OnDeviceChanged));
+    }
+
+    #endregion
+
+    #region 入力バッファ
+
+    /// <summary>
+    /// 攻撃入力バッファの設定
+    /// </summary>
+    public void SetAttackInputBufferTimer()
+    {
+        StopCoroutine(nameof(AttackInputBufferCoroutine));
+        StartCoroutine(nameof(AttackInputBufferCoroutine));
+    }
+
+    IEnumerator AttackInputBufferCoroutine()
+    {
+        HasAttackInputBuffer = true;
+        yield return _waitAttackInputBufferTime;
+        HasAttackInputBuffer = false;
     }
 
     #endregion
 
     #region デバイス
+    
+    protected void OnDeviceChanged(InputDevice device)
+    {
+        Debug.Log($"Maximum Health Changed to: {device}");
+    }
     
     /// <summary>
     /// デバイス切り替え処理

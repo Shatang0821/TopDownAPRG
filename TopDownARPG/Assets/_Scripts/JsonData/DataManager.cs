@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DataManager : PersistentUnitySingleton<DataManager>
+public class DataManager : PersistentSingleton<DataManager>
 {
     public int id { get; private set; } //プレイヤーのid
     public int maxhealth { get; private set; } //プレイヤーの最大HP

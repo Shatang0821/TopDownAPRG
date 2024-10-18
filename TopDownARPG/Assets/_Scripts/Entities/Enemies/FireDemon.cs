@@ -23,7 +23,7 @@ public class FireDemon : Enemy
     protected override void Awake()
     {
         base.Awake();
-        _movementComponent = new MovementComponent(Rigidbody, transform);
+        _movementComponent = GetComponent<MovementComponent>();
         AttackComponent = GetComponent<AttackComponent>();
 
         
@@ -40,20 +40,6 @@ public class FireDemon : Enemy
         return stateMachine;
     }
     
-    
-    /// <summary>
-    /// アニメーションイベント
-    /// </summary>
-    private void AnimationEventCalled()
-    {
-        enemyStateMachine.AnimationEventCalled();
-    }
-
-    private void AnimationEndCalled()
-    {
-        enemyStateMachine.AnimationEndCalled();
-    }
-
     protected override Enum GetInitialState()
     {
         return FDStateEnum.Idle;

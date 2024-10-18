@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50035a90bde16144482d328a44ad2bc8, type: 3}
   m_Name: Attack02
   m_EditorClassIdentifier: 
-  Radius: 2
-  Angle: 220
+  Radius: 3
+  Angle: 240
   RayCount: 20
   RollAngle: 0
   StartMoveTime: 0.2

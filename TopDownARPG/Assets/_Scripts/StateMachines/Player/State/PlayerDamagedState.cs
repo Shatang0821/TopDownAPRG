@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class PlayerDamagedState : PlayerBaseState
 {
-    private bool _canOtherState;
     public PlayerDamagedState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
@@ -14,7 +13,6 @@ public class PlayerDamagedState : PlayerBaseState
     public override void Enter()
     {
         base.Enter();
-        _canOtherState = false;
     }
 
     public override void LogicUpdate()
@@ -27,9 +25,9 @@ public class PlayerDamagedState : PlayerBaseState
             return;
         }
         
-        if (_canOtherState)
+        //if (_canOtherState)
         {
-            if (player.Axis != Vector2.zero)
+            if (playerInputComponent.Axis != Vector2.zero)
             {
                 playerStateMachine.ChangeState(PlayerStateEnum.Idle);
                 return;
@@ -47,10 +45,5 @@ public class PlayerDamagedState : PlayerBaseState
         base.Exit();
         player.Damaged = false;
     }
-
-    public override void AnimationEventCalled()
-    {
-        base.AnimationEventCalled();
-        _canOtherState = true;
-    }
+    
 }

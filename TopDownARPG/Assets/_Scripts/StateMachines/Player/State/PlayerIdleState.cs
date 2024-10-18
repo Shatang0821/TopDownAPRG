@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using FrameWork.Resource;
+using UnityEngine;
 
 
 public class PlayerIdleState : PlayerMovementState
@@ -6,6 +7,8 @@ public class PlayerIdleState : PlayerMovementState
     public PlayerIdleState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
+        playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerIdle_Config");
+        if(playerStateConfig == null) Debug.LogError("PlayerIdle_Configが見つかりません");
     }
 
     public override void Enter()
@@ -16,12 +19,9 @@ public class PlayerIdleState : PlayerMovementState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (!playerStateMachine.CheckState(this))
-            return;
-       
-        if (player.Axis != Vector2.zero)
+        if (playerInputComponent.Axis != Vector2.zero)
         {
-            playerStateMachine.ChangeState(PlayerStateEnum.Move);
+            ChangeState(PlayerStateEnum.Move);
             return;
         }
     }

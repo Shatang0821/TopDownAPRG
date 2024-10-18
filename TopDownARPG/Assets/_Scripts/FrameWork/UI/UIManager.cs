@@ -10,7 +10,7 @@ namespace FrameWork.UI
     /// <summary>
     /// UIControllerの初期化とオブジェクト登録
     /// </summary>
-    public class UIManager : PersistentUnitySingleton<UIManager>
+    public class UIManager : PersistentSingleton<UIManager>
     {
         public GameObject Canvas { get;private set; }
 

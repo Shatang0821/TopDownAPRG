@@ -6,9 +6,9 @@ namespace FrameWork.FSM
     public abstract class StateMachine
     {
         protected IState currentState { get; private set; }     //現在状態クラス
-        public Enum CurrentState { get; private set; }    //現在状態列挙型
+        public string CurrentStateName { get; private set; }    //現在状態列挙型
         
-        private Dictionary<Enum, IState> _stateTable = new();
+        private Dictionary<string, IState> _stateTable = new();
         
         /// <summary>
         /// 状態の初期化
@@ -20,10 +20,11 @@ namespace FrameWork.FSM
         }
         public void ChangeState(Enum newState)
         {
-            if (_stateTable.TryGetValue(newState, out IState state))
+            var stateName = newState.ToString();
+            if (_stateTable.TryGetValue(stateName, out IState state))
             {
                 currentState?.Exit();
-                CurrentState = newState;
+                CurrentStateName = stateName;
                 currentState = state;
 
                 currentState.Enter();
@@ -41,19 +42,9 @@ namespace FrameWork.FSM
             currentState?.PhysicsUpdate();
         }
 
-        public void AnimationEventCalled()
-        {
-            currentState?.AnimationEventCalled();
-        }
-
-        public void AnimationEndCalled()
-        {
-            currentState?.AnimationEndCalled();
-        }
-
         public void RegisterState(Enum stateEnum, IState state)
         {
-            _stateTable[stateEnum] = state;
+            _stateTable[stateEnum.ToString()] = state;
         }
     
         /// <summary>
