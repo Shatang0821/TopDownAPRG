@@ -89,6 +89,7 @@ public class API : MonoBehaviour
             isLogin = true;
 
             StartCoroutine(_loginCtrl.SignIn());
+            
             //_username.text ="name：" + accountname.text;
         }
     }
@@ -120,7 +121,10 @@ public class API : MonoBehaviour
             JsonGameData playerData = JsonUtility.FromJson<JsonGameData>(json);
 
             _dataManager.GameDataSet(playerData);
-            
+
+            //StartCoroutine(UpDate_Status(accountname));
+
+            PowerUpSystem.Instance.SetSavedValues(_dataManager.maxhealth, _dataManager.mp, _dataManager.power, _dataManager.defense, _dataManager.speed, _dataManager.dashcooltime);
         }
     }
     
@@ -136,6 +140,8 @@ public class API : MonoBehaviour
         form.AddField("mp", _dataManager.mp);
         form.AddField("dashcooltime", _dataManager.dashcooltime);
         form.AddField("coin", _dataManager.coin);
+
+        Debug.Log(_dataManager.maxhealth);
         // POSTリクエストを作成
         UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/update_status", form);
         // リクエストを送信して応答を待つ
