@@ -4,48 +4,52 @@ using UnityEngine.UI;
 using FrameWork.UI;
 using FrameWork.Audio;
 using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class UIWinCtrl : UICtrl
 {
+
     private Image _blackImage; // Black Image を格納するための変数
-    private Button[] _buttons; // 按钮数组
-    private int _currentButtonIndex = 0; // 当前选中的按钮索引
-    private ButtonHoverEffect _currentHoverEffect; // 当前按钮的 HoverEffect
+
+    private List<Selectable> _winSelectables = new List<Selectable>();
+    private List<Selectable> _currentSelectables;
+    private int _currentSelectionIndex = 0;
+
+    private Button[] buttons; // すべてのボタンを格納する配列
 
     public override void Awake()
     {
         base.Awake();
 
+        // 初始化登录界面的可选择元素
+        _winSelectables.Add(View["Title"].GetComponent<Button>());
+        _winSelectables.Add(View["Exit"].GetComponent<Button>());
+        _currentSelectables = _winSelectables;
+
         // 按钮事件和效果
         AddButtonListener("Exit", Exit);
         AddButtonListener("Title", Title);
 
-        // 初始化按钮数组
-        _buttons = new Button[]
+        // ボタンの配列を初期化
+        buttons = new Button[]
         {
             View["Title"].GetComponent<Button>(),
             View["Exit"].GetComponent<Button>()
         };
 
-        // 确保按钮已正确添加
-        Debug.Log("Title Button: " + _buttons[0]);
-        Debug.Log("Exit Button: " + _buttons[1]);
-
-        // 为每个按钮添加特效
-        foreach (Button button in _buttons)
-        {
-            AddButtonHoverEffect(button);
-            Debug.Log("ButtonHoverEffect added to: " + button.name);
-        }
+        AudioManager.Instance.PlayWinBgm();
+        AudioManager.Instance.StopAllNonWinBgms();
 
         _blackImage = View["Black"].GetComponent<Image>(); // Black Image を取得
 
         // 1秒后隐藏 Black Image
         StartCoroutine(HideBlackImageAfterDelay());
 
-        AudioManager.Instance.PlayWinBgm();
-        AudioManager.Instance.StopAllNonWinBgms();
-
+        // すべてのボタンにホバーエフェクトを追加
+        foreach (var button in buttons)
+        {
+            AddButtonHoverEffect(button);
+        }
     }
 
     private IEnumerator HideBlackImageAfterDelay()
@@ -54,10 +58,154 @@ public class UIWinCtrl : UICtrl
         _blackImage.gameObject.SetActive(false);
     }
 
-    private void Exit()
+    void Start()
     {
-        Debug.Log("Exit");
-        Application.Quit();
+        // 默认选中登录界面的第一个元素
+        _currentSelectables[_currentSelectionIndex].Select();
+    }
+
+    // ボタンが押されたときのスケール効果を実装するコルーチン
+    private IEnumerator ScaleButtonOnPress(Button button)
+    {
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerDown(null);
+            yield return new WaitForSeconds(0.2f);
+            hoverEffect.OnPointerUp(null);
+        }
+    }
+
+    private IEnumerator ExecuteWithDelay(System.Action action, Button button)
+    {
+        // 触发按钮的缩放效果
+        yield return StartCoroutine(ScaleButtonOnPress(button));
+
+        // 在缩放效果完成后执行传入的action
+        action.Invoke();
+
+        // 恢复按钮的缩放状态
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerUp(null); // 恢复按钮状态
+        }
+    }
+
+    private void SelectPreviousInput()
+    {
+        // 手动取消当前选择的元素（如果是按钮）
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动调用 Deselect
+            }
+        }
+
+        _currentSelectionIndex--;
+        if (_currentSelectionIndex < 0)
+        {
+            _currentSelectionIndex = _currentSelectables.Count - 1;
+        }
+
+        _currentSelectables[_currentSelectionIndex].Select();
+
+        // 手动选中新的元素（如果是按钮）
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动调用 Select
+            }
+        }
+    }
+
+    private void SelectNextInput()
+    {
+        // 手动取消当前选择的元素（如果是按钮）
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动调用 Deselect
+            }
+        }
+
+        _currentSelectionIndex++;
+        if (_currentSelectionIndex >= _currentSelectables.Count)
+        {
+            _currentSelectionIndex = 0;
+        }
+
+        _currentSelectables[_currentSelectionIndex].Select();
+
+        // 手动选中新的元素（如果是按钮）
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动调用 Select
+            }
+        }
+    }
+
+
+    private void ExecuteCurrentSelection()
+    {
+        var current = _currentSelectables[_currentSelectionIndex];
+
+        if (current is Button)
+        {
+            Button button = current as Button;
+
+            // 启动缩放效果
+            StartCoroutine(ScaleButtonOnPress(button));
+
+            // 等待特效完成后再执行跳转效果
+            StartCoroutine(HandleButtonClick(button));
+        }
+    }
+
+    // 处理按钮点击后的延迟效果
+    private IEnumerator HandleButtonClick(Button button)
+    {
+        // 等待与 ButtonHoverEffect 中的 ScaleTo 一样的时间
+        yield return new WaitForSeconds(0.2f); // 调整此时间与 ScaleTo 方法的延迟一致
+
+        if (button.name == "Exit")
+        {
+            Exit();
+        }
+        else
+        {
+            button.onClick.Invoke();
+        }
+    }
+
+    private void Update()
+    {
+        // 检测上下方向键来选择输入框或按钮
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            SelectPreviousInput();
+        }
+        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            SelectNextInput();
+        }
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            ExecuteCurrentSelection();
+        }
     }
 
     private void Title()
@@ -73,78 +221,17 @@ public class UIWinCtrl : UICtrl
         }
     }
 
+    private void Exit()
+    {
+        Debug.Log("Exit");
+        Application.Quit();
+    }
+
+    // ボタンにホバーエフェクトを追加する
     private void AddButtonHoverEffect(Button button)
     {
         ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
         hoverEffect.SetOriginalScale(button.transform.localScale);
-        Debug.Log("HoverEffect added to: " + button.name);
     }
 
-    private void Update()
-    {
-        // 向左箭头：选择上一个按钮
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            SelectPreviousButton();
-        }
-        // 向右箭头：选择下一个按钮
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            SelectNextButton();
-        }
-        // 回车键按下：模拟按钮按下效果
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            // 手动触发按下效果，缩小按钮
-            ExecuteEvents.Execute(_buttons[_currentButtonIndex].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerDownHandler);
-            _currentHoverEffect.OnPointerDown(null); // 手动调用 OnPointerDown 以缩小按钮
-        }
-        // 回车键松开：模拟按钮松开效果
-        else if (Input.GetKeyUp(KeyCode.Return))
-        {
-            // 手动触发松开效果，并执行点击事件
-            ExecuteEvents.Execute(_buttons[_currentButtonIndex].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerUpHandler);
-            _currentHoverEffect.OnPointerUp(null); // 手动调用 OnPointerUp 以恢复按钮大小
-            _buttons[_currentButtonIndex].onClick.Invoke(); // 调用按钮的点击事件
-        }
-    }
-
-    // 选择上一个按钮
-    private void SelectPreviousButton()
-    {
-        int previousIndex = _currentButtonIndex;
-        _currentButtonIndex--;
-        if (_currentButtonIndex < 0)
-        {
-            _currentButtonIndex = _buttons.Length - 1;
-        }
-        SelectButton(previousIndex, _currentButtonIndex);
-    }
-
-    // 选择下一个按钮
-    private void SelectNextButton()
-    {
-        int previousIndex = _currentButtonIndex;
-        _currentButtonIndex++;
-        if (_currentButtonIndex >= _buttons.Length)
-        {
-            _currentButtonIndex = 0;
-        }
-        SelectButton(previousIndex, _currentButtonIndex);
-    }
-
-    // 选中指定索引的按钮并触发动画效果
-    private void SelectButton(int previousIndex, int newIndex)
-    {
-        // 取消之前按钮的选中状态
-        if (_currentHoverEffect != null)
-        {
-            _currentHoverEffect.OnDeselect(null); // 手动取消选中时调用OnDeselect
-        }
-
-        // 更新当前选中的按钮
-        _currentHoverEffect = _buttons[newIndex].GetComponent<ButtonHoverEffect>();
-        _buttons[newIndex].Select();
-        _currentHoverEffect.OnSelect(null); // 手动选中时调用OnSelect
-    }
 }
