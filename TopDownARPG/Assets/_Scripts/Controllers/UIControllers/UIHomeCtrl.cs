@@ -10,6 +10,7 @@ using System;
 using TMPro;
 using System.IO;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class UIHomeCtrl : UICtrl
 {
@@ -21,13 +22,14 @@ public class UIHomeCtrl : UICtrl
     public Text BGM; // BGMのラベルを表示するテキスト
     public Text GSE; // 効果音のラベルを表示するテキスト
 
-    private Button _gameStart; // ゲームを開始するボタン
-    private Button _lastSelectedButton; // 最後に選択されたボタンを格納するための変数
     private Image _blackImage; // Black Image を格納するための変数
 
     private bool panelDelayInProgress = false; // パネルの遅延処理が進行中かどうかを示すフラグ
     private int currentButtonIndex = 0; // 現在選択されているボタンのインデックス
     private Button[] buttons; // すべてのボタンを格納する配列
+
+    private Button[] upDateButtons; // 存储 UpDatePanel 中的按钮
+    private int currentUpDateButtonIndex = 0; // 当前选择的 UpDatePanel 中的按钮索引
 
     // UIで選択されている要素を示す列挙型
     private enum SelectedElement { Button, BgmSlider, GseSlider }
@@ -50,6 +52,13 @@ public class UIHomeCtrl : UICtrl
         AddButtonListener("Exit", () => StartCoroutine(PanelDelayCoroutine(Exit)));
         AddButtonListener("Logout", () => StartCoroutine(PanelDelayCoroutine(Logout)));
 
+        AddButtonListener("UpDatePanel/status/HEALTH/HEALTH", HEALTH);
+        AddButtonListener("UpDatePanel/status/ATTACK/ATTACK", ATTACK);
+        AddButtonListener("UpDatePanel/status/DEFENSE/DEFENSE", DEFENSE);
+        AddButtonListener("UpDatePanel/status/SPEED/SPEED", SPEED);
+        AddButtonListener("UpDatePanel/status/MP/MP", MP);
+        AddButtonListener("UpDatePanel/status/DASH/DASH", DASH);
+
         // スライダーとパネルを初期化する
         BgmSlider = View["SettingsPanel/BGMSlider"].GetComponent<Slider>();
         GseSlider = View["SettingsPanel/GSESlider"].GetComponent<Slider>();
@@ -60,6 +69,7 @@ public class UIHomeCtrl : UICtrl
 
         View["SettingsPanel"].SetActive(false); // 設定パネルを非表示にする
         View["OperationPanel"].SetActive(false); // 操作説明パネルを非表示にする
+        View["UpDatePanel"].SetActive(false); // 操作説明パネルを非表示にする
 
         BGMPercentage = View["SettingsPanel/BGMPercentage"].GetComponent<Text>(); // BGMの音量を表示するテキストを取得
         GSEPercentage = View["SettingsPanel/GSEPercentage"].GetComponent<Text>(); // 効果音の音量を表示するテキストを取得
@@ -70,7 +80,6 @@ public class UIHomeCtrl : UICtrl
         BGMPercentage.text = "100%";
         GSEPercentage.text = "100%";
 
-        _gameStart = View["GameStart"].GetComponent<Button>(); // ゲーム開始ボタンを取得
         _blackImage = View["Black"].GetComponent<Image>();// Black Image を取得
 
         // ボタンの配列を初期化
@@ -83,6 +92,18 @@ public class UIHomeCtrl : UICtrl
         View["Exit"].GetComponent<Button>(), // 終了ボタン
         View["Logout"].GetComponent<Button>(), // 終了ボタン
         };
+
+        // 在 Awake 方法中初始化 upDateButtons
+        upDateButtons = new Button[]
+        {
+        View["UpDatePanel/status/HEALTH/HEALTH"].GetComponent<Button>(),
+        View["UpDatePanel/status/ATTACK/ATTACK"].GetComponent<Button>(),
+        View["UpDatePanel/status/DEFENSE/DEFENSE"].GetComponent<Button>(),
+        View["UpDatePanel/status/SPEED/SPEED"].GetComponent<Button>(),
+        View["UpDatePanel/status/MP/MP"].GetComponent<Button>(),
+        View["UpDatePanel/status/DASH/DASH"].GetComponent<Button>(),
+        };
+
 
         // すべてのボタンにホバーエフェクトを追加
         foreach (var button in buttons)
@@ -115,8 +136,12 @@ public class UIHomeCtrl : UICtrl
         BgmSlider.onValueChanged.AddListener(delegate { OnBgmVolumeChanged(); });
         GseSlider.onValueChanged.AddListener(delegate { OnSfxVolumeChanged(); });
 
-        // ゲーム開始ボタンを選択状態にする
-        _gameStart.Select();
+        // 默认选择 BgmSlider
+        if (View["SettingsPanel"].activeSelf)
+        {
+            selectedElement = SelectedElement.BgmSlider;
+            BgmSlider.Select(); // 确保 BgmSlider 被选择
+        }
     }
 
     // スクリプトが無効になったときに呼び出される
@@ -140,23 +165,85 @@ public class UIHomeCtrl : UICtrl
     // フレームごとに呼び出される
     void Update()
     {
-        // エスケープキーが押された場合の処理
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (View["SettingsPanel"].activeSelf)
             {
                 View["SettingsPanel"].SetActive(false);
-                RestoreLastSelectedButton();
+
+                selectedElement = SelectedElement.Button; // 重置选中的元素
+                currentButtonIndex = 0; // 或设置为最后选中的按钮索引
+                SelectButton(currentButtonIndex); // 重新选择当前按钮
             }
             if (View["OperationPanel"].activeSelf)
             {
                 View["OperationPanel"].SetActive(false);
-                RestoreLastSelectedButton();
+            }
+            if (View["UpDatePanel"].activeSelf)
+            {
+                View["UpDatePanel"].SetActive(false);
+
+                selectedElement = SelectedElement.Button; // 重置选中的元素
+                currentButtonIndex = 0; // 或设置为最后选中的按钮索引
+                SelectButton(currentButtonIndex); // 重新选择当前按钮
             }
         }
 
-        // キーボードナビゲーションの処理を行う
-        HandleKeyboardNavigation();
+        // 如果 UpDatePanel 激活，则处理 UpDatePanel 中的键盘导航
+        if (View["UpDatePanel"].activeSelf)
+        {
+            HandleUpDateKeyboardNavigation();
+        }
+        else
+        {
+            // 否则使用默认的键盘导航逻辑
+            HandleKeyboardNavigation();
+        }
+    }
+
+
+    // 创建一个新的方法来处理 UpDatePanel 中的键盘导航
+    private void HandleUpDateKeyboardNavigation()
+    {
+        // 右矢印またはDキーが押された場合
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+        {
+            currentUpDateButtonIndex = (currentUpDateButtonIndex + 1) % upDateButtons.Length;
+            SelectUpDateButton(currentUpDateButtonIndex);
+        }
+        // 左矢印またはAキーが押された場合
+        else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+        {
+            currentUpDateButtonIndex = (currentUpDateButtonIndex - 1 + upDateButtons.Length) % upDateButtons.Length;
+            SelectUpDateButton(currentUpDateButtonIndex);
+        }
+        // リターンキーが押された場合
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            Button currentButton = upDateButtons[currentUpDateButtonIndex];
+            StartCoroutine(ScaleButtonOnPress(currentButton));
+            currentButton.onClick.Invoke();
+        }
+    }
+
+    // 选择 UpDatePanel 中指定索引的按钮
+    private void SelectUpDateButton(int index)
+    {
+        if (upDateButtons != null && upDateButtons.Length > 0 && index >= 0 && index < upDateButtons.Length)
+        {
+            // 取消选择所有按钮
+            for (int i = 0; i < upDateButtons.Length; i++)
+            {
+                if (i != index)
+                {
+                    ExecuteEvents.Execute(upDateButtons[i].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerExitHandler);
+                }
+            }
+
+            // 选择当前按钮
+            upDateButtons[index].Select();
+            ExecuteEvents.Execute(upDateButtons[index].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerEnterHandler);
+        }
     }
 
     // キーボードによるナビゲーションの処理を行う
@@ -206,17 +293,8 @@ public class UIHomeCtrl : UICtrl
             {
                 BgmSlider.value = Mathf.Max(BgmSlider.value - 0.01f, 0.0f);
             }
-            // 上矢印またはWキーが押された場合
-            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                selectedElement = SelectedElement.Button;
-                // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
-                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/SBack"].GetComponent<Button>());
-                SelectButton(currentButtonIndex);
-                ScaleText(BGM, false);
-            }
             // 下矢印またはSキーが押された場合
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
             {
                 selectedElement = SelectedElement.GseSlider;
                 GseSlider.Select();
@@ -236,22 +314,13 @@ public class UIHomeCtrl : UICtrl
             {
                 GseSlider.value = Mathf.Max(GseSlider.value - 0.01f, 0.0f);
             }
-            // 上矢印またはWキーが押された場合
-            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+
+            else if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
             {
                 selectedElement = SelectedElement.BgmSlider;
                 BgmSlider.Select();
                 ScaleText(GSE, false);
                 ScaleText(BGM, true);
-            }
-            // 下矢印またはSキーが押された場合
-            else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow))
-            {
-                selectedElement = SelectedElement.Button;
-                // 如果当前处于 SettingsPanel 中，将焦点移到 Back 按钮上
-                currentButtonIndex = Array.IndexOf(buttons, View["SettingsPanel/SBack"].GetComponent<Button>());
-                SelectButton(currentButtonIndex);
-                ScaleText(GSE, false);
             }
 
             // キーが離された場合、効果音を再生する
@@ -294,22 +363,6 @@ public class UIHomeCtrl : UICtrl
         }
     }
 
-    // 最後に選択されたボタンを保存する
-    private void SaveLastSelectedButton(Button button)
-    {
-        _lastSelectedButton = button;
-    }
-
-    // 最後に選択されたボタンを復元する
-    private void RestoreLastSelectedButton()
-    {
-        if (_lastSelectedButton != null)
-        {
-            _lastSelectedButton.Select();
-            _lastSelectedButton = null;
-        }
-    }
-
     // パネルの遷移に遅延を加えるコルーチン
     private IEnumerator PanelDelayCoroutine(System.Action action)
     {
@@ -346,7 +399,13 @@ public class UIHomeCtrl : UICtrl
         bool currentStatus = View["SettingsPanel"].activeSelf;
 
         View["SettingsPanel"].SetActive(!currentStatus);
-        SelectButton(currentButtonIndex);
+
+        if (!currentStatus) // 如果当前面板刚被激活
+        {
+            selectedElement = SelectedElement.BgmSlider; // 默认选择 BgmSlider
+            BgmSlider.Select(); // 选择 BgmSlider
+            ScaleText(BGM, true); // 放大 BGM 标签
+        }
     }
 
     // 操作説明画面を表示する処理
@@ -363,12 +422,9 @@ public class UIHomeCtrl : UICtrl
     private void UpDate()
     {
         Debug.Log("UIUpDate");
-        bool currentStatus = View["UIUpDate"].activeSelf;
-        if (!currentStatus)
-        {
-            SaveLastSelectedButton(buttons[currentButtonIndex]);
-        }
-        View["UIUpDate"].SetActive(!currentStatus);
+        bool currentStatus = View["UpDatePanel"].activeSelf;
+
+        View["UpDatePanel"].SetActive(!currentStatus);
         SelectButton(currentButtonIndex);
     }
 
@@ -403,6 +459,32 @@ public class UIHomeCtrl : UICtrl
         {
             this.gameObject.SetActive(false);
         }
+    }
+
+    private void HEALTH()
+    {
+        Debug.Log("Exit");
+
+    }
+    private void ATTACK()
+    {
+        Debug.Log("Exit");
+    }
+    private void DEFENSE()
+    {
+        Debug.Log("Exit");
+    }
+    private void SPEED()
+    {
+        Debug.Log("Exit");
+    }
+    private void MP()
+    {
+        Debug.Log("Exit");
+    }
+    private void DASH()
+    {
+        Debug.Log("Exit");
     }
 
     // BGMの音量が変更されたときの処理
