@@ -1,15 +1,21 @@
 ﻿using UnityEngine;
 
-public class MeleeDamagedState : EnemyBaseState
+public class FireDemonDamagedState : EnemyBaseState
 {
-    public MeleeDamagedState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+    private MovementComponent _movementComponent;
+    private float _moveDuration = 0.5f;
+    private float _moveSpeed = 10.0f;
+    public FireDemonDamagedState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        _movementComponent = enemy.GetComponent<MovementComponent>();
+        if(!_movementComponent)Debug.LogWarning("Move Component is null");
     }
 
     public override void Enter()
     {
         base.Enter();
         enemy.IsTakenDamaged = false;
+        _movementComponent.Move(new Vector3(0,0,0),15);
         
     }
 

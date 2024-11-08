@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,14 +7,22 @@ using UnityEngine.Serialization;
 [CreateAssetMenu(fileName = "NewAttackConfig",menuName = "ComboSystem/CreateNewAttackConfig")]
 public class AttackConfig : ScriptableObject
 {
-    public float Radius = 5.0f; // 扇型の半径
-    public float Angle = 45.0f; // 扇型の角度
-    public int RayCount = 10;   // Rayの数
-    public float RollAngle = 30.0f; // 扇型のロール角度
-
+    public AttackParam AttackParam;
+    
     public float StartMoveTime = 0.0f;
     public float StopMoveTime = 0.0f;
     public float Speed = 2.0f;
-
-    public float RaycastTriggerTime = 0.2f;  //レイを飛ばすタイミング
+    public string AnimationName;
+}
+/// <summary>
+/// レイキャストのパラメータ
+/// </summary>
+[Serializable]
+public struct AttackParam
+{
+    public float Radius;                // 扇型の半径
+    public float Angle;                 // 扇型の角度
+    public int RayCount;                // Rayの数
+    public float RollAngle;             // 扇型のロール角度
+    public float RaycastTriggerTime;    //レイを飛ばすタイミング
 }

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 
-public class MeleeDieState : EnemyBaseState
+public class FireDemonDieState : EnemyBaseState
  {
      private bool _isDead;
-     public MeleeDieState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+     public FireDemonDieState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
      {
      }
      
@@ -25,12 +25,6 @@ public class MeleeDieState : EnemyBaseState
                 Die();
             }
             
-        }
-
-        public override void AnimationEndCalled()
-        {
-            base.AnimationEndCalled();
-            _isDead = true;
         }
 
         

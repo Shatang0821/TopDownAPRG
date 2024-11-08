@@ -46,14 +46,14 @@ public class RHAttackState : RHMovementState
         }
     }
 
-    public override void AnimationEventCalled()
-    {
-        base.AnimationEventCalled();
-        // 岩のプレハブをロード（Resources フォルダー内に配置されていると仮定）
-        RockPrefab = Resources.Load<GameObject>("Prefabs/Enemies/Rock-Purple");
-        // プレハブを生成して初期化する
-        GameObject projectile =
-            //PoolManager.Release(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
-            GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
-    }
+    // public override void AnimationEventCalled()
+    // {
+    //     base.AnimationEventCalled();
+    //     // 岩のプレハブをロード（Resources フォルダー内に配置されていると仮定）
+    //     RockPrefab = Resources.Load<GameObject>("Prefabs/Enemies/Rock-Purple");
+    //     // プレハブを生成して初期化する
+    //     GameObject projectile =
+    //         //PoolManager.Release(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
+    //         GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
+    // }
 }

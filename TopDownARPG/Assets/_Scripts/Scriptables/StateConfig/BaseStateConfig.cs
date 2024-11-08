@@ -1,24 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
-public abstract@class BaseStateConfig : ScriptableObject
+public abstractã€€class BaseStateConfig : ScriptableObject
 {
     [Header("General Settings")]
-    public float fullLockTime;                      // Š®‘Só‘ÔƒƒbƒNŠÔ
-    public float partialLockTime;                   // •”•ªó‘ÔƒƒbƒNŠÔ
+    public float FullLockTime;                      // å®Œå…¨çŠ¶æ…‹ãƒ­ãƒƒã‚¯æ™‚é–“
+    public float PartialLockTime;                   // éƒ¨åˆ†çŠ¶æ…‹ãƒ­ãƒƒã‚¯æ™‚é–“
 
     [Header("State Transitions")]
-    public List<StateTransition> stateTransitions;  // ó‘ÔŠÔ‚Ì‘JˆÚŠÔ
+    public List<StateTransition> stateTransitions;  // çŠ¶æ…‹é–“ã®é·ç§»æ™‚é–“
     
     /// <summary>
-    /// ó‘Ô‘JˆÚŠÔæ“¾
+    /// çŠ¶æ…‹é·ç§»æ™‚é–“å–å¾—
     /// </summary>
-    /// <param name="targetState">‘JˆÚ‚µ‚½‚¢ó‘Ô–¼</param>
-    /// <returns>‘JˆÚŠÔ</returns>
+    /// <param name="targetState">é·ç§»ã—ãŸã„çŠ¶æ…‹å</param>
+    /// <returns>é·ç§»æ™‚é–“</returns>
     public float GetTransitionDuration(string targetState)
     {
-        // ó‘Ô‘JˆÚŠÔæ“¾
+        // çŠ¶æ…‹é·ç§»æ™‚é–“å–å¾—
         foreach (var transition in stateTransitions)
         {
             if (transition.targetState == targetState)
@@ -26,8 +27,7 @@ public abstract@class BaseStateConfig : ScriptableObject
                 return transition.transitionDuration;
             }
         }
-        // ‘¶İ‚µ‚È‚¢‚Æ‚«‚É0‚ğ•Ô‚·
-        Debug.Log("‘JˆÚŠÔ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ");
+        // å­˜åœ¨ã—ãªã„ã¨ãã«0ã‚’è¿”ã™
         return 0;
     }
 }
@@ -35,6 +35,6 @@ public abstract@class BaseStateConfig : ScriptableObject
 [Serializable]
 public class StateTransition
 {
-    public string targetState;          //ó‘Ô–¼
-    public float transitionDuration;    //‘JˆÚŠÔ
+    public string targetState;          //çŠ¶æ…‹å
+    public float transitionDuration;    //é·ç§»æ™‚é–“
 }

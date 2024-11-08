@@ -86,16 +86,6 @@ public class Entity : MonoBehaviour, IDamageable
     {
         currentHealth.Value = Mathf.Max(currentHealth.Value - amount, 0);
     }
-
-    /// <summary>
-    /// アニメーションを変更する
-    /// </summary>
-    /// <param name="animHash"></param>
-    /// <param name="value"></param>
-    public virtual void SetAnimation(int animHash, bool value)
-    {
-        animator.SetBool(animHash, value);
-    }
     
     
 }

@@ -30,7 +30,7 @@ public class PlayerMoveState : PlayerMovementState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
-        _movementComponent.Move(playerInputComponent.Axis,_playerStatusComponent.CurrentStatus.Speed,0.6f);
+        _movementComponent.Move(playerInputComponent.Axis,_playerStatusComponent.CurrentStatus.Speed,true,0.6f);
     }
     
 }

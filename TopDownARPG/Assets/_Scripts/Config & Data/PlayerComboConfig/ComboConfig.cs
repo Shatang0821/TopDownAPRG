@@ -7,10 +7,4 @@ using UnityEngine;
 public class ComboConfig : ScriptableObject
 {
     public List<AttackConfig> AttackConfigs;
-    public int ComboCount =  0;
-
-    private void OnEnable()
-    {
-        ComboCount = 0;
-    }
 }

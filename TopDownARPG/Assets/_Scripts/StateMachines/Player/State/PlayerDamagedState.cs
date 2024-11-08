@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Resource;
 using UnityEngine;
 
 
 public class PlayerDamagedState : PlayerBaseState
 {
+    
     public PlayerDamagedState(string animBoolName, Player player, PlayerStateMachine stateMachine) : base(animBoolName,
         player, stateMachine)
     {
-    }
-
-    public override void Enter()
-    {
-        base.Enter();
+        playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerDamaged_Config");
     }
 
     public override void LogicUpdate()
@@ -21,20 +19,26 @@ public class PlayerDamagedState : PlayerBaseState
 
         if (player.GetCurrentHealth <= 0)
         {
-            playerStateMachine.ChangeState(PlayerStateEnum.Die);
+            ChangeState(PlayerStateEnum.Die);
             return;
         }
         
-        //if (_canOtherState)
+        if (playerStateConfig.FullLockTime < stateTimer)
         {
-            if (playerInputComponent.Axis != Vector2.zero)
+            ChangeState(PlayerStateEnum.Idle);
+            return;
+        }
+        
+        if(playerStateConfig.PartialLockTime < stateTimer)
+        {
+            if(playerInputComponent.Attack)
             {
-                playerStateMachine.ChangeState(PlayerStateEnum.Idle);
+                ChangeState(PlayerStateEnum.Attack);
                 return;
             }
-            else
+            if (playerInputComponent.Axis != Vector2.zero)
             {
-                playerStateMachine.ChangeState(PlayerStateEnum.Move);
+                ChangeState(PlayerStateEnum.Move);
                 return;
             }
         }

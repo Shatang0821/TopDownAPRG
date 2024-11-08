@@ -32,11 +32,11 @@ public class FireDemon : Enemy
     {
         var stateMachine = new EnemyStateMachine(this);
         //èÛë‘ÇÃìoò^ 
-        stateMachine.RegisterState(FDStateEnum.Idle, new MeleeIdleState("Idle", this, stateMachine));
-        stateMachine.RegisterState(FDStateEnum.Move, new MeleeMoveState("Move", this, stateMachine));
-        stateMachine.RegisterState(FDStateEnum.Damaged, new MeleeDamagedState("Damaged", this, stateMachine));
-        stateMachine.RegisterState(FDStateEnum.Attack, new MeleeAttackState("Attack", this, stateMachine));
-        stateMachine.RegisterState(FDStateEnum.Die, new MeleeDieState("Die", this, stateMachine));
+        stateMachine.RegisterState(FDStateEnum.Idle, new FireDemonIdleState("Idle", this, stateMachine));
+        stateMachine.RegisterState(FDStateEnum.Move, new FireDemonMoveState("Move", this, stateMachine));
+        stateMachine.RegisterState(FDStateEnum.Damaged, new FireDemonDamagedState("Damaged", this, stateMachine));
+        stateMachine.RegisterState(FDStateEnum.Attack, new FireDemonAttackState("Attack", this, stateMachine));
+        stateMachine.RegisterState(FDStateEnum.Die, new FireDemonDieState("Die", this, stateMachine));
         return stateMachine;
     }
     
@@ -50,7 +50,7 @@ public class FireDemon : Enemy
     {
         if (dir != Vector2.zero)
         {
-            _movementComponent.Move(dir, speed.Value, 0.2f);
+            _movementComponent.Move(dir, speed.Value,true, 0.2f);
         }
     }
     

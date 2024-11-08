@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8f5b962d1814760952be739e4b0fbc8, type: 3}
   m_Name: PlayerDash_Config
   m_EditorClassIdentifier: 
-  fullLockTime: 0
-  partialLockTime: 0
+  FullLockTime: 0.3
+  PartialLockTime: 0
   stateTransitions:
   - targetState: Idle
+    transitionDuration: 0.2
+  - targetState: Move
     transitionDuration: 0.2

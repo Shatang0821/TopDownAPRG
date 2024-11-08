@@ -11,7 +11,7 @@
             _rigidbody = GetComponent<Rigidbody>();
         }
     
-        public void Move(Vector3 vector,float speed,float rotationSpeed,bool rotation = true)
+        public void Move(Vector3 vector,float speed,bool rotation = false,float rotationSpeed = 0.0f)
         {
             Vector3 movement = new Vector3(vector.x, 0,vector.y);
             if (rotation)

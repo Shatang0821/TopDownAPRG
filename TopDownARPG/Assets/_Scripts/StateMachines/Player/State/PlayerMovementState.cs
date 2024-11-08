@@ -8,17 +8,17 @@
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        // if (playerInputComponent.Dash)
-        // {
-        //     playerStateMachine.ChangeState(PlayerStateEnum.Dash);
-        //     return;
-        // }
-        // if (player.Damaged)
-        // {
-        //     playerStateMachine.ChangeState(PlayerStateEnum.Damaged);
-        //     return;
-        // }
-        //
+        if (playerInputComponent.Dash)
+        {
+            ChangeState(PlayerStateEnum.Dash);
+            return;
+        }
+        if (player.Damaged)
+        {
+            ChangeState(PlayerStateEnum.Damaged);
+            return;
+        }
+        
         if (playerInputComponent.Attack)
         {
             ChangeState(PlayerStateEnum.Attack);

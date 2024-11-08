@@ -88,6 +88,8 @@ public class Player : Entity
     /// <param name="amount">ダメージ数</param>
     public override void TakeDamage(float amount)
     {
+        if(_stateMachine.CurrentStateName == PlayerStateEnum.Dash.ToString())
+            return;
         base.TakeDamage(amount);
         Damaged = true;
     }

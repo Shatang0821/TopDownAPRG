@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50035a90bde16144482d328a44ad2bc8, type: 3}
   m_Name: Attack03
   m_EditorClassIdentifier: 
-  Radius: 2
-  Angle: 360
-  RayCount: 35
-  RollAngle: 0
+  AttackParam:
+    Radius: 2
+    Angle: 360
+    RayCount: 35
+    RollAngle: 0
+    RaycastTriggerTime: 0.2
   StartMoveTime: 0
   StopMoveTime: 0.4
   Speed: 2
-  AttackTiming: 0.45
+  AnimationName: 

@@ -26,11 +26,12 @@ public class PlayerInputComponent : MonoBehaviour
     public Vector2 MousePosition => Mouse.current.position.ReadValue();
     
     //攻撃バッファの継続時間
-    private float _attackInputBufferTime = 0.2f;            
+    private float _attackInputBufferTime = 0.1f;            
     //攻撃入力バッファ
     private WaitForSeconds _waitAttackInputBufferTime;
     //バッファ持ちチェック
-    public bool HasAttackInputBuffer { get; private set; }
+    [HideInInspector]
+    public bool HasAttackInputBuffer;
     
     #endregion
 
@@ -82,6 +83,7 @@ public class PlayerInputComponent : MonoBehaviour
     IEnumerator AttackInputBufferCoroutine()
     {
         HasAttackInputBuffer = true;
+       
         yield return _waitAttackInputBufferTime;
         HasAttackInputBuffer = false;
     }

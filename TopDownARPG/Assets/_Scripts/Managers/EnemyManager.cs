@@ -131,7 +131,7 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
             yield return new WaitForSeconds(spawnInfo.SpawnTime);
             
             var worldSpawnPos = GameManager.Instance.LevelManager.CurrentStageInstance.transform.TransformPoint(spawnInfo.SpawnLocalPosition);
-            Debug.Log(worldSpawnPos);
+//            Debug.Log(worldSpawnPos);
             var enemy = PoolManager.Release(spawnInfo.EnemyPrefab,worldSpawnPos,Quaternion.identity).GetComponent<Enemy>();
             
             if (enemy != null)

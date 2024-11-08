@@ -2,7 +2,7 @@
 using FrameWork.Utils;
 using UnityEngine;
 
-public class MeleeAttackState : EnemyBaseState
+public class FireDemonAttackState : FireDemonBaseState
 {
     private float angle = 45;        //範囲角度
     private int rayCount = 5;       //レイ数
@@ -11,11 +11,13 @@ public class MeleeAttackState : EnemyBaseState
 
     private float _attackTiming = 0.55f;
     private bool _isAttacked = false;
-    private FireDemon _fireDemon;
-    public MeleeAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+
+    private AttackComponent _attackComponent;
+
+    public FireDemonAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
-        _fireDemon = enemy as FireDemon;
-        if(!_fireDemon) {DebugLogger.Log("EnemyをMeleeに変換失敗");}
+        _attackComponent = fireDemon.GetComponent<AttackComponent>();
+        if(!_attackComponent)Debug.LogWarning("Attack Component is null");
     }
 
     public override void Enter()
@@ -26,17 +28,18 @@ public class MeleeAttackState : EnemyBaseState
 
         //チンペン音
         AudioManager.Instance.PlayCRE_Attack();
+        DebugLogger.Log("In Attack");
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        _fireDemon.Rotation(enemy.DirectionToPlayer,0.1f);
+        fireDemon.Rotation(enemy.DirectionToPlayer,0.1f);
         
         if (!_isAttacked && stateTimer > _attackTiming)
         {
             _isAttacked = true;
-            if (_fireDemon != null) _fireDemon.AttackComponent.StableRolledFanRayCast(angle, rayCount, rollAngle, radius, 10);
+            _attackComponent.StableRolledFanRayCast(angle, rayCount, rollAngle, radius, 10);
         }
         
         if (enemy.IsTakenDamaged)
@@ -63,5 +66,11 @@ public class MeleeAttackState : EnemyBaseState
 
         
         
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+        DebugLogger.Log("Out Attack");
     }
 }

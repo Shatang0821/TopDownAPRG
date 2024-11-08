@@ -24,12 +24,6 @@ public class RHDieState : RHMovementState
         }
     }
 
-    public override void AnimationEndCalled()
-    {
-        base.AnimationEndCalled();
-        _isDead=true;
-    }
-
     private void Die()
     {
         _isDead = false;

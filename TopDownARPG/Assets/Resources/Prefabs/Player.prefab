@@ -103,7 +103,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 226332518636486403}
   serializedVersion: 8
-  lengthInSec: 0.5
+  lengthInSec: 0.2
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 3
@@ -178,7 +178,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
+      scalar: 0.2
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
@@ -5289,7 +5289,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653747355048485564}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 0.2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -10583,7 +10583,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2693624861615474494}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.3491117, z: -0, w: 0.93708116}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -10591,7 +10591,7 @@ Transform:
   - {fileID: 2982461303603781128}
   - {fileID: 3575213056827875890}
   m_Father: {fileID: 8564380153451995212}
-  m_LocalEulerAnglesHint: {x: 0, y: -40.866, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!198 &1653654181107710432
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -10600,7 +10600,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2693624861615474494}
   serializedVersion: 8
-  lengthInSec: 0.5
+  lengthInSec: 0.2
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -10675,7 +10675,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.3
+      scalar: 0.15
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -15542,7 +15542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 3.5
-  angle: 70
+  angle: 240
   rayCount: 20
   rollAngle: 0
 --- !u!1 &3147916441609620149
@@ -15651,7 +15651,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3287294558578397130}
   serializedVersion: 8
-  lengthInSec: 2
+  lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 1
@@ -20624,7 +20624,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3552948993673967023}
   serializedVersion: 8
-  lengthInSec: 1
+  lengthInSec: 0.1
   simulationSpeed: 1
   stopAction: 0
   cullingMode: 3
@@ -26886,7 +26886,7 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8282002557776422262}
   serializedVersion: 8
-  lengthInSec: 0.1
+  lengthInSec: 0.2
   simulationSpeed: 2
   stopAction: 0
   cullingMode: 3
@@ -26961,7 +26961,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 1
+      scalar: 0.4
       minScalar: 0.2
       maxCurve:
         serializedVersion: 2
@@ -32163,7 +32163,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Rigidbody: {fileID: 0}
   RayStartPoint: {fileID: 4527349287752044695}
-  ComboConfig: {fileID: 11400000, guid: e9358a52df19d6b4d830bd46abfcf462, type: 2}
   Damaged: 0
 --- !u!114 &9152967425415224534
 MonoBehaviour:
@@ -32236,6 +32235,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66cc93f409cf98d4ca206ad63cd3c069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _attackInputBufferTime: 0.2
+  HasAttackInputBuffer: 0
 --- !u!114 &1786754315020131878
 MonoBehaviour:
   m_ObjectHideFlags: 0

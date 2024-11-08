@@ -19,7 +19,7 @@ public class PlayerStateMachine : StateMachine
         RegisterState(PlayerStateEnum.Idle,new PlayerIdleState("Idle",player,this));
         RegisterState(PlayerStateEnum.Move,new PlayerMoveState("Move",player,this));
         RegisterState(PlayerStateEnum.Attack,new PlayerAttackState("Attack",player,this));
-        RegisterState(PlayerStateEnum.Dash,new PlayerDashState("Move",player,this));
+        RegisterState(PlayerStateEnum.Dash,new PlayerDashState("Dash",player,this));
         RegisterState(PlayerStateEnum.Damaged,new PlayerDamagedState("Damaged",player,this));
         RegisterState(PlayerStateEnum.Die, new PlayerDieState("Die",player,this));
     }

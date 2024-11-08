@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using FrameWork.Resource;
+using UnityEngine;
 
-public class MeleeMoveState : MeleeMovementState
+public class FireDemonMoveState : FireDemonMovementState
 {
     //10m以上2秒ごと,10m以下5m以上1秒ごと,5m以下0.5秒ごと
     private float _pathFindInterval = 2.0f;
     private float _pathFindTimer = 0.0f;
-    public MeleeMoveState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+    public FireDemonMoveState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<FireDemonStateConfig>(stateConfigPath + "FireDemon/FireDemonMove_Config");
     }
     
     public override void Enter()
@@ -23,13 +25,14 @@ public class MeleeMoveState : MeleeMovementState
 
         if (!enemy.TargetFound)
         {
-            enemyStateMachine.ChangeState(FDStateEnum.Idle);
+            ChangeState(FDStateEnum.Idle);
         }
         
         UpdatePathFindInterval();
         _pathFindTimer += Time.deltaTime;
         if (_pathFindTimer >= _pathFindInterval)
         {
+            Debug.Log("Find new Path");
             enemy.FindPath();
             _pathFindTimer = 0.0f;
         }

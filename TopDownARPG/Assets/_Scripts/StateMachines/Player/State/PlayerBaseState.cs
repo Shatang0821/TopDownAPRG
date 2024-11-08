@@ -12,7 +12,7 @@ public class PlayerBaseState : BaseState
     protected Animator animator;
     protected PlayerStateConfig playerStateConfig;
 
-    protected string stateConfigPath = "Config & Data/StateConfig/PlayerStateConfig/";
+    protected string stateConfigPath = "Config & Data/StateConfig/Player/";
 
     protected static float transitionDuration;
     public PlayerBaseState(string animName, Player player, PlayerStateMachine stateMachine) : base(animName)
@@ -33,7 +33,17 @@ public class PlayerBaseState : BaseState
     public override void Enter()
     {
         stateTimer = 0;
-        animator.CrossFade(StateBoolHash, transitionDuration);
+        if (animator.GetCurrentAnimatorStateInfo(0).shortNameHash == StateHash)
+        {
+            // 同じアニメーションを再生
+            animator.CrossFade(StateHash, transitionDuration, 0, 0.0f);
+        }
+        else
+        {
+            // アニメーションが再生中でなければ、通常通りCrossFadeを使用して再生
+            animator.CrossFade(StateHash, transitionDuration);
+        }
+        //animator.CrossFade(StateHash, transitionDuration);
     }
 
     /// <summary>
@@ -41,7 +51,7 @@ public class PlayerBaseState : BaseState
     /// </summary>
     public override void Exit()
     {
-        player.SetAnimation(StateBoolHash, false);
+        
     }
     
 
@@ -55,14 +65,6 @@ public class PlayerBaseState : BaseState
     {
     }
 
-    public override void AnimationEventCalled()
-    {
-    }
-
-    public override void AnimationEndCalled()
-    {
-    }
-
     /// <summary>
     /// ステート変更処理
     /// </summary>
@@ -71,7 +73,7 @@ public class PlayerBaseState : BaseState
     {
         //遷移時間の設定
         transitionDuration = playerStateConfig.GetTransitionDuration(state.ToString());
-        Debug.Log(state.ToString() + "へ遷移,時間は:" + transitionDuration);
+
         playerStateMachine.ChangeState(state);
     }
 }

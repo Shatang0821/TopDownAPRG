@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 7049359769537773752}
   - component: {fileID: 798238816947757751}
   m_Layer: 7
-  m_Name: Melee
+  m_Name: FireDemon
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

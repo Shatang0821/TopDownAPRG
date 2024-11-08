@@ -1,9 +1,10 @@
-﻿using Unity.VisualScripting;
+﻿using FrameWork.Resource;
 
-public class MeleeIdleState : MeleeMovementState
+public class FireDemonIdleState : FireDemonMovementState
 {
-    public MeleeIdleState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+    public FireDemonIdleState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<FireDemonStateConfig>(stateConfigPath + "FireDemon/FireDemonIdle_Config");
     }
 
     public override void Enter()
@@ -22,7 +23,7 @@ public class MeleeIdleState : MeleeMovementState
             if(!enemy.InAttackRange)
             {
                 //移動
-                enemyStateMachine.ChangeState(FDStateEnum.Move);
+               ChangeState(FDStateEnum.Move);
                 return;
             }
             

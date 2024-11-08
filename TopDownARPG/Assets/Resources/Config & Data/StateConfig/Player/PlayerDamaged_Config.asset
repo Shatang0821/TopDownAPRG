@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8f5b962d1814760952be739e4b0fbc8, type: 3}
-  m_Name: PlayerAttack01_Config
+  m_Name: PlayerDamaged_Config
   m_EditorClassIdentifier: 
-  fullLockTime: 1
-  partialLockTime: 0.4
+  FullLockTime: 0.5
+  PartialLockTime: 0
   stateTransitions:
+  - targetState: Idle
+    transitionDuration: 2
+  - targetState: Move
+    transitionDuration: 0
   - targetState: Attack
     transitionDuration: 0
-  - targetState: Idle
-    transitionDuration: 0.4
-  - targetState: Move
-    transitionDuration: 0.2

@@ -6,23 +6,24 @@ public class EnemyBaseState : BaseState
 {
     protected Enemy enemy;
     protected EnemyStateMachine enemyStateMachine;
-
+    protected EnemyStateConfig enemyStateConfig;
+    protected Animator animator;
+    protected string stateConfigPath = "Config & Data/StateConfig/";
     public EnemyBaseState(string animBoolName,Enemy enemy,EnemyStateMachine enemyStateMachine) : base(animBoolName)
     {
         this.enemy = enemy;
         this.enemyStateMachine = enemyStateMachine;
+        animator = enemy.GetComponent<Animator>();
     }
 
     public override void Enter()
     {
         stateTimer = 0;
-//        Debug.Log(this.GetType().ToString());
-        enemy.SetAnimation(StateBoolHash,true);
     }
 
     public override void Exit()
-    {
-        enemy.SetAnimation(StateBoolHash, false);
+    {   
+        
     }
 
     public override void LogicUpdate()
@@ -35,14 +36,6 @@ public class EnemyBaseState : BaseState
     {
         
     }
+    
 
-    public override void AnimationEventCalled()
-    {
-        
-    }
-
-    public override void AnimationEndCalled()
-    {
-        
-    }
 }
