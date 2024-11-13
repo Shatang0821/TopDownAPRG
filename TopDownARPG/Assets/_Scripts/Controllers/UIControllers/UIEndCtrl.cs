@@ -180,17 +180,18 @@ public class UIEndCtrl : UICtrl
     // 每帧调用一次，处理输入
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        // 检测方向键选择上一个或下一个UI元素
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
         {
-            SelectPreviousInput(); // 选择上一个元素
+            SelectPreviousInput();
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
         {
-            SelectNextInput(); // 选择下一个元素
+            SelectNextInput();
         }
         else if (Input.GetKeyDown(KeyCode.Return))
         {
-            ExecuteCurrentSelection(); // 执行选中的操作
+            ExecuteCurrentSelection(); // 确认选择
         }
     }
 

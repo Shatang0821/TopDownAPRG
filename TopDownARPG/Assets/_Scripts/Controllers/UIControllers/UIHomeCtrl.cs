@@ -178,6 +178,10 @@ public class UIHomeCtrl : UICtrl
             if (View["OperationPanel"].activeSelf)
             {
                 View["OperationPanel"].SetActive(false);
+
+                selectedElement = SelectedElement.Button; // 重置选中的元素
+                currentButtonIndex = 0; // 或设置为最后选中的按钮索引
+                SelectButton(currentButtonIndex); // 重新选择当前按钮
             }
             if (View["UpDatePanel"].activeSelf)
             {
@@ -224,6 +228,7 @@ public class UIHomeCtrl : UICtrl
             StartCoroutine(ScaleButtonOnPress(currentButton));
             currentButton.onClick.Invoke();
         }
+
     }
 
     // 选择 UpDatePanel 中指定索引的按钮
@@ -252,13 +257,13 @@ public class UIHomeCtrl : UICtrl
         if (selectedElement == SelectedElement.Button)
         {
             // 右矢印またはDキーが押された場合
-            if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.D))
+            if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
             {
                 currentButtonIndex = (currentButtonIndex + 1) % buttons.Length;
                 SelectButton(currentButtonIndex);
             }
             // 左矢印またはAキーが押された場合
-            else if (Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
             {
                 currentButtonIndex = (currentButtonIndex - 1 + buttons.Length) % buttons.Length;
                 SelectButton(currentButtonIndex);
@@ -415,7 +420,6 @@ public class UIHomeCtrl : UICtrl
         bool currentStatus = View["OperationPanel"].activeSelf;
 
         View["OperationPanel"].SetActive(!currentStatus);
-        SelectButton(currentButtonIndex);
     }
 
     // パワーアップ画面を表示する処理
@@ -464,7 +468,6 @@ public class UIHomeCtrl : UICtrl
     private void HEALTH()
     {
         Debug.Log("Exit");
-
     }
     private void ATTACK()
     {

@@ -205,11 +205,11 @@ public class UIWinCtrl : UICtrl
     private void Update()
     {
         // 检测方向键选择上一个或下一个UI元素
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        if (Input.GetKeyDown(KeyCode.UpArrow)|| Input.GetKeyDown(KeyCode.W))
         {
             SelectPreviousInput();
         }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow)|| Input.GetKeyDown(KeyCode.S))
         {
             SelectNextInput();
         }
