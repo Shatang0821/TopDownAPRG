@@ -114,8 +114,6 @@ public class UILoginCtrl : UICtrl
         }
     }
 
-
-
     private void SelectPreviousInput()
     {
         // 手动取消当前选择的元素（如果是按钮）
@@ -215,13 +213,17 @@ public class UILoginCtrl : UICtrl
         }
     }
 
-
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (View["RegistrationScreenPanel"].activeSelf)
+            // 检查键盘面板是否激活
+            if (View["KeyboardPanel"].activeSelf)
+            {
+                // 隐藏键盘面板
+                View["KeyboardPanel"].SetActive(false);
+            }
+            else if (View["RegistrationScreenPanel"].activeSelf)
             {
                 View["RegistrationScreenPanel"].SetActive(false);
                 _currentSelectables = _loginSelectables;  // 切换回登录界面的可选择元素
@@ -239,11 +241,30 @@ public class UILoginCtrl : UICtrl
             SelectNextInput();
         }
 
-        // 检测回车键来执行当前选择的按钮
+        // 检测回车键来执行当前选择的按钮或唤出键盘面板
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            ExecuteCurrentSelection();
+            var current = _currentSelectables[_currentSelectionIndex];
+            if (current is TMP_InputField)
+            {
+                // 如果当前选择的是输入框，按下回车键则唤出键盘面板
+                ShowKeyboardPanel();
+            }
+            else
+            {
+                ExecuteCurrentSelection();
+            }
         }
+    }
+
+
+    private void ShowKeyboardPanel()
+    {
+        // 显示键盘面板
+        View["KeyboardPanel"].SetActive(true);
+
+        // 如果需要，你可以在键盘面板唤出后自动聚焦某个按键
+        // View["KeyboardPanel/SomeKey"].GetComponent<Button>().Select();
     }
 
     private void Register()
@@ -268,7 +289,6 @@ public class UILoginCtrl : UICtrl
             StopAllCoroutines();
         }, View["Register"].GetComponent<Button>()));
     }
-
 
     private void SingIn()
     {
@@ -315,6 +335,4 @@ public class UILoginCtrl : UICtrl
             this.gameObject.SetActive(false);
         }
     }
-
-
 }

@@ -4,70 +4,223 @@ using UnityEngine.UI;
 using FrameWork.UI; // 自定义的UI框架
 using FrameWork.Audio; // 自定义的音频框架
 using UnityEngine.EventSystems; // 处理UI事件的系统
+using System.Collections.Generic;
 
 // UIEndCtrl类继承自UICtrl（自定义的UI控制器类）
 public class UIEndCtrl : UICtrl
 {
-    // 私有变量，用来存储UI组件
-    private Image _blackImage; // 用于存储黑色遮罩图片的引用
-    private Button[] _buttons; // 按钮数组，用于存储多个按钮的引用
-    private int _currentButtonIndex = 0; // 当前选中的按钮索引
-    private ButtonHoverEffect _currentHoverEffect; // 当前选中按钮的悬停特效
+    private Image _blackImage; // 用于显示黑色遮罩的Image组件
+    private List<Selectable> _endSelectables = new List<Selectable>(); // 存储所有可选择的UI元素
+    private List<Selectable> _currentSelectables; // 当前选择的UI元素列表
+    private int _currentSelectionIndex = 0; // 当前选择的索引
+    private Button[] buttons; // 存储所有按钮的数组
 
-    // Awake方法在脚本实例加载时调用
+    // Awake方法在脚本实例加载时调用，初始化UI元素
     public override void Awake()
     {
-        base.Awake(); // 调用父类的Awake方法
+        base.Awake(); // 调用父类的Awake方法，初始化基本逻辑
 
-        // 为按钮“Title”、“Exit”和“ReStart”添加事件监听器
-        AddButtonListener("Title", Title); // 为“Title”按钮添加点击事件
-        AddButtonListener("Exit", Exit); // 为“Exit”按钮添加点击事件
-        AddButtonListener("ReStart", ReStart); // 为“ReStart”按钮添加点击事件
+        // 初始化结束界面的可选择元素
+        _endSelectables.Add(View["Title"].GetComponent<Button>()); // 获取“Title”按钮
+        _endSelectables.Add(View["ReStart"].GetComponent<Button>()); // 获取“ReStart”按钮
+        _endSelectables.Add(View["Exit"].GetComponent<Button>()); // 获取“Exit”按钮
+        _currentSelectables = _endSelectables; // 将可选择元素列表赋值给当前选择元素列表
 
-        // 初始化按钮数组，并获取相应的按钮组件
-        _buttons = new Button[]
+        // 为按钮添加点击事件
+        AddButtonListener("Title", Title); // 为“Title”按钮添加事件
+        AddButtonListener("ReStart", ReStart); // 为“ReStart”按钮添加事件
+        AddButtonListener("Exit", Exit); // 为“Exit”按钮添加事件
+
+        // 初始化按钮数组
+        buttons = new Button[]
         {
-            View["Title"].GetComponent<Button>(), // 获取“Title”按钮的Button组件
-            View["ReStart"].GetComponent<Button>(), // 获取“ReStart”按钮的Button组件
-            View["Exit"].GetComponent<Button>() // 获取“Exit”按钮的Button组件
+            View["Title"].GetComponent<Button>(), // Title按钮
+            View["ReStart"].GetComponent<Button>(), // ReStart按钮
+            View["Exit"].GetComponent<Button>() // Exit按钮
         };
 
-        // 为每个按钮添加悬停特效
-        foreach (var button in _buttons)
-        {
-            AddButtonHoverEffect(button); // 调用自定义方法为每个按钮添加悬停效果
-        }
-
-        // 获取黑色遮罩图片（Black Image）
-        _blackImage = View["Black"].GetComponent<Image>();
-
         // 播放失败场景的背景音乐，并停止所有非失败场景的音乐
-        AudioManager.Instance.PlayLoseBgm();
-        AudioManager.Instance.StopAllNonLoseBgms();
+        AudioManager.Instance.PlayLoseBgm(); // 播放失败场景BGM
+        AudioManager.Instance.StopAllNonLoseBgms(); // 停止其他非失败场景的背景音乐
 
-        // 启动协程，在1.8秒后隐藏黑色遮罩图片
+        _blackImage = View["Black"].GetComponent<Image>(); // 获取黑色遮罩的Image组件
+
+        // 1.8秒后隐藏黑色遮罩
         StartCoroutine(HideBlackImageAfterDelay());
+
+        // 为每个按钮添加悬停效果
+        foreach (var button in buttons)
+        {
+            AddButtonHoverEffect(button); // 添加悬停效果
+        }
     }
 
     // 协程：在延迟1.8秒后隐藏黑色遮罩图片
     private IEnumerator HideBlackImageAfterDelay()
     {
         yield return new WaitForSeconds(1.8f); // 等待1.8秒
-        _blackImage.gameObject.SetActive(false); // 隐藏黑色遮罩图片
+        _blackImage.gameObject.SetActive(false); // 隐藏黑色遮罩
+    }
+
+    // Start方法在脚本启用时调用，默认选择第一个按钮
+    void Start()
+    {
+        _currentSelectables[_currentSelectionIndex].Select(); // 选中第一个可选择元素
+    }
+
+    // 按钮按下时缩放的协程
+    private IEnumerator ScaleButtonOnPress(Button button)
+    {
+        ButtonHoverEffect hoverEffect = button.GetComponent<ButtonHoverEffect>();
+        if (hoverEffect != null)
+        {
+            hoverEffect.OnPointerDown(null); // 触发按钮按下效果
+            yield return new WaitForSeconds(0.2f); // 等待0.2秒
+            hoverEffect.OnPointerUp(null); // 恢复按钮原始状态
+        }
+    }
+
+    // 执行延迟操作的协程
+    private IEnumerator ExecuteWithDelay(System.Action action, Button button)
+    {
+        yield return StartCoroutine(ScaleButtonOnPress(button)); // 执行按钮缩放效果
+        action.Invoke(); // 执行传入的操作
+    }
+
+    // 选择上一个可选元素
+    private void SelectPreviousInput()
+    {
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动取消选中效果
+            }
+        }
+
+        _currentSelectionIndex--; // 向前选择
+        if (_currentSelectionIndex < 0)
+        {
+            _currentSelectionIndex = _currentSelectables.Count - 1; // 循环回到列表最后一个元素
+        }
+
+        _currentSelectables[_currentSelectionIndex].Select(); // 选中新的元素
+
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动触发选中效果
+            }
+        }
+    }
+
+    // 选择下一个可选元素
+    private void SelectNextInput()
+    {
+        var current = _currentSelectables[_currentSelectionIndex];
+        if (current is Button button)
+        {
+            var hoverEffect = button.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnDeselect(null); // 手动取消选中效果
+            }
+        }
+
+        _currentSelectionIndex++; // 向后选择
+        if (_currentSelectionIndex >= _currentSelectables.Count)
+        {
+            _currentSelectionIndex = 0; // 循环回到第一个元素
+        }
+
+        _currentSelectables[_currentSelectionIndex].Select(); // 选中新的元素
+
+        var newCurrent = _currentSelectables[_currentSelectionIndex];
+        if (newCurrent is Button newButton)
+        {
+            var hoverEffect = newButton.GetComponent<ButtonHoverEffect>();
+            if (hoverEffect != null)
+            {
+                hoverEffect.OnSelect(null); // 手动触发选中效果
+            }
+        }
+    }
+
+    // 执行当前选中的按钮的操作
+    private void ExecuteCurrentSelection()
+    {
+        var current = _currentSelectables[_currentSelectionIndex];
+
+        if (current is Button button)
+        {
+            StartCoroutine(ScaleButtonOnPress(button)); // 启动按钮缩放效果
+            StartCoroutine(HandleButtonClick(button)); // 处理按钮点击效果
+        }
+    }
+
+    // 处理按钮点击后的延迟效果
+    private IEnumerator HandleButtonClick(Button button)
+    {
+        yield return new WaitForSeconds(0.2f); // 等待与Button缩放效果同步的时间
+        if (button.name == "Exit")
+        {
+            Exit(); // 退出游戏
+        }
+        else
+        {
+            button.onClick.Invoke(); // 调用按钮点击事件
+        }
+    }
+
+    // 每帧调用一次，处理输入
+    private void Update()
+    {
+        // 检测方向键选择上一个或下一个UI元素
+        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            SelectPreviousInput();
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            SelectNextInput();
+        }
+        else if (Input.GetKeyDown(KeyCode.Return))
+        {
+            ExecuteCurrentSelection(); // 确认选择
+        }
     }
 
     // “Title”按钮的回调方法，返回主菜单
     private void Title()
     {
         Debug.Log("Title");
-        UIManager.Instance.RemoveUI("UIEnd"); // 移除当前的“UIEnd”界面
-        UIManager.Instance.ShowUI("UIHome"); // 显示主菜单界面“UIHome”
-        UIManager.Instance.ChangeUIPrefab("UIHome"); // 切换UI预制体为“UIHome”
+        UIManager.Instance.RemoveUI("UIEnd"); // 移除当前的结束界面
+        UIManager.Instance.ShowUI("UIHome"); // 显示主菜单界面
+        UIManager.Instance.ChangeUIPrefab("UIHome"); // 切换UI预制体为主菜单
 
-        // 隐藏当前游戏对象
         if (this.gameObject != null)
         {
-            this.gameObject.SetActive(false);
+            this.gameObject.SetActive(false); // 隐藏当前游戏对象
+        }
+    }
+
+    // “ReStart”按钮的回调方法，重新开始游戏
+    private void ReStart()
+    {
+        Debug.Log("ReStart");
+        UIManager.Instance.RemoveUI("UIEnd"); // 移除结束界面
+        UIManager.Instance.ShowUI("UIGame"); // 显示游戏界面
+        UIManager.Instance.ChangeUIPrefab("UIGame"); // 切换UI预制体为游戏界面
+        GameManager.Instance.ChangeState(GameState.Gameplay); // 更改游戏状态为进行中
+
+        if (this.gameObject != null)
+        {
+            this.gameObject.SetActive(false); // 隐藏当前游戏对象
         }
     }
 
@@ -78,96 +231,10 @@ public class UIEndCtrl : UICtrl
         Application.Quit(); // 退出应用程序
     }
 
-    // “ReStart”按钮的回调方法，重新开始游戏
-    private void ReStart()
-    {
-        Debug.Log("ReStart");
-        UIManager.Instance.RemoveUI("UIEnd"); // 移除当前的“UIEnd”界面
-        UIManager.Instance.ShowUI("UIGame"); // 显示游戏界面“UIGame”
-        UIManager.Instance.ChangeUIPrefab("UIGame"); // 切换UI预制体为“UIGame”
-
-        // 改变游戏状态为游戏进行中
-        GameManager.Instance.ChangeState(GameState.Gameplay);
-
-        // 隐藏当前游戏对象
-        if (this.gameObject != null)
-        {
-            this.gameObject.SetActive(false);
-        }
-    }
-
-    // 为指定的按钮添加悬停特效
+    // 为按钮添加悬停效果
     private void AddButtonHoverEffect(Button button)
     {
-        ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>(); // 给按钮添加悬停效果组件
-        hoverEffect.SetOriginalScale(button.transform.localScale); // 设置按钮的原始缩放值，用于悬停效果
-    }
-
-    // Update方法在每一帧都会调用，处理用户输入
-    private void Update()
-    {
-        // 按向上或向左键时选择上一个按钮
-        if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            SelectPreviousButton(); // 选择上一个按钮
-        }
-        // 按向下或向右键时选择下一个按钮
-        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            SelectNextButton(); // 选择下一个按钮
-        }
-        // 按下回车键时，模拟按钮按下效果
-        else if (Input.GetKeyDown(KeyCode.Return))
-        {
-            ExecuteEvents.Execute(_buttons[_currentButtonIndex].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerDownHandler); // 模拟按钮按下事件
-            _currentHoverEffect.OnPointerDown(null); // 手动调用按钮的OnPointerDown方法，缩小按钮
-        }
-        // 松开回车键时，模拟按钮松开效果
-        else if (Input.GetKeyUp(KeyCode.Return))
-        {
-            ExecuteEvents.Execute(_buttons[_currentButtonIndex].gameObject, new PointerEventData(EventSystem.current), ExecuteEvents.pointerUpHandler); // 模拟按钮松开事件
-            _currentHoverEffect.OnPointerUp(null); // 手动调用按钮的OnPointerUp方法，恢复按钮大小
-            _buttons[_currentButtonIndex].onClick.Invoke(); // 调用当前按钮的点击事件
-        }
-    }
-
-    // 选择上一个按钮
-    private void SelectPreviousButton()
-    {
-        int previousIndex = _currentButtonIndex; // 记录当前的按钮索引
-        _currentButtonIndex--; // 索引减1，移动到上一个按钮
-        if (_currentButtonIndex < 0)
-        {
-            _currentButtonIndex = _buttons.Length - 1; // 如果越界，则回到最后一个按钮
-        }
-        SelectButton(previousIndex, _currentButtonIndex); // 更新选中按钮
-    }
-
-    // 选择下一个按钮
-    private void SelectNextButton()
-    {
-        int previousIndex = _currentButtonIndex; // 记录当前的按钮索引
-        _currentButtonIndex++; // 索引加1，移动到下一个按钮
-        if (_currentButtonIndex >= _buttons.Length)
-        {
-            _currentButtonIndex = 0; // 如果越界，则回到第一个按钮
-        }
-        SelectButton(previousIndex, _currentButtonIndex); // 更新选中按钮
-    }
-
-    // 选中指定索引的按钮并触发动画效果
-    private void SelectButton(int previousIndex, int newIndex)
-    {
-        // 取消之前按钮的选中状态
-        if (_currentHoverEffect != null)
-        {
-            _currentHoverEffect.OnDeselect(null); // 手动调用OnDeselect取消选中状态
-        }
-
-        // 更新当前选中的按钮
-        _currentButtonIndex = newIndex; // 更新当前按钮索引
-        _currentHoverEffect = _buttons[newIndex].GetComponent<ButtonHoverEffect>(); // 获取新的悬停效果组件
-        _buttons[newIndex].Select(); // 选中新的按钮
-        _currentHoverEffect.OnSelect(null); // 手动调用OnSelect选中效果
+        ButtonHoverEffect hoverEffect = button.gameObject.AddComponent<ButtonHoverEffect>();
+        hoverEffect.SetOriginalScale(button.transform.localScale); // 设置按钮的初始缩放值
     }
 }
