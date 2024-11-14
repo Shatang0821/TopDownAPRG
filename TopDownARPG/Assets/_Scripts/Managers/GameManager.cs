@@ -2,6 +2,7 @@
 using System.Collections;
 using FrameWork.Factories;
 using FrameWork.Resource;
+using FrameWork.UI;
 using FrameWork.Utils;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -96,7 +97,9 @@ public class GameManager : PersistentSingleton<GameManager>
     /// </summary>
     private void InitializeGameplayState()
     {
+        
         StartCoroutine(nameof(InitializeGameplayStateCoroutine));
+        
     }
     
     private IEnumerator InitializeGameplayStateCoroutine()
@@ -118,6 +121,7 @@ public class GameManager : PersistentSingleton<GameManager>
         // カメラの設定
         CameraManager.Instance.Initialize();
         CameraManager.Instance.SetFollowTarget(PlayerManager.GetPlayerInstance().transform);
+
         yield break;
     }
 

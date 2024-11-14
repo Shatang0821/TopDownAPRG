@@ -3,6 +3,7 @@ using FrameWork.Interface;
 using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
 {

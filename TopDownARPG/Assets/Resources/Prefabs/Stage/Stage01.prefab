@@ -4700,7 +4700,7 @@ GameObject:
   - component: {fileID: 7236906727733996997}
   - component: {fileID: 456946121211025061}
   - component: {fileID: 1584029356686560049}
-  - component: {fileID: 1318788598074316908}
+  - component: {fileID: 455164978412314644}
   m_Layer: 6
   m_Name: TriggerZone03
   m_TagString: Untagged
@@ -4757,8 +4757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TriggerReceivers:
-  - {fileID: 1318788598074316908}
---- !u!114 &1318788598074316908
+  - {fileID: 455164978412314644}
+--- !u!114 &455164978412314644
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4767,7 +4767,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8278159718351866767}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b823dbb22619a541adc965a3c190877, type: 3}
+  m_Script: {fileID: 11500000, guid: 73cf590bdf7ae4047afba1929411188a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &8319261751684833568
