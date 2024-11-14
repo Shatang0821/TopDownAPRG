@@ -9,7 +9,7 @@ public class LevelManager : MonoBehaviour,IInitializable
 {
     private LevelDataBase _gameLevelDatabase;   //すべてのステージデータ
     
-    private int _currentStageIndex = 0; //現在のステージインデックス
+    public int _currentStageIndex = 0; //現在のステージインデックス
     private LevelData _currentLevelData; //現在のステージデータ
     private int _maxLevelNum = 0;       //ステージ数
     
@@ -75,6 +75,11 @@ public class LevelManager : MonoBehaviour,IInitializable
             return;
         }
 
+        UpdateData();
+    }
+
+    public void UpdateData()
+    {
         // 現在のステージデータを取得
         _currentLevelData = _gameLevelDatabase.StageDetails[_currentStageIndex];
 
@@ -83,7 +88,7 @@ public class LevelManager : MonoBehaviour,IInitializable
         {
             Destroy(CurrentStageInstance);
         }
-        
+
         CurrentStageInstance = _currentLevelData.SpawnLevel();
         _aStar.InitMap(_currentLevelData.Map);
     }
@@ -135,11 +140,16 @@ public class LevelManager : MonoBehaviour,IInitializable
     public void UpdateLevel()
     {
         _currentStageIndex++;
-        if(_currentStageIndex >= _gameLevelDatabase.StageDetails.Length)
+        if (_currentStageIndex >= _gameLevelDatabase.StageDetails.Length)
         {
             DebugLogger.Log("ステージデータが取得できません");
             return;
         }
+
+        UpdateData();
+
+
+
     }
 
     public void ResetLevel()
