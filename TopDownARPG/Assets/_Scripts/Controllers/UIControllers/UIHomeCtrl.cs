@@ -221,6 +221,16 @@ public class UIHomeCtrl : UICtrl
             currentUpDateButtonIndex = (currentUpDateButtonIndex - 1 + upDateButtons.Length) % upDateButtons.Length;
             SelectUpDateButton(currentUpDateButtonIndex);
         }
+        else if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+        {
+            currentUpDateButtonIndex = (currentUpDateButtonIndex + 3 + upDateButtons.Length) % upDateButtons.Length;
+            SelectUpDateButton(currentUpDateButtonIndex);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
+        {
+            currentUpDateButtonIndex = (currentUpDateButtonIndex - 3 + upDateButtons.Length) % upDateButtons.Length;
+            SelectUpDateButton(currentUpDateButtonIndex);
+        }
         // リターンキーが押された場合
         else if (Input.GetKeyDown(KeyCode.Return))
         {
