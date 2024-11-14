@@ -12,7 +12,7 @@ public class FireDemonMovementState : FireDemonBaseState
         base.LogicUpdate();
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(FDStateEnum.Damaged);
             return;
         }
 
