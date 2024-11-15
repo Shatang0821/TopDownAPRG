@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using FrameWork.Interface;
 using FrameWork.Resource;
+using FrameWork.UI;
 using FrameWork.Utils;
 using UnityEngine;
 
@@ -148,8 +150,14 @@ public class LevelManager : MonoBehaviour,IInitializable
 
         UpdateData();
 
+        StartCoroutine(Remove());
+        GameManager.Instance.PlayerManager.EnablePlayer(true);
+    }
 
-
+    IEnumerator Remove()
+    {
+        yield return new WaitForSeconds(0.5f);
+        UIManager.Instance.RemoveUI("UIChange");
     }
 
     public void ResetLevel()

@@ -32235,7 +32235,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66cc93f409cf98d4ca206ad63cd3c069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackInputBufferTime: 0.2
   HasAttackInputBuffer: 0
 --- !u!114 &1786754315020131878
 MonoBehaviour:

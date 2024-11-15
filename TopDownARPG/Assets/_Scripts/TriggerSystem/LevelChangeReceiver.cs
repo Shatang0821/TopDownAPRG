@@ -11,21 +11,20 @@ public class LevelChangeReceiver : TriggerReceiver
     {
         base.OnTriggerReceived();
         UIManager.Instance.ShowUI("UIChange");
+
         StartCoroutine(ChangeStage());
+
 
     }
 
     IEnumerator ChangeStage()
     {
-        yield return new WaitForSeconds(3);
+        GameManager.Instance.PlayerManager.EnablePlayer(false);
+        yield return new WaitForSeconds(2);
         var _levelM = GameManager.Instance.LevelManager;
         _levelM.UpdateLevel();
-        Debug.Log(_levelM.GetPlayerSpawnPos());
         GameManager.Instance.PlayerManager.UpdatePlayerPosition(_levelM.GetPlayerSpawnPos());
-
-        UIManager.Instance.RemoveUI("UIChange");
     }
-
 
 
 }

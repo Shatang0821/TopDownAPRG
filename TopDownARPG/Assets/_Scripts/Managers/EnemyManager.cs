@@ -182,6 +182,7 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
             _currentWaveEnemies.Clear();
             
             EventCenter.TriggerEvent(EnemyEventEnum.OnWaveClear);
+            StartWave();
         }
     }
 

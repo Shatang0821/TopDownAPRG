@@ -56,4 +56,14 @@ public class PlayerManager : MonoBehaviour,IInitializable,IUpdatable
             _player = null;
         }
     }
+
+    /// <summary>
+    /// プレイヤーの表示
+    /// </summary>
+    /// <param name="enable"></param>
+    public void EnablePlayer(bool enable)
+    {
+        _player?.gameObject.SetActive(enable);
+        Debug.Log("プレイヤー非表示");
+    }
 }
