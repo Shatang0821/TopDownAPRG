@@ -32053,6 +32053,7 @@ GameObject:
   - component: {fileID: 7057775696835027708}
   - component: {fileID: 7664812370543424194}
   - component: {fileID: 1786754315020131878}
+  - component: {fileID: 1074545522802790156}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -32235,7 +32236,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66cc93f409cf98d4ca206ad63cd3c069, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackInputBufferTime: 0.2
   HasAttackInputBuffer: 0
 --- !u!114 &1786754315020131878
 MonoBehaviour:
@@ -32252,6 +32252,21 @@ MonoBehaviour:
   SlashVFX01: {fileID: 4609561329602111025}
   SlashVFX02: {fileID: 1653654181107710432}
   SlashVFX03: {fileID: 0}
+--- !u!114 &1074545522802790156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8909302511932035052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be415b8ea5404735a258b6c15b396e03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skillCooldowns:
+  - skillName: Dash
+    cooldownTime: 1
 --- !u!1 &8932563404921736762
 GameObject:
   m_ObjectHideFlags: 0

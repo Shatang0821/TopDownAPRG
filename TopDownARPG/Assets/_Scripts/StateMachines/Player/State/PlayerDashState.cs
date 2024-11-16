@@ -17,6 +17,8 @@ public class PlayerDashState : PlayerBaseState
     {
         _movementComponent = player.GetComponent<MovementComponent>();
         if(_movementComponent == null) Debug.LogError("MovementComponentが見つかりません");
+       
+        
         playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerDash_Config");
     }
 
@@ -24,10 +26,9 @@ public class PlayerDashState : PlayerBaseState
     {
         base.Enter();
         _direction = playerInputComponent.Axis;
-
+        _cooldownManager.TriggerCooldown("Dash");
         //チンペン音
         AudioManager.Instance.PlayDash();
-        
         // 衝突を無効化
         Physics.IgnoreLayerCollision(_layer1, _layer2, true);
         Physics.IgnoreLayerCollision(_layer1,_layer3,true);
