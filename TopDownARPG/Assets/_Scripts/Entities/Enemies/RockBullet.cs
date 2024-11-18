@@ -51,17 +51,10 @@ public class RockBullet : MonoBehaviour
         if (damageableEntity != null)
         {
             damageableEntity.TakeDamage(5);
-            Destroy(this.gameObject);
-            //gameObject.SetActive(false);
-
             //ƒ`ƒ“ƒyƒ“‰¹
             AudioManager.Instance.PlayLRE_Hit();
         }
-        else
-        {
-            Destroy(this.gameObject);
-            //gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
 
 
     }

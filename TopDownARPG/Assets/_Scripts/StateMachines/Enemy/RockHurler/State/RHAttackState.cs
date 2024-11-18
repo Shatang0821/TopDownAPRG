@@ -20,6 +20,7 @@ public class RHAttackState : RHMovementState
         base.Enter();
         //ƒ`ƒ“ƒyƒ“‰¹
         AudioManager.Instance.PlayLRE_Attack();
+        PoolManager.Release(RockPrefab, rockHurler.BulletLauncher.position);
     }
 
     public override void LogicUpdate()
@@ -35,7 +36,7 @@ public class RHAttackState : RHMovementState
         _player = enemy.DirectionToPlayer;
 
         enemy.transform.forward = _player;
-
+        
         if (stateTimer >= 1.0)
         {
             enemyStateMachine.ChangeState(RHStateEnum.Idle);
