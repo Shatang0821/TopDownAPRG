@@ -70,7 +70,7 @@ public class PlayerDashState : PlayerBaseState
     public override void Exit()
     {
         base.Exit();
-        // 衝突を無効化
+        // 衝突を有効化
         Physics.IgnoreLayerCollision(_layer1, _layer2, false);
         Physics.IgnoreLayerCollision(_layer1,_layer3,false);
     }

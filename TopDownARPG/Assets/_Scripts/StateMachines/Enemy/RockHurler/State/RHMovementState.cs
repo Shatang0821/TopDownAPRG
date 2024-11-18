@@ -1,5 +1,5 @@
 
-public class RHMovementState : EnemyBaseState
+public class RHMovementState : RHBaseState
 {
     public RHMovementState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
@@ -11,7 +11,7 @@ public class RHMovementState : EnemyBaseState
 
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(RHStateEnum.Damaged);
             return;
         }
 

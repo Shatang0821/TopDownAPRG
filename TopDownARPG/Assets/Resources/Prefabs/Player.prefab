@@ -32267,6 +32267,8 @@ MonoBehaviour:
   skillCooldowns:
   - skillName: Dash
     cooldownTime: 1
+  - skillName: Attack
+    cooldownTime: 1
 --- !u!1 &8932563404921736762
 GameObject:
   m_ObjectHideFlags: 0

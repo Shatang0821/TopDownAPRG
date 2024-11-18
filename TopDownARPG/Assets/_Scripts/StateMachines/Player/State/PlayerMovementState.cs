@@ -10,8 +10,7 @@
         base.LogicUpdate();
         if (playerInputComponent.Dash)
         {
-            if(!_cooldownManager.IsOnCooldown("Dash"))
-                ChangeState(PlayerStateEnum.Dash);
+            ChangeState(PlayerStateEnum.Dash);
             return;
         }
         if (player.Damaged)

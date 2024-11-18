@@ -76,7 +76,8 @@ public class PlayerBaseState : BaseState
     {
         //遷移時間の設定
         transitionDuration = playerStateConfig.GetTransitionDuration(state.ToString());
-        
+        if (state == PlayerStateEnum.Attack && _cooldownManager.IsOnCooldown("Attack")) return;
+        if (state == PlayerStateEnum.Dash && _cooldownManager.IsOnCooldown("Dash")) return;
         playerStateMachine.ChangeState(state);
     }
 }

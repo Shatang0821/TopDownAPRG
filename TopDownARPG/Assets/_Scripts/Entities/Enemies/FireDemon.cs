@@ -17,13 +17,12 @@ public enum FDStateEnum
 
 public class FireDemon : Enemy
 {
-    private MovementComponent _movementComponent;
+
     public AttackComponent AttackComponent;
 
     protected override void Awake()
     {
         base.Awake();
-        _movementComponent = GetComponent<MovementComponent>();
         AttackComponent = GetComponent<AttackComponent>();
 
         
@@ -50,7 +49,7 @@ public class FireDemon : Enemy
     {
         if (dir != Vector2.zero)
         {
-            _movementComponent.Move(dir, speed.Value,true, 0.2f);
+            movementComponent.Move(dir, speed.Value,true, 0.2f);
         }
     }
     
@@ -69,12 +68,7 @@ public class FireDemon : Enemy
         targetDirection.y = 0;
         if (targetDirection.magnitude > 0.1f)
         {
-            _movementComponent.RotateTowards(transform, targetDirection, rotationSpeed);
+            movementComponent.RotateTowards(transform, targetDirection, rotationSpeed);
         }
-    }
-
-    public override void TakenDamageState()
-    {
-        enemyStateMachine.ChangeState(FDStateEnum.Damaged);
     }
 }

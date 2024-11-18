@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Resource;
 using UnityEngine;
 
 public class RHMoveState : RHMovementState
@@ -9,6 +10,7 @@ public class RHMoveState : RHMovementState
     float _speed;
     public RHMoveState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerMove_Config");
     }
 
     public override void Enter()
@@ -28,7 +30,7 @@ public class RHMoveState : RHMovementState
 
         if (!enemy.TargetFound)
         {
-            enemyStateMachine.ChangeState(RHStateEnum.Idle);
+            ChangeState(RHStateEnum.Idle);
         }
 
         _time += Time.deltaTime;
@@ -47,7 +49,7 @@ public class RHMoveState : RHMovementState
 
 
         
-        enemy.transform.position += _player * _speed * Time.deltaTime;
+        enemy.transform.position += _player * (_speed * Time.deltaTime);
 
         enemy.transform.forward = _player;
     }

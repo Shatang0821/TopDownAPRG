@@ -46,7 +46,7 @@ public class FireDemonAttackState : FireDemonBaseState
         
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(FDStateEnum.Damaged);
             return;
         }
         

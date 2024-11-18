@@ -28,7 +28,7 @@ public class CooldownManager : MonoBehaviour
             if (cooldownTimers[skillCooldown.skillName] > 0)
             {
                 cooldownTimers[skillCooldown.skillName] -= Time.deltaTime;
-                Debug.Log(cooldownTimers[skillCooldown.skillName]); 
+//                Debug.Log(cooldownTimers[skillCooldown.skillName]); 
                 // クールダウンが終了した場合
                 if (cooldownTimers[skillCooldown.skillName] <= 0)
                 {

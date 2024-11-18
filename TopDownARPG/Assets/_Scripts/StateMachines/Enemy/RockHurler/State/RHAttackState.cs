@@ -2,21 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using FrameWork.Audio;
 using FrameWork.Pool;
+using FrameWork.Resource;
 using Unity.Properties;
 using UnityEngine;
 
 public class RHAttackState : RHMovementState
 {
     private GameObject RockPrefab; // 岩のプレハブ
-    private RockHurler _rockHurler;
     Vector3 _player;
     public RHAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
-        _rockHurler = enemy as RockHurler;
-        if (!_rockHurler)
-        {
-            Debug.LogWarning("キャッシュできませんでした");
-        }
+        enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerAttack_Config");
     }
 
     public override void Enter()
@@ -32,7 +28,7 @@ public class RHAttackState : RHMovementState
 
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(RHStateEnum.Damaged);
             return;
         }
 
@@ -45,15 +41,5 @@ public class RHAttackState : RHMovementState
             enemyStateMachine.ChangeState(RHStateEnum.Idle);
         }
     }
-
-    // public override void AnimationEventCalled()
-    // {
-    //     base.AnimationEventCalled();
-    //     // 岩のプレハブをロード（Resources フォルダー内に配置されていると仮定）
-    //     RockPrefab = Resources.Load<GameObject>("Prefabs/Enemies/Rock-Purple");
-    //     // プレハブを生成して初期化する
-    //     GameObject projectile =
-    //         //PoolManager.Release(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
-    //         GameObject.Instantiate(RockPrefab, _rockHurler.BulletLauncher.position, Quaternion.identity);
-    // }
+    
 }

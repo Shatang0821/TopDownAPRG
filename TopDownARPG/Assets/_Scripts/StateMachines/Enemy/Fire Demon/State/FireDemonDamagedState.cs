@@ -5,7 +5,7 @@ public class FireDemonDamagedState : FireDemonBaseState
 {
     private MovementComponent _movementComponent;
     private float _moveDuration = 0.1f;
-    private float _moveSpeed = 10.0f;
+    private float _moveSpeed = 100.0f;
     public FireDemonDamagedState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
         enemyStateConfig = ResManager.Instance.GetAssetCache<FireDemonStateConfig>(stateConfigPath + "FireDemon/FireDemonDamaged_Config");
@@ -17,15 +17,12 @@ public class FireDemonDamagedState : FireDemonBaseState
     {
         base.Enter();
         enemy.IsTakenDamaged = false;
+        enemy.ApplyKnockback();;
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        if (stateTimer < _moveDuration)
-        {
-            _movementComponent.Move(-enemy.transform.forward,_moveSpeed);
-        }
         if(enemy.GetCurrentHealth <= 0)
         {
             
@@ -35,7 +32,7 @@ public class FireDemonDamagedState : FireDemonBaseState
         
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(FDStateEnum.Damaged);
             return;
         }
         
