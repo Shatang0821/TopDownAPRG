@@ -92,6 +92,11 @@ namespace FrameWork.UI
             _uiPrefabs.Add(uiName, uiView);
 
             Type type = Type.GetType(uiName + "Ctrl");
+            if (type == null)
+            {
+                Debug.LogError($"Controller class '{uiName}Ctrl' could not be found.");
+                return null;
+            }
             UICtrl ctrl = (UICtrl)uiView.AddComponent(type);
 
             return ctrl;

@@ -2615,7 +2615,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 310, y: -740}
+  m_AnchoredPosition: {x: 336.5, y: -1389.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1366681256894881262
@@ -3702,7 +3702,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1610, y: -340}
+  m_AnchoredPosition: {x: 336.5, y: -989.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8974195927751530224
@@ -3980,7 +3980,7 @@ GameObject:
   - component: {fileID: 3254473477304905025}
   - component: {fileID: 3436496666626680010}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4046,7 +4046,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: coin 100
+  m_Text: 
 --- !u!1 &4716851684845892208
 GameObject:
   m_ObjectHideFlags: 0
@@ -4907,7 +4907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 310, y: -340}
+  m_AnchoredPosition: {x: 336.5, y: -189.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4519567182554464907
@@ -5527,7 +5527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1610, y: -740}
+  m_AnchoredPosition: {x: 336.5, y: -2189.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8902273445603555464
@@ -5606,7 +5606,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -740}
+  m_AnchoredPosition: {x: 336.5, y: -1789.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5330071596578283770
@@ -7512,7 +7512,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 960, y: -340}
+  m_AnchoredPosition: {x: 336.5, y: -589.25}
   m_SizeDelta: {x: 550, y: 300}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &819175350460129821
@@ -7952,6 +7952,7 @@ GameObject:
   - component: {fileID: 141429977575832591}
   - component: {fileID: 8333621873190751417}
   - component: {fileID: 80915132091771914}
+  - component: {fileID: 335029256600585356}
   m_Layer: 5
   m_Name: UpDatePanel
   m_TagString: Untagged
@@ -8018,3 +8019,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &335029256600585356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166836306865232132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 54be200639eea764e9ce933be2153fd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _powerUpData: {fileID: 0}
+  _cointext: {fileID: 3436496666626680010}
+  _blackImage: {fileID: 6860990849610822902}

@@ -437,7 +437,7 @@ public class UIHomeCtrl : UICtrl
     {
         Debug.Log("UIUpDate");
         bool currentStatus = View["UpDatePanel"].activeSelf;
-
+        
         View["UpDatePanel"].SetActive(!currentStatus);
         SelectButton(currentButtonIndex);
     }

@@ -72,7 +72,7 @@ GameObject:
   - component: {fileID: 4889739094965767302}
   - component: {fileID: 464113231510522580}
   m_Layer: 5
-  m_Name: Text (Legacy)
+  m_Name: Coin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +138,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: coin 100
+  m_Text: 
 --- !u!1 &5240068114072478957
 GameObject:
   m_ObjectHideFlags: 0
@@ -1023,6 +1023,10 @@ PrefabInstance:
     - target: {fileID: 6209939758890992856, guid: 1321007077644e4409a0105b895dcf29, type: 3}
       propertyPath: m_Name
       value: UIPowerUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6209939758890992856, guid: 1321007077644e4409a0105b895dcf29, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

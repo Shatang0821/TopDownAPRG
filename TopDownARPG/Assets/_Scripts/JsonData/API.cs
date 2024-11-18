@@ -127,6 +127,7 @@ public class API : MonoBehaviour
             //StartCoroutine(UpDate_Status(accountname));
 
             PowerUpSystem.Instance.SetSavedValues(_dataManager.maxhealth, _dataManager.mp, _dataManager.power, _dataManager.defense, _dataManager.speed, _dataManager.dashcooltime);
+            CoinSystem.Instance.InitCoin(_dataManager.coin);
         }
     }
     
@@ -145,7 +146,8 @@ public class API : MonoBehaviour
 
         Debug.Log(_dataManager.maxhealth);
         // POSTリクエストを作成
-        UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/update_status", form);
+        //UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/update_status", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://10.22.53.100/r06/3n/ARPGDataManagement/api/update_status", form);
         // リクエストを送信して応答を待つ
         yield return request.SendWebRequest();
 
@@ -161,7 +163,37 @@ public class API : MonoBehaviour
         }
     }
 
+    public IEnumerator UpDate_Status_String(string accountname)
+    {
+        // フォームデータを作成
+        WWWForm form = new WWWForm();
+        form.AddField("user_name", accountname);
+        form.AddField("maxhealth", _dataManager.maxhealth);
+        form.AddField("power", _dataManager.power);
+        form.AddField("defense", _dataManager.defense);
+        form.AddField("speed", _dataManager.speed);
+        form.AddField("mp", _dataManager.mp);
+        form.AddField("dashcooltime", _dataManager.dashcooltime);
+        form.AddField("coin", CoinSystem.Instance.Coin);
 
+        Debug.Log(_dataManager.maxhealth);
+        // POSTリクエストを作成
+        //UnityWebRequest request = UnityWebRequest.Post("http://192.168.56.104:8000/api/update_status", form);
+        UnityWebRequest request = UnityWebRequest.Post("http://10.22.53.100/r06/3n/ARPGDataManagement/api/update_status", form);
+        // リクエストを送信して応答を待つ
+        yield return request.SendWebRequest();
+
+        if (request.result != UnityWebRequest.Result.Success)
+        {
+            Debug.LogError("アップデート失敗: " + request.error);
+
+        }
+        else
+        {
+            Debug.Log("アップデート完了 ");
+
+        }
+    }
     #region アカウントの保存
     public void SaveAccount(TMP_InputField accountname, TMP_InputField password)
     {

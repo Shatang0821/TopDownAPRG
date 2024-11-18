@@ -147,7 +147,8 @@ public class LevelManager : MonoBehaviour,IInitializable
             DebugLogger.Log("ステージデータが取得できません");
             return;
         }
-
+        CoinSystem.Instance.AddCoin(100);
+        Debug.Log(CoinSystem.Instance.Coin);
         UpdateData();
 
         StartCoroutine(Remove());

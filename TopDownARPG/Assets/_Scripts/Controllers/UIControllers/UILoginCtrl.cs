@@ -31,13 +31,13 @@ public class UILoginCtrl : UICtrl
         AddButtonListener("Register", Register);
         AddButtonListener("SingIn", SingIn);
         AddButtonListener("RegistrationScreenPanel/Complete", Complete);
-        AddButtonListener("RegistrationScreenPanel/Back", Back);
+        //AddButtonListener("RegistrationScreenPanel/Back", Back);
         View["RegistrationScreenPanel"].SetActive(false);
 
         AddButtonHoverEffect("Register");
         AddButtonHoverEffect("SingIn");
         AddButtonHoverEffect("RegistrationScreenPanel/Complete");
-        AddButtonHoverEffect("RegistrationScreenPanel/Back");
+        //AddButtonHoverEffect("RegistrationScreenPanel/Back");
 
         if (!AudioManager.Instance.IsBgmPlaying())
         {
