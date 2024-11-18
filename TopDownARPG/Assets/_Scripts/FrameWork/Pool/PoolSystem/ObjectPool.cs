@@ -221,10 +221,11 @@ namespace FrameWork.Pool
         public GameObject preparedObject(Vector3 position, Quaternion rotation)
         {
             GameObject preparedObject = AvailableObject();
-
-            preparedObject.SetActive(true);
+            
             preparedObject.transform.position = position;
             preparedObject.transform.rotation = rotation;
+            preparedObject.SetActive(true);
+            
 
             return preparedObject;
         }

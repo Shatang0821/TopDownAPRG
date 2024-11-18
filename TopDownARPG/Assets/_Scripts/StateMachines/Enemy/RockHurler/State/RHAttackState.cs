@@ -13,6 +13,7 @@ public class RHAttackState : RHMovementState
     public RHAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
         enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerAttack_Config");
+        RockPrefab = ResManager.Instance.GetAssetCache<GameObject>("Prefabs/Enemies/Rock-Purple");
     }
 
     public override void Enter()
