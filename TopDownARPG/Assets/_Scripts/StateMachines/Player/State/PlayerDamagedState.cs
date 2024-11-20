@@ -11,6 +11,7 @@ public class PlayerDamagedState : PlayerBaseState
         player, stateMachine)
     {
         playerStateConfig = ResManager.Instance.GetAssetCache<PlayerStateConfig>(stateConfigPath + "PlayerDamaged_Config");
+        
     }
 
     public override void LogicUpdate()

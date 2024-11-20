@@ -32,7 +32,7 @@ public class FireDemonMoveState : FireDemonMovementState
         _pathFindTimer += Time.deltaTime;
         if (_pathFindTimer >= _pathFindInterval)
         {
-            Debug.Log("Find new Path");
+            //Debug.Log("Find new Path");
             enemy.FindPath();
             _pathFindTimer = 0.0f;
         }

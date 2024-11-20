@@ -94,7 +94,7 @@ public class PlayerAttackState : PlayerBaseState
         // 部分ロック時間内に攻撃入力があれば攻撃状態に遷移
         if (playerStateConfig.PartialLockTime < stateTimer)
         {
-            if ((playerInputComponent.HasAttackInputBuffer|| playerInputComponent.Attack) )
+            if ((playerInputComponent.HasAttackInputBuffer|| playerInputComponent.Attack))
             {
                 _nextAttackFlag = true;
                 ChangeState(PlayerStateEnum.Attack);
@@ -152,7 +152,6 @@ public class PlayerAttackState : PlayerBaseState
     /// <summary>
     /// ターゲット方向に回転
     /// </summary>
-    /// <param name="targetDirection">ターゲット方向</param>
     /// <param name="rotationSpeed">回転速度</param>
     public void RotationWithMouse(float rotationSpeed)
     {
@@ -212,6 +211,11 @@ public class PlayerAttackState : PlayerBaseState
         }
         
         _comboCounter++;
+        if (_comboCounter >= _comboConfig.AttackConfigs.Count)
+        {
+            Debug.Log("cooldown　start");
+            _cooldownManager.TriggerCooldown("Attack");
+        }
     }
 
 }

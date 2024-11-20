@@ -17,6 +17,7 @@ public class RockBullet : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
     }
+    
 
     private void OnEnable()
     {
@@ -27,11 +28,24 @@ public class RockBullet : MonoBehaviour
             return;
         }
         
+        StartCoroutine(nameof(MoveDirectionCoroutine));
+    }
+    
+    //1フレームを待って、正確な値を与えるようにするため
+    IEnumerator MoveDirectionCoroutine()
+    {
+        yield return null;
+
         directionToPlayer = (_player.transform.position - transform.position).normalized;
         directionToPlayer.y = 0;
     }
 
-
+    private void OnDisable()
+    {
+        _rb.velocity = Vector3.zero;
+    }
+    
+    
 
     void Update()
     {
@@ -40,28 +54,23 @@ public class RockBullet : MonoBehaviour
             return;
         }
 
-        
+        // directionToPlayer = (_player.transform.position - transform.position).normalized;
+        // directionToPlayer.y = 0;
         _rb.velocity = directionToPlayer * moveSpeed;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("a" + other.name);
         IDamageable damageableEntity = other.GetComponent<Collider>().GetComponent<IDamageable>();
 
         if (damageableEntity != null)
         {
             damageableEntity.TakeDamage(5);
-            Destroy(this.gameObject);
-            //gameObject.SetActive(false);
-
             //チンペン音
             AudioManager.Instance.PlayLRE_Hit();
         }
-        else
-        {
-            Destroy(this.gameObject);
-            //gameObject.SetActive(false);
-        }
+        gameObject.SetActive(false);
 
 
     }

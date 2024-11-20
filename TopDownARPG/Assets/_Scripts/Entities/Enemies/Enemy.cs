@@ -22,7 +22,8 @@ public abstract class Enemy : Entity
     public bool IsTakenDamaged = false; //ダメージを受けたトリガー
 
     public bool IsUsePool = true; //オブジェクトプールの利用
-
+    
+    protected MovementComponent movementComponent;
     // 死亡アクション
     public event Action<Enemy> OnDeath;
 
@@ -31,6 +32,8 @@ public abstract class Enemy : Entity
         base.Awake();
         Path = new List<AStar.AstarNode>();
         enemyStateMachine = CreateStateMachine();
+        movementComponent = GetComponent<MovementComponent>();
+        if(!movementComponent)Debug.Log(name + "no moveComponent");
     }
 
     protected override void OnEnable()
@@ -87,20 +90,29 @@ public abstract class Enemy : Entity
     /// <returns>状態の列挙型</returns>
     protected abstract Enum GetInitialState();
 
-    /// <summary>
-    /// ダメージ受けた時の詳細処理(ひるむ値などの計算)
-    /// </summary>
-    public abstract void TakenDamageState();
-
     #endregion
 
     #region API群
+    
+    // ノックバックを適用するメソッド
+    public void ApplyKnockback()
+    {
+        // 攻撃者から自分への相対ベクトルを計算
+        Vector3 knockbackDirection = (transform.position - playerTransform.position).normalized;
+
+        // Rigidbodyを取得して力を加える
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.AddForce(knockbackDirection * 50, ForceMode.Impulse);
+        }
+    }
 
     public override void TakeDamage(float amount)
     {
         base.TakeDamage(amount);
         IsTakenDamaged = true;
-
+        
         //チンペン音
         AudioManager.Instance.PlayAttack();
     }

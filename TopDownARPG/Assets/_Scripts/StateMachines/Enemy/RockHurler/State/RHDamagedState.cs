@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using FrameWork.Resource;
 using UnityEngine;
 
-public class RHDamageState : RHMovementState
+public class RHDamagedState : RHMovementState
 {
-    public RHDamageState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
+    public RHDamagedState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerDamaged_Config");
     }
 
     public override void Enter()
@@ -20,13 +22,13 @@ public class RHDamageState : RHMovementState
 
         if(enemy.GetCurrentHealth <= 0 )
         {
-            enemyStateMachine.ChangeState(RHStateEnum.Die);
+            ChangeState(RHStateEnum.Die);
             return;
         }
 
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(RHStateEnum.Damaged);
             return;
         }
 
@@ -37,16 +39,16 @@ public class RHDamageState : RHMovementState
             {
                 if (enemy.TargetFound)
                 {
-                    enemyStateMachine.ChangeState(RHStateEnum.Move);
+                    ChangeState(RHStateEnum.Move);
                 }
                 else
                 {
-                    enemyStateMachine.ChangeState(RHStateEnum.Attack);
+                    ChangeState(RHStateEnum.Attack);
                 }
             }
             else
             {
-                enemyStateMachine.ChangeState(RHStateEnum.Idle);
+                ChangeState(RHStateEnum.Idle);
             }
 
 

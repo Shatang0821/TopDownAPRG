@@ -8,6 +8,7 @@ public class PlayerBaseState : BaseState
     protected PlayerStateMachine playerStateMachine;
     protected Player player;
     protected PlayerInputComponent playerInputComponent;
+    protected CooldownManager _cooldownManager;
     
     protected Animator animator;
     protected PlayerStateConfig playerStateConfig;
@@ -23,6 +24,8 @@ public class PlayerBaseState : BaseState
         
         playerInputComponent = player.GetComponent<PlayerInputComponent>();
         if(playerInputComponent == null) Debug.LogError("PlayerInputComponentが見つかりません");
+        _cooldownManager = player.GetComponent<CooldownManager>();
+        if(!_cooldownManager) Debug.LogError("CooldownManagerが見つかりません"); 
         animator = player.GetComponent<Animator>();
         if(animator == null) Debug.LogError("Animatorが見つかりません");
     }
@@ -73,7 +76,8 @@ public class PlayerBaseState : BaseState
     {
         //遷移時間の設定
         transitionDuration = playerStateConfig.GetTransitionDuration(state.ToString());
-
+        if (state == PlayerStateEnum.Attack && _cooldownManager.IsOnCooldown("Attack")) return;
+        if (state == PlayerStateEnum.Dash && _cooldownManager.IsOnCooldown("Dash")) return;
         playerStateMachine.ChangeState(state);
     }
 }

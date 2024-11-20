@@ -1,9 +1,11 @@
+using FrameWork.Resource;
 using Unity.VisualScripting;
 
 public class RHIdleState : RHMovementState
 {
     public RHIdleState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerIdle_Config");
     }
 
     public override void Enter()
@@ -19,11 +21,11 @@ public class RHIdleState : RHMovementState
 
         if (enemy.InAttackRange)
         {
-            enemyStateMachine.ChangeState(RHStateEnum.Attack); 
+            ChangeState(RHStateEnum.Attack); 
             if (enemy.TargetFound)
             {
                 //ˆÚ“®
-                enemyStateMachine.ChangeState(RHStateEnum.Move);
+                ChangeState(RHStateEnum.Move);
                 return;
             }
             return;

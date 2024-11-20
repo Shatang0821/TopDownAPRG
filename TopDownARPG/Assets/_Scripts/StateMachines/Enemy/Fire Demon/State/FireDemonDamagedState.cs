@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using FrameWork.Resource;
+using UnityEngine;
 
-public class FireDemonDamagedState : EnemyBaseState
+public class FireDemonDamagedState : FireDemonBaseState
 {
     private MovementComponent _movementComponent;
-    private float _moveDuration = 0.5f;
-    private float _moveSpeed = 10.0f;
+    private float _moveDuration = 0.1f;
+    private float _moveSpeed = 100.0f;
     public FireDemonDamagedState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<FireDemonStateConfig>(stateConfigPath + "FireDemon/FireDemonDamaged_Config");
         _movementComponent = enemy.GetComponent<MovementComponent>();
         if(!_movementComponent)Debug.LogWarning("Move Component is null");
     }
@@ -15,8 +17,7 @@ public class FireDemonDamagedState : EnemyBaseState
     {
         base.Enter();
         enemy.IsTakenDamaged = false;
-        _movementComponent.Move(new Vector3(0,0,0),15);
-        
+        enemy.ApplyKnockback();;
     }
 
     public override void LogicUpdate()
@@ -25,13 +26,13 @@ public class FireDemonDamagedState : EnemyBaseState
         if(enemy.GetCurrentHealth <= 0)
         {
             
-            enemyStateMachine.ChangeState(FDStateEnum.Die);
+            ChangeState(FDStateEnum.Die);
             return;
         }
         
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(FDStateEnum.Damaged);
             return;
         }
         
@@ -42,18 +43,18 @@ public class FireDemonDamagedState : EnemyBaseState
             {
                 if (enemy.InAttackRange)
                 {
-                    enemyStateMachine.ChangeState(FDStateEnum.Attack);
+                    ChangeState(FDStateEnum.Attack);
                     return;
                 }
                 else
                 {
-                    enemyStateMachine.ChangeState(FDStateEnum.Move);
+                    ChangeState(FDStateEnum.Move);
                     return;
                 }
             }
             else
             {
-                enemyStateMachine.ChangeState(FDStateEnum.Idle);
+                ChangeState(FDStateEnum.Idle);
                 return;
             }
             

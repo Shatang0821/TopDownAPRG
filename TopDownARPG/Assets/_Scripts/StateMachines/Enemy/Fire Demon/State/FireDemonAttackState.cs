@@ -1,4 +1,5 @@
 ﻿using FrameWork.Audio;
+using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class FireDemonAttackState : FireDemonBaseState
 
     public FireDemonAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
+        enemyStateConfig = ResManager.Instance.GetAssetCache<FireDemonStateConfig>(stateConfigPath + "FireDemon/FireDemonAttack_Config");
         _attackComponent = fireDemon.GetComponent<AttackComponent>();
         if(!_attackComponent)Debug.LogWarning("Attack Component is null");
     }
@@ -44,7 +46,7 @@ public class FireDemonAttackState : FireDemonBaseState
         
         if (enemy.IsTakenDamaged)
         {
-            enemy.TakenDamageState();
+            ChangeState(FDStateEnum.Damaged);
             return;
         }
         
