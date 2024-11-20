@@ -136,13 +136,13 @@ public class API : MonoBehaviour
         // フォームデータを作成
         WWWForm form = new WWWForm();
         form.AddField("user_name", accountname.text);
-        form.AddField("maxhealth", _dataManager.maxhealth);
-        form.AddField("power", _dataManager.power);
-        form.AddField("defense", _dataManager.defense);
-        form.AddField("speed", _dataManager.speed);
-        form.AddField("mp", _dataManager.mp);
-        form.AddField("dashcooltime", _dataManager.dashcooltime);
-        form.AddField("coin", _dataManager.coin);
+        form.AddField("maxhealth", PowerUpSystem.Instance._healthPowerUp.CurrentLevel);
+        form.AddField("power", PowerUpSystem.Instance._attackPowerPowerUp.CurrentLevel);
+        form.AddField("defense", PowerUpSystem.Instance._defensePowerPowerUp.CurrentLevel);
+        form.AddField("speed", PowerUpSystem.Instance._speedPowerUp.CurrentLevel);
+        form.AddField("mp", PowerUpSystem.Instance._magicPointPowerUp.CurrentLevel);
+        form.AddField("dashcooltime", PowerUpSystem.Instance._dashCoolTimePowerUp.CurrentLevel);
+        form.AddField("coin", CoinSystem.Instance.Coin);
 
         Debug.Log(_dataManager.maxhealth);
         // POSTリクエストを作成
@@ -168,12 +168,12 @@ public class API : MonoBehaviour
         // フォームデータを作成
         WWWForm form = new WWWForm();
         form.AddField("user_name", accountname);
-        form.AddField("maxhealth", _dataManager.maxhealth);
-        form.AddField("power", _dataManager.power);
-        form.AddField("defense", _dataManager.defense);
-        form.AddField("speed", _dataManager.speed);
-        form.AddField("mp", _dataManager.mp);
-        form.AddField("dashcooltime", _dataManager.dashcooltime);
+        form.AddField("maxhealth", PowerUpSystem.Instance._healthPowerUp.CurrentLevel);
+        form.AddField("power", PowerUpSystem.Instance._attackPowerPowerUp.CurrentLevel);
+        form.AddField("defense", PowerUpSystem.Instance._defensePowerPowerUp.CurrentLevel);
+        form.AddField("speed", PowerUpSystem.Instance._speedPowerUp.CurrentLevel);
+        form.AddField("mp", PowerUpSystem.Instance._magicPointPowerUp.CurrentLevel);
+        form.AddField("dashcooltime", PowerUpSystem.Instance._dashCoolTimePowerUp.CurrentLevel);
         form.AddField("coin", CoinSystem.Instance.Coin);
 
         Debug.Log(_dataManager.maxhealth);

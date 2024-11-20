@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: PlayerBaseData
   m_EditorClassIdentifier: 
   status:
-    Health: 0
+    Health: 100
     MagicPoint: 0
-    AttackPower: 0
+    AttackPower: 10
     DefensePower: 0
-    Speed: 5
+    Speed: 10
   playerSpecificStatus:
     MpRecoverySpeed: 0
     DashCoolTime: 0

@@ -5,12 +5,12 @@ using UnityEngine.Serialization;
 
 public class PowerUpSystem : Singleton<PowerUpSystem>
 {
-    private PowerUp<float> _magicPointPowerUp;        // MP強化データ
-    private PowerUp<float> _healthPowerUp;            // HP強化データ
-    private PowerUp<float> _attackPowerPowerUp;       // 攻撃力強化データ
-    private PowerUp<float> _defensePowerPowerUp;      // 防御力強化データ
-    private PowerUp<float> _speedPowerUp;             // スピード強化データ
-    private PowerUp<float> _dashCoolTimePowerUp;      // ダッシュクールタイム強化データ
+    public PowerUp<float> _magicPointPowerUp { get; private set; }          // MP強化データ
+    public PowerUp<float> _healthPowerUp { get; private set; }            // HP強化データ
+    public PowerUp<float> _attackPowerPowerUp { get; private set; }         // 攻撃力強化データ
+    public PowerUp<float> _defensePowerPowerUp { get; private set; }        // 防御力強化データ
+    public PowerUp<float> _speedPowerUp { get; private set; }               // スピード強化データ
+    public PowerUp<float> _dashCoolTimePowerUp { get; private set; }        // ダッシュクールタイム強化データ
     //public PowerUp<float> MpRecoverySpeedPowerUp;   // MP回復速度強化データ
     protected override void Awake()
     {
@@ -136,8 +136,9 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
     /// <returns>強化できたか</returns>
     public bool UpgradeHealth()
     {
-        int cost = _healthPowerUp.GetUpgradeCost();
-        if (CoinSystem.Instance.Coin >= cost)
+        int cost = 100;
+        
+        if (CoinSystem.Instance.Coin >= cost && !_healthPowerUp.CheckMax() )
         {
             CoinSystem.Instance.UseCoin(cost);
             _healthPowerUp.Upgrade();
@@ -146,6 +147,90 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
         return false;   
     }
 
+    /// <summary>
+    /// 攻撃力強化
+    /// </summary>
+    /// <returns>強化できたか</returns>
+    public bool UpgradeAttack()
+    {
+        int cost = 100;
+
+        if (CoinSystem.Instance.Coin >= cost && !_attackPowerPowerUp.CheckMax())
+        {
+            CoinSystem.Instance.UseCoin(cost);
+            _attackPowerPowerUp.Upgrade();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 防御力強化
+    /// </summary>
+    /// <returns>強化できたか</returns>
+    public bool UpgradeDefense()
+    {
+        int cost = 100;
+
+        if (CoinSystem.Instance.Coin >= cost && !_defensePowerPowerUp.CheckMax())
+        {
+            CoinSystem.Instance.UseCoin(cost);
+            _defensePowerPowerUp.Upgrade();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// 移動速度強化
+    /// </summary>
+    /// <returns>強化できたか</returns>
+    public bool UpgradeSpeed()
+    {
+        int cost = 100;
+
+        if (CoinSystem.Instance.Coin >= cost && !_speedPowerUp.CheckMax())
+        {
+            CoinSystem.Instance.UseCoin(cost);
+            _speedPowerUp.Upgrade();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// MP強化
+    /// </summary>
+    /// <returns>強化できたか</returns>
+    public bool UpgradeMp()
+    {
+        int cost = 100;
+
+        if (CoinSystem.Instance.Coin >= cost && !_magicPointPowerUp.CheckMax())
+        {
+            CoinSystem.Instance.UseCoin(cost);
+            _magicPointPowerUp.Upgrade();
+            return true;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// ダッシュ強化
+    /// </summary>
+    /// <returns>強化できたか</returns>
+    public bool UpgradeDash()
+    {
+        int cost = 100;
+
+        if (CoinSystem.Instance.Coin >= cost && !_dashCoolTimePowerUp.CheckMax())
+        {
+            CoinSystem.Instance.UseCoin(cost);
+            _dashCoolTimePowerUp.Upgrade();
+            return true;
+        }
+        return false;
+    }
     #endregion
 }
 
@@ -156,7 +241,7 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
 public class PowerUp<T> where T : struct
 {
     public int CurrentLevel = 0;             // 現在の強化レベル
-    public int MaxLevel = 10;                // 最大強化レベル
+    public int MaxLevel;                // 最大強化レベル
     public int BaseCost;                     // 初期の強化コスト(消費コイン数)
     
     public T BaseInCreaseValue;              // 初期の強化値
@@ -196,6 +281,18 @@ public class PowerUp<T> where T : struct
         {
             CurrentLevel++;
             Debug.Log("現在のレベル:" + this.GetType().ToString() +CurrentLevel);
+        }
+    }
+
+    public bool CheckMax()
+    {
+        if(CurrentLevel >= MaxLevel)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

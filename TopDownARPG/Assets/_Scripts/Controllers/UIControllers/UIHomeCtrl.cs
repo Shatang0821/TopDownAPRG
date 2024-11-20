@@ -187,6 +187,17 @@ public class UIHomeCtrl : UICtrl
             {
                 View["UpDatePanel"].SetActive(false);
 
+                string filePath = Application.persistentDataPath + "/LoginAccount.json";
+                AccountManager accountmanager = new AccountManager(); // accountmanager を初期化
+                if (File.Exists(filePath))
+                {
+                    // ファイルが存在する場合はロードして追加
+                    string json = File.ReadAllText(filePath);
+                    accountmanager = JsonUtility.FromJson<AccountManager>(json);
+
+                }
+
+                StartCoroutine(_api.UpDate_Status_String(accountmanager.accountname));
                 selectedElement = SelectedElement.Button; // 重置选中的元素
                 currentButtonIndex = 0; // 或设置为最后选中的按钮索引
                 SelectButton(currentButtonIndex); // 重新选择当前按钮
@@ -477,27 +488,27 @@ public class UIHomeCtrl : UICtrl
 
     private void HEALTH()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeHealth();
     }
     private void ATTACK()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeAttack();
     }
     private void DEFENSE()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeDefense();
     }
     private void SPEED()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeSpeed();
     }
     private void MP()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeMp();
     }
     private void DASH()
     {
-        Debug.Log("Exit");
+        PowerUpSystem.Instance.UpgradeDash();
     }
 
     // BGMの音量が変更されたときの処理
