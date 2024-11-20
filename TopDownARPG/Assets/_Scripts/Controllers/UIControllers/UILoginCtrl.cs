@@ -18,6 +18,8 @@ public class UILoginCtrl : UICtrl
 
     private Button[] buttons; // すべてのボタンを格納する配列
 
+    private bool isKeyboardPanelActive = false; // 用于跟踪键盘面板的状态
+
     public override void Awake()
     {
         base.Awake();
@@ -116,6 +118,8 @@ public class UILoginCtrl : UICtrl
 
     private void SelectPreviousInput()
     {
+        if (isKeyboardPanelActive) return; // 如果键盘面板激活，则禁用
+
         // 手动取消当前选择的元素（如果是按钮）
         var current = _currentSelectables[_currentSelectionIndex];
         if (current is Button button)
@@ -149,6 +153,8 @@ public class UILoginCtrl : UICtrl
 
     private void SelectNextInput()
     {
+        if (isKeyboardPanelActive) return; // 如果键盘面板激活，则禁用
+
         // 手动取消当前选择的元素（如果是按钮）
         var current = _currentSelectables[_currentSelectionIndex];
         if (current is Button button)
@@ -217,42 +223,46 @@ public class UILoginCtrl : UICtrl
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // 检查键盘面板是否激活
             if (View["KeyboardPanel"].activeSelf)
             {
                 // 隐藏键盘面板
-                View["KeyboardPanel"].SetActive(false);
+                HideKeyboardPanel();
             }
             else if (View["RegistrationScreenPanel"].activeSelf)
             {
                 View["RegistrationScreenPanel"].SetActive(false);
-                _currentSelectables = _loginSelectables;  // 切换回登录界面的可选择元素
-                _currentSelectionIndex = 0; // 重置选择索引
+                _currentSelectables = _loginSelectables;
+                _currentSelectionIndex = 0;
             }
         }
 
-        // 检测上下方向键来选择输入框或按钮
-        if (Input.GetKeyDown(KeyCode.UpArrow))
+        // 仅在键盘面板未激活时允许切换输入框或按钮
+        if (!isKeyboardPanelActive)
         {
-            SelectPreviousInput();
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            SelectNextInput();
+            if (Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                SelectPreviousInput();
+            }
+            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            {
+                SelectNextInput();
+            }
         }
 
         // 检测回车键来执行当前选择的按钮或唤出键盘面板
         if (Input.GetKeyDown(KeyCode.Return))
         {
-            var current = _currentSelectables[_currentSelectionIndex];
-            if (current is TMP_InputField)
+            if (!isKeyboardPanelActive)  // 确保键盘面板未激活时才执行按钮事件
             {
-                // 如果当前选择的是输入框，按下回车键则唤出键盘面板
-                ShowKeyboardPanel();
-            }
-            else
-            {
-                ExecuteCurrentSelection();
+                var current = _currentSelectables[_currentSelectionIndex];
+                if (current is TMP_InputField)
+                {
+                    ShowKeyboardPanel();
+                }
+                else
+                {
+                    ExecuteCurrentSelection();
+                }
             }
         }
     }
@@ -262,10 +272,48 @@ public class UILoginCtrl : UICtrl
     {
         // 显示键盘面板
         View["KeyboardPanel"].SetActive(true);
+        isKeyboardPanelActive = true;
+
+        // 禁用其他面板的交互
+        DisableOtherUIElements(true);
+
+        // 确保 EventSystem 仅接收键盘面板的输入
+        EventSystem.current.SetSelectedGameObject(View["KeyboardPanel"]);
 
         // 如果需要，你可以在键盘面板唤出后自动聚焦某个按键
         // View["KeyboardPanel/SomeKey"].GetComponent<Button>().Select();
     }
+
+    private void HideKeyboardPanel()
+    {
+        // 隐藏键盘面板
+        View["KeyboardPanel"].SetActive(false);
+        isKeyboardPanelActive = false;
+
+        // 启用其他面板的交互
+        DisableOtherUIElements(false);
+
+        // 恢复默认选中状态（例如回到登录面板的第一个输入框）
+        _currentSelectables[_currentSelectionIndex].Select();
+    }
+
+    // 禁用或启用其他 UI 元素的交互
+    private void DisableOtherUIElements(bool disable)
+    {
+        // 禁用登录/注册面板的所有交互
+        foreach (var selectable in _loginSelectables)
+        {
+            selectable.interactable = !disable;
+        }
+
+        foreach (var selectable in _registerSelectables)
+        {
+            selectable.interactable = !disable;
+        }
+
+        // 如果你有其他面板，也可以在这里禁用它们的交互
+    }
+
 
     private void Register()
     {
