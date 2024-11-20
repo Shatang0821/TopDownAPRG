@@ -14,21 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Enemies:
   - EnemyPrefab: {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
-    SpawnLocalPosition: {x: 29, y: 0, z: -17}
+    SpawnLocalPosition: {x: 11, y: 0, z: -8}
     SpawnTime: 0
   - EnemyPrefab: {fileID: 3437016293230610375, guid: 38d850616bdca354f8457663bf1d8c26, type: 3}
-    SpawnLocalPosition: {x: 15, y: 0, z: -17}
+    SpawnLocalPosition: {x: 21, y: 0, z: -14}
     SpawnTime: 0
   - EnemyPrefab: {fileID: 8382721700994508426, guid: 9da9d5d4362fb124cb776b1c2e3a9f2c, type: 3}
-    SpawnLocalPosition: {x: 11, y: 0, z: -10}
-    SpawnTime: 0
-  - EnemyPrefab: {fileID: 8382721700994508426, guid: 9da9d5d4362fb124cb776b1c2e3a9f2c, type: 3}
-    SpawnLocalPosition: {x: 8, y: 0, z: -10}
-    SpawnTime: 0
-  - EnemyPrefab: {fileID: 8382721700994508426, guid: 9da9d5d4362fb124cb776b1c2e3a9f2c, type: 3}
-    SpawnLocalPosition: {x: 12, y: 0, z: -6}
-    SpawnTime: 0
-  - EnemyPrefab: {fileID: 8382721700994508426, guid: 9da9d5d4362fb124cb776b1c2e3a9f2c, type: 3}
-    SpawnLocalPosition: {x: 21, y: 0, z: -9}
+    SpawnLocalPosition: {x: 18, y: 0, z: -10}
     SpawnTime: 0
   SpawnEffect: {fileID: 4466138879023697255, guid: 599878bc53eb7f44a9acf57f970f4825, type: 3}
