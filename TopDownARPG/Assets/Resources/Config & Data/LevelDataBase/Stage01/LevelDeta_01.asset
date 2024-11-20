@@ -10,15 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a65e6d6fbe2d8e74b9ee0970310ef931, type: 3}
-  m_Name: LevelDeta_02
+  m_Name: LevelDeta_01
   m_EditorClassIdentifier: 
   WaveConfigs:
-  - {fileID: 11400000, guid: e4db78722b63a9c418fcd46fb6027b26, type: 2}
-  StagePrefab: {fileID: 1938218005334160412, guid: a31c6d1c09f5cd34b88d57635868c4ef, type: 3}
-  DataFilePath: Config & Data/LevelDataBase/MapData/Stage02
+  - {fileID: 11400000, guid: 78bda8f6865cfbd41a685d496ae0b693, type: 2}
+  - {fileID: 11400000, guid: a86decaf657db8d4c97278955e1e1a5f, type: 2}
+  StagePrefab: {fileID: 1383462282956652517, guid: eb839b61f881ba844b95f09df94ab09d, type: 3}
+  DataFilePath: Config & Data/LevelDataBase/MapData/Stage01
   MapWidth: 32
   MapHeight: 32
   SpawnPos: {x: 0, y: 0, z: 0}
   CellSize: 1
   rotation: {x: 0, y: 135, z: 0}
-  PlayerSpawnPos: {x: 27.11, y: 0, z: -9.82}
+  PlayerSpawnPos: {x: 28.5, y: 0, z: -3}

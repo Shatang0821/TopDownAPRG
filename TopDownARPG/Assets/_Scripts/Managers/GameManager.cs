@@ -97,9 +97,7 @@ public class GameManager : PersistentSingleton<GameManager>
     /// </summary>
     private void InitializeGameplayState()
     {
-        
         StartCoroutine(nameof(InitializeGameplayStateCoroutine));
-        
     }
     
     private IEnumerator InitializeGameplayStateCoroutine()

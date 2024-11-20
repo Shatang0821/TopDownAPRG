@@ -6,10 +6,12 @@ using FrameWork.Resource;
 using Unity.Properties;
 using UnityEngine;
 
-public class RHAttackState : RHMovementState
+public class RHAttackState : RHBaseState
 {
     private GameObject RockPrefab; // 岩のプレハブ
     Vector3 _player;
+    private float _attackTime = 0.5f;
+    private bool _isAttacked;
     public RHAttackState(string animBoolName, Enemy enemy, EnemyStateMachine enemyStateMachine) : base(animBoolName, enemy, enemyStateMachine)
     {
         enemyStateConfig = ResManager.Instance.GetAssetCache<RockHurlerStateConfig>(stateConfigPath + "RockHurler/RockHurlerAttack_Config");
@@ -20,14 +22,30 @@ public class RHAttackState : RHMovementState
     {
         base.Enter();
         //チンペン音
-        AudioManager.Instance.PlayLRE_Attack();
-        PoolManager.Release(RockPrefab, rockHurler.BulletLauncher.position);
+        _isAttacked = false;
+        
     }
 
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-
+        
+        if (enemy.IsTakenDamaged)
+        {
+            ChangeState(RHStateEnum.Damaged);
+            return;
+        }
+        
+        if (stateTimer > _attackTime && !_isAttacked)
+        {
+            AudioManager.Instance.PlayLRE_Attack();
+            PoolManager.Release(RockPrefab, rockHurler.BulletLauncher.position);
+            _isAttacked = true;
+            return;
+        }
+        
+        
+        
         if (enemy.IsTakenDamaged)
         {
             ChangeState(RHStateEnum.Damaged);

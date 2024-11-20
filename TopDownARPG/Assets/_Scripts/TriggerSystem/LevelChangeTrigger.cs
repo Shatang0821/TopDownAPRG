@@ -1,20 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using FrameWork.UI;
 using UnityEngine;
 
-public class LevelChangeReceiver : TriggerReceiver
+public class LevelChangeTrigger : MonoBehaviour
 {
     LevelManager _levelManager;
-    public override void OnTriggerReceived()
+
+    private void OnTriggerEnter(Collider other)
     {
-        base.OnTriggerReceived();
         UIManager.Instance.ShowUI("UIChange");
 
         StartCoroutine(ChangeStage());
-
-
     }
 
     IEnumerator ChangeStage()

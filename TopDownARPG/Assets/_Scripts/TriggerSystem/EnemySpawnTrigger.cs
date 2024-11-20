@@ -1,16 +1,18 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using FrameWork.EventCenter;
 using UnityEngine;
 
-public class EnemySpawnTrigger : TriggerReceiver
+public class EnemySpawnTrigger : MonoBehaviour
 {
-    
-    public override void OnTriggerReceived()
+    private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("EnemySpawnTrigger received trigger. Starting wave.");
-        GameManager.Instance.EnemyManager.StartWave();
+        if (other.CompareTag("Player"))
+        {
+            Debug.Log("EnemySpawnTrigger received trigger. Starting wave.");
+            GameManager.Instance.EnemyManager.StartWave();
+        }
     }
-    
     
 }

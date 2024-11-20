@@ -7,6 +7,11 @@ using FrameWork.UI;
 using FrameWork.Utils;
 using UnityEngine;
 
+enum LevelEvent
+{
+    Clear,
+}
+
 public class LevelManager : MonoBehaviour,IInitializable
 {
     private LevelDataBase _gameLevelDatabase;   //すべてのステージデータ

@@ -8,11 +8,6 @@ using FrameWork.Resource;
 using FrameWork.Utils;
 using UnityEngine;
 
-enum EnemyEventEnum
-{
-    OnStartWave,
-    OnWaveClear,
-}
 public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
 {
     private List<WaveConfig> _waveConfigs;
@@ -27,16 +22,6 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
     private Transform _playerTransform; //プレイヤーの変換情報
 
     private Transform _level;
-
-    private void OnEnable()
-    {
-        EventCenter.AddListener(EnemyEventEnum.OnStartWave, StartWave);
-    }
-
-    private void OnDisable()
-    {
-        EventCenter.RemoveListener(EnemyEventEnum.OnStartWave, StartWave);
-    }
 
     /// <summary>
     /// EnemyManagerの初期化
@@ -117,6 +102,11 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
             StartCoroutine(SpawnWave(_waveConfigs[_currentWaveIndex]));
             _currentWaveIndex++;
         }
+        else
+        {
+            //クリア時のイベント
+            EventCenter.TriggerEvent(LevelEvent.Clear);
+        }
     }
     
     /// <summary>
@@ -181,7 +171,6 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
             _enemiesToRemove.Clear();
             _currentWaveEnemies.Clear();
             
-            EventCenter.TriggerEvent(EnemyEventEnum.OnWaveClear);
             StartWave();
         }
     }
