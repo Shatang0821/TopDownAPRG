@@ -196,8 +196,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ba013f1f2ab4d9a871e1693f4f999c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TriggerReceivers:
-  - {fileID: 4698475628922978394}
+  Door: {fileID: 7907983944537955363}
+  _motionIncrement: {x: 0, y: -2, z: 0}
+  _duration: 2
 --- !u!1 &7907983944537955363
 GameObject:
   m_ObjectHideFlags: 0
@@ -209,7 +210,6 @@ GameObject:
   - component: {fileID: 5388654830474528756}
   - component: {fileID: 31090659000020128}
   - component: {fileID: 3246833017046416415}
-  - component: {fileID: 4698475628922978394}
   - component: {fileID: 763684180398279871}
   m_Layer: 6
   m_Name: LinearDoor
@@ -283,21 +283,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4698475628922978394
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7907983944537955363}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e092a83502c22a44d9b9f3961bf4314a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _motionIncrement: {x: 0, y: -2, z: 0}
-  _duration: 2
-  _delay: 1.5
 --- !u!65 &763684180398279871
 BoxCollider:
   m_ObjectHideFlags: 0

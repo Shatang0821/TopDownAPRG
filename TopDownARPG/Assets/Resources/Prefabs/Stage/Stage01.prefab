@@ -362,7 +362,7 @@ Transform:
   m_GameObject: {fileID: 1383462282956652517}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.75, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2819,7 +2819,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6435984571809715227}
   - component: {fileID: 1423208558892102115}
-  - component: {fileID: 189170670651585018}
   - component: {fileID: 1389523750581645278}
   m_Layer: 6
   m_Name: TriggerZone01
@@ -2864,21 +2863,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 6.1087704, y: 1.220206, z: 6.5871115}
   m_Center: {x: -0.016999245, y: 0.11010313, z: 0.72675467}
---- !u!114 &189170670651585018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7738267579321449938}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ba013f1f2ab4d9a871e1693f4f999c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Door: {fileID: 0}
-  _motionIncrement: {x: 0, y: 0, z: 0}
-  _duration: 0
 --- !u!114 &1389523750581645278
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -21,4 +21,4 @@ MonoBehaviour:
   SpawnPos: {x: 0, y: 0, z: 0}
   CellSize: 1
   rotation: {x: 0, y: 135, z: 0}
-  PlayerSpawnPos: {x: 27.11, y: 0, z: -9.82}
+  PlayerSpawnPos: {x: 22.59, y: 0, z: -9.89}
