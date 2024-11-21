@@ -13,6 +13,8 @@ public class EnemySpawnTrigger : MonoBehaviour
             Debug.Log("EnemySpawnTrigger received trigger. Starting wave.");
             GameManager.Instance.EnemyManager.StartWave();
         }
+
+        gameObject.SetActive(false);
     }
     
 }

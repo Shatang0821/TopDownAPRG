@@ -149,13 +149,21 @@ public class LevelManager : MonoBehaviour,IInitializable
         _currentStageIndex++;
         if (_currentStageIndex >= _gameLevelDatabase.StageDetails.Length)
         {
+            UIManager.Instance.RemoveUI("UIGame");
+            UIManager.Instance.ShowUI("UIWin");
+            UIManager.Instance.RemoveUI("UIChange");
+            GameManager.Instance.ChangeState(GameState.GameOver);
             DebugLogger.Log("ステージデータが取得できません");
+            
             return;
         }
         CoinSystem.Instance.AddCoin(100);
+        
         Debug.Log(CoinSystem.Instance.Coin);
         UpdateData();
-
+        
+        SetWaveConfigToEnemyManager(GameManager.Instance.EnemyManager);
+        
         StartCoroutine(Remove());
         GameManager.Instance.PlayerManager.EnablePlayer(true);
     }

@@ -19,14 +19,14 @@ public class Entity : MonoBehaviour, IDamageable
 
     protected Observer<float> currentHealth;
 
-    protected Observer<int> power;
+    protected Observer<float> power;
 
     protected Observer<float> speed;
 
     protected Animator animator;
     public float GetMaxHealth => maxHealth.Value;           //最大HPを取得する
     public float GetCurrentHealth => currentHealth.Value;   //現在HPを取得する
-    public int GetPower => power.Value;                     //攻撃力を取得する
+    public float GetPower => power.Value;                     //攻撃力を取得する
     public float GetSpeed => speed.Value;                   //移動速度を取得する
 
     [HideInInspector] public Rigidbody Rigidbody;

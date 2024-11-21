@@ -18,7 +18,7 @@ public class PlayerStatusComponent : MonoBehaviour
     //ゲッター
     public Status CurrentStatus => currentStatus;
     public PlayerSpecificStatus CurrentSpecificStatus => currentSpecificStatus;
-    private void Start()
+    public void Init()
     {
         // プレイヤの基本数値を取得
         maxStatus = playerBaseData.BaseStatus;

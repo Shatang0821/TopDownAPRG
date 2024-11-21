@@ -24,8 +24,6 @@ public class FireDemon : Enemy
     {
         base.Awake();
         AttackComponent = GetComponent<AttackComponent>();
-
-        
     }
     protected override StateMachine CreateStateMachine()
     {

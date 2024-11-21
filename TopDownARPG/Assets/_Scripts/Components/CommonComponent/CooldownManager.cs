@@ -7,8 +7,8 @@ public class CooldownManager : MonoBehaviour
     [SerializeField] private List<SkillCooldown> skillCooldowns = new List<SkillCooldown>();
 
     private Dictionary<string, float> cooldownTimers = new Dictionary<string, float>();
-
-    private void Start()
+    
+    private void Awake()
     {
         // 初期設定: skillCooldownsリストの各スキルをDictionaryに追加
         foreach (var skill in skillCooldowns)
@@ -99,6 +99,19 @@ public class CooldownManager : MonoBehaviour
         }
 
         return 0;
+    }
+    
+    /// <summary>
+    /// クールタイムの設定
+    /// </summary>
+    /// <param name="skillName"></param>
+    /// <param name="time"></param>
+    public void SetCooldownTime(string skillName, float time)
+    {
+        if (cooldownTimers.ContainsKey(skillName))
+        {
+            cooldownTimers[skillName] = time;
+        }
     }
 }
 

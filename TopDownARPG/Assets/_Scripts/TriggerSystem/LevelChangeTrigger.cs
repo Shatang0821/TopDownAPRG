@@ -11,9 +11,12 @@ public class LevelChangeTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        UIManager.Instance.ShowUI("UIChange");
+        if (other.CompareTag("Player"))
+        {
+            UIManager.Instance.ShowUI("UIChange");
 
-        StartCoroutine(ChangeStage());
+            StartCoroutine(ChangeStage());
+        }
     }
 
     IEnumerator ChangeStage()

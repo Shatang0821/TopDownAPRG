@@ -43,13 +43,19 @@ public abstract class Enemy : Entity
         enemyStateMachine.ChangeState(GetInitialState());
     }
 
+    protected override void OnDisable()
+    {
+        base.OnDisable();
+        enemyStateMachine.ChangeState(GetInitialState());
+    }
+
     public override void InitValue()
     {
         base.InitValue();
         maxHealth = new Observer<float>(50);
         currentHealth = new Observer<float>(maxHealth.Value);
         //テスト
-        power = new Observer<int>(5);
+        power = new Observer<float>(5);
         speed = new Observer<float>(2);
     }
 

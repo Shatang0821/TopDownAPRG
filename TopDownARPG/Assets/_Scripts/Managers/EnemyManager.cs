@@ -79,6 +79,7 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
     /// <param name="waveConfigs"></param>
     public void SetWaveConfig(List<WaveConfig> waveConfigs)
     {
+        Reset();
         this._waveConfigs = waveConfigs;
         _currentWaveIndex = 0;
     }
@@ -104,6 +105,7 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
         }
         else
         {
+            Debug.Log("クリア");
             //クリア時のイベント
             EventCenter.TriggerEvent(LevelEvent.Clear);
         }

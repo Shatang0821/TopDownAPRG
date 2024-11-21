@@ -61,7 +61,7 @@ public class RockBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("a" + other.name);
+        //Debug.Log("a" + other.name);
         IDamageable damageableEntity = other.GetComponent<Collider>().GetComponent<IDamageable>();
 
         if (damageableEntity != null)

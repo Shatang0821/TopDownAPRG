@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   status:
     Health: 100
-    MagicPoint: 0
+    MagicPoint: 100
     AttackPower: 10
     DefensePower: 0
-    Speed: 10
+    Speed: 5
   playerSpecificStatus:
     MpRecoverySpeed: 0
-    DashCoolTime: 0
+    DashCoolTime: 1

@@ -50,7 +50,7 @@ public class PowerUpSystem : Singleton<PowerUpSystem>
             CurrentLevel = 0,
             MaxLevel = 5,
             BaseCost = 100,
-            BaseInCreaseValue = 1,
+            BaseInCreaseValue = 2,
             CostInCreaseRate = 1.2f,
             ValueDecreaseRate = 1f
         };

@@ -13,31 +13,34 @@ public enum PlayerEvent
 }
 public class Player : Entity
 {
-    //パワーのゲット
-    public int Power => power.Value;
-
     private PlayerStateMachine _stateMachine;
     
-    #region Component
-    //public PlayerInputComponent PlayerInputComponent;
-    #endregion
-    
     public Transform RayStartPoint;
-    
+
+    private PlayerStatusComponent _playerStatusComponent;
+
+    private CooldownManager _cooldownManager;
     //被撃
     public bool Damaged = false;
     
     //現在HP
     public float GetCurrentHealth => currentHealth.Value;
-    
+
+    public float Power => power.Value;
+    public float Health => maxHealth.Value;
     public override void InitValue()
     {
         base.InitValue();
-        maxHealth = new Observer<float>(100);
+        _playerStatusComponent = GetComponent<PlayerStatusComponent>();
+        //_cooldownManager.GetComponent<CooldownManager>();
+        _playerStatusComponent.Init();
+        maxHealth = new Observer<float>(_playerStatusComponent.CurrentStatus.Health);
         currentHealth = new Observer<float>(maxHealth.Value);
         //テスト
-        power = new Observer<int>(10);
-        speed = new Observer<float>(5);
+        power = new Observer<float>(_playerStatusComponent.CurrentStatus.AttackPower);
+        speed = new Observer<float>(_playerStatusComponent.CurrentStatus.Speed);
+        
+        //_cooldownManager.SetCooldownTime("Dash",_playerStatusComponent.CurrentSpecificStatus.DashCoolTime);
     }
 
     public override void Initialize()
