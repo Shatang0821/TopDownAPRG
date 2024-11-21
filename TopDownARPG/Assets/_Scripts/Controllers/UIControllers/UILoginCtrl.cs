@@ -239,11 +239,11 @@ public class UILoginCtrl : UICtrl
         // 仅在键盘面板未激活时允许切换输入框或按钮
         if (!isKeyboardPanelActive)
         {
-            if (Input.GetKeyDown(KeyCode.UpArrow))
+            if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.RightArrow))
             {
                 SelectPreviousInput();
             }
-            else if (Input.GetKeyDown(KeyCode.DownArrow))
+            else if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 SelectNextInput();
             }
