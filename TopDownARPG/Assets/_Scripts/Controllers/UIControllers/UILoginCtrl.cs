@@ -378,9 +378,6 @@ public class UILoginCtrl : UICtrl
         UIManager.Instance.RemoveUI("UILogin");
         UIManager.Instance.ShowUI("UIHome");
         UIManager.Instance.ChangeUIPrefab("UIHome");
-        if (this.gameObject != null)
-        {
-            this.gameObject.SetActive(false);
-        }
+
     }
 }
