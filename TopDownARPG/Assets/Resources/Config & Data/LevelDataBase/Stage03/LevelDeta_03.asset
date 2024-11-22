@@ -13,13 +13,14 @@ MonoBehaviour:
   m_Name: LevelDeta_03
   m_EditorClassIdentifier: 
   WaveConfigs:
-  - {fileID: 11400000, guid: 78bda8f6865cfbd41a685d496ae0b693, type: 2}
-  - {fileID: 11400000, guid: a86decaf657db8d4c97278955e1e1a5f, type: 2}
-  StagePrefab: {fileID: 7576449515863224654, guid: eb839b61f881ba844b95f09df94ab09d, type: 3}
+  - {fileID: 11400000, guid: 2d26be24d6cdade4ea9e1107e3f1f2c7, type: 2}
+  - {fileID: 11400000, guid: bee145d6bb741df489b0cecc8a435e4c, type: 2}
+  - {fileID: 11400000, guid: 112401552c22b8a4d9a79b9b58b0cca0, type: 2}
+  StagePrefab: {fileID: 7810637293234976806, guid: a8eaa380e2080024ca697f41dcf3389a, type: 3}
   DataFilePath: Config & Data/LevelDataBase/MapData/Stage01
   MapWidth: 32
   MapHeight: 32
   SpawnPos: {x: 0, y: 0, z: 0}
   CellSize: 1
   rotation: {x: 0, y: 135, z: 0}
-  PlayerSpawnPos: {x: 28.5, y: 0, z: -3}
+  PlayerSpawnPos: {x: 13.326, y: 0, z: -0.887}

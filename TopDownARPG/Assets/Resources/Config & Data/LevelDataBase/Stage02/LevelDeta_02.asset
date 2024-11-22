@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WaveConfigs:
   - {fileID: 11400000, guid: e4db78722b63a9c418fcd46fb6027b26, type: 2}
+  - {fileID: 11400000, guid: 3f2eb001081b7fc46b2cad9df77bd37f, type: 2}
   StagePrefab: {fileID: 8422477316973233673, guid: a31c6d1c09f5cd34b88d57635868c4ef, type: 3}
   DataFilePath: Config & Data/LevelDataBase/MapData/Stage02
   MapWidth: 32
