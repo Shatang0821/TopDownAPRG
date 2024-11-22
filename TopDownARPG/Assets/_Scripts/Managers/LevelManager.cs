@@ -149,6 +149,7 @@ public class LevelManager : MonoBehaviour,IInitializable
         _currentStageIndex++;
         if (_currentStageIndex >= _gameLevelDatabase.StageDetails.Length)
         {
+            CoinSystem.Instance.AddCoin(100);
             UIManager.Instance.RemoveUI("UIGame");
             UIManager.Instance.ShowUI("UIWin");
             UIManager.Instance.RemoveUI("UIChange");
