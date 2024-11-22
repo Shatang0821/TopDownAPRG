@@ -10,6 +10,8 @@ namespace FrameWork.Pool
     //例
     [SerializeField] UnityObjectPool[] enemyPools;
     [SerializeField] UnityObjectPool[] bulletPools;
+
+    [SerializeField] UnityObjectPool[] effectPools;
     // プレハブとそれに対応するプールのリファレンスを格納する辞書
     static Dictionary<GameObject, UnityObjectPool> dictionary;
 
@@ -21,6 +23,7 @@ namespace FrameWork.Pool
         
         Initialize(enemyPools);
         Initialize(bulletPools);
+        Initialize(effectPools);
     }
 
     // Unityエディタでのみ実行されるデストラクタ。各プールのサイズを検証。

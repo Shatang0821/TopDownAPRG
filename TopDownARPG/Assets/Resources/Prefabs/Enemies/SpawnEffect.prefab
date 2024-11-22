@@ -115,6 +115,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7430191028968291485}
+  - component: {fileID: 424477900546257251}
   m_Layer: 0
   m_Name: SpawnEffect
   m_TagString: Untagged
@@ -140,6 +141,20 @@ Transform:
   - {fileID: 4325509325375496464}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &424477900546257251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4466138879023697255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c23ef9b4ddadd94d8a7983a348c3a9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  destroyGameObject: 0
+  lifetime: 0.2
 --- !u!1 &5932385806751499577
 GameObject:
   m_ObjectHideFlags: 0

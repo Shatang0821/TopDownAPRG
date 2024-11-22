@@ -120,9 +120,13 @@ public class EnemyManager : MonoBehaviour, IInitializable,IUpdatable
     {
         foreach (var spawnInfo in waveConfig.Enemies)
         {
-            yield return new WaitForSeconds(spawnInfo.SpawnTime);
-            
             var worldSpawnPos = GameManager.Instance.LevelManager.CurrentStageInstance.transform.TransformPoint(spawnInfo.SpawnLocalPosition);
+           
+            yield return new WaitForSeconds(spawnInfo.SpawnTime);
+            if(waveConfig.SpawnEffect)
+                PoolManager.Release(waveConfig.SpawnEffect, worldSpawnPos, Quaternion.identity);
+            yield return new WaitForSeconds(0.2f);
+            
 //            Debug.Log(worldSpawnPos);
             var enemy = PoolManager.Release(spawnInfo.EnemyPrefab,worldSpawnPos,Quaternion.identity).GetComponent<Enemy>();
             
